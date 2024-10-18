@@ -35,6 +35,26 @@ const HomeContent = () => {
           <p className="ml-2">Profil Saya</p>
         </button>
       </div>
+        <div className="mt-8">
+            {activeButton === 'home' && (
+            <div>
+                <h3 className="font-bold text-lg">Beranda</h3>
+                <p className="mt-2">Selamat datang di website penilaian dan umpan balik antara dosen dan mahasiswa dengan realtime.</p>
+            </div>
+            )}
+            {activeButton === 'dosen' && (
+            <div>
+                <h3 className="font-bold text-lg">Profil Dosen</h3>
+                <p className="mt-2">Informasi profil dosen akan ditampilkan di sini.</p>
+            </div>
+            )}
+            {activeButton === 'saya' && (
+            <div>
+                <h3 className="font-bold text-lg">Profil Saya</h3>
+                <p className="mt-2">Informasi profil saya akan ditampilkan di sini.</p>
+            </div>
+            )}
+        </div>
     </div>
   );
 };
