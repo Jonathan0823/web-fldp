@@ -20,7 +20,7 @@ const MyProfile = () => {
         </div>
         <div className="mt-4">
           <p className="font-semibold">Bergabung Sejak</p>
-          <p>sdlfsdf</p>
+          <p>September 2023</p>
         </div>
         <div className="mt-4">
           <p className="font-semibold">Rata-Rata Penilaian</p>
