@@ -9,7 +9,7 @@ const LogOut = () => {
     }
 
     return (
-        <div onClick={handleLogout} className='text-[#4d459c] flex items-center text-sm font-semibold hover:cursor-pointer'><div className='scale-125'>
+        <div onClick={handleLogout} className='text-[#5442f6] flex items-center text-sm font-semibold hover:cursor-pointer'><div className='scale-125'>
             <RxExit/>
             </div> <p className='ml-2'>Keluar</p></div>
     )
