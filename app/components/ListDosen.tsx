@@ -4,29 +4,15 @@ import React, { useState, useEffect } from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import axios from "axios";
 
-const profiles = [
-  {
-    name: "Dr. dean Smith",
-    specialization: "yapping Terapan",
-    rating: 4.5,
-    reviews: 50,
-  },
-  {
-    name: "Prof. amba thu khang",
-    specialization: "Linguistik Terapan",
-    rating: 4.5,
-    reviews: 50,
-  },
-  {
-    name: "Mrs. reagga nigarox",
-    specialization: "Pendidikan Bahasa Jepang",
-    rating: 4.5,
-    reviews: 50,
-  },
-];
+interface DosenProfile {
+  nama: string;
+  mataKuliah: string;
+  rating: string;  // Ubah ke string karena toFixed digunakan
+  reviews: number;
+}
 
 export default function ProfileList() {
-  const [dosen, setDosen] = useState([]);
+  const [dosen, setDosen] = useState<DosenProfile[]>([]);
 
   useEffect(() => {
     const getDosenData = async () => {
@@ -53,8 +39,8 @@ export default function ProfileList() {
               className="p-4 bg-white rounded-lg shadow flex items-center justify-between"
             >
               <div>
-                <h3 className="text-lg font-medium text-gray-900">{profile.name}</h3>
-                <p className="text-sm text-gray-600">{profile.specialization}</p>
+                <h3 className="text-lg font-medium text-gray-900">{profile.nama}</h3>
+                <p className="text-sm text-gray-600">{profile.mataKuliah}</p>
                 <div className="flex items-center mt-1">
                   <StarIcon className="w-5 h-5 text-yellow-400" />
                   <span className="ml-1 text-sm text-gray-600">
