@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { getServerSession } from "next-auth";
-import LogOut from "./components/LogOut";
-import Link from "next/link";
 
 
 
@@ -16,14 +13,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession();
   return (
     <html lang="en">
       <body
       >
-        <nav>
-          {session ? (<LogOut/>) : (<Link href="/signin">Sign In</Link>)}
-        </nav>
         {children}
       </body>
     </html>
