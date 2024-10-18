@@ -7,21 +7,25 @@ export async function GET(
 ) {
   const { query } = params;
 
-  if (!query) {
-    return NextResponse.json({ status: 401, message: "Unauthorized" });
-  }
-  
   try {
-    const dosen = await prisma.dosen.findMany({
-      where: {
-        OR: [
-          { prodi: { contains: query } },
-          { fakultas: { contains: query } },
-          { mataKuliah: { contains: query } },
-        ],
-      },
-      include: { nilai: true },
-    });
+    let dosen;
+
+    if (query === "All") {
+      dosen = await prisma.dosen.findMany({
+        include: { nilai: true }, 
+      });
+    } else {
+      dosen = await prisma.dosen.findMany({
+        where: {
+          OR: [
+            { prodi: { contains: query } },
+            { fakultas: { contains: query } },
+            { mataKuliah: { contains: query } },
+          ],
+        },
+        include: { nilai: true },
+      });
+    }
 
     const dosenWithRatings = dosen.map((d) => {
       const totalNilai = d.nilai.reduce((acc, curr) => {
@@ -29,13 +33,12 @@ export async function GET(
       }, 0);
       
       let averageRating = totalNilai / (d.nilai.length * 3) || 0;
-    
       averageRating = Math.min(averageRating, 5);
 
       const formattedRating = Number.isInteger(averageRating) 
         ? Math.round(averageRating) 
         : averageRating.toFixed(1);
-    
+
       return {
         nama: d.nama,
         mataKuliah: d.mataKuliah,
@@ -43,7 +46,6 @@ export async function GET(
         reviews: d.nilai.length,
       };
     });
-    
 
     return NextResponse.json(dosenWithRatings);
   } catch (error) {

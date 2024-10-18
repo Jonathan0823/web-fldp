@@ -17,7 +17,7 @@ export default function ProfileList() {
   useEffect(() => {
     const getDosenData = async () => {
       try {
-        const result = await axios.get(`/api/getDosen/ilkom`);
+        const result = await axios.get(`/api/getDosen/All`);
         setDosen(result.data);
       } catch (e) {
         console.error("Error fetching data:", e);
