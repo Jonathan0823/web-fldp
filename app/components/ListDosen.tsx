@@ -2,6 +2,7 @@
 import React from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
+import axios from "axios";
 
 const profiles = [
   {
@@ -25,7 +26,7 @@ const profiles = [
 ];
 
 export default function ProfileList() {
-    
+    const [dosen, setDosen] = useState([]);
 
     const getDosenData = async () => {
         try{
