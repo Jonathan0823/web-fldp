@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { FiHome, FiUser } from "react-icons/fi";
 import { RiGroupLine } from "react-icons/ri";
+import MyProfile from "./Home/MyProfile";
+import { SessionProvider } from "next-auth/react";
 
 const HomeContent = () => {
   const [activeButton, setActiveButton] = useState("home");
@@ -11,6 +13,7 @@ const HomeContent = () => {
   };
 
   return (
+    <SessionProvider>
     <div>
       <div className="flex justify-between text-gray-500 mt-8 md:text-base text-sm">
         <button
@@ -62,15 +65,12 @@ const HomeContent = () => {
         {activeButton === "saya" && (
           <div>
             <h3 className="font-bold text-lg">Profil Saya</h3>
-            <div className=" bg-white rounded-xl shadow-md min-h-32">
-              <p className="mt-2">
-                Informasi profil saya akan ditampilkan di sini.
-              </p>
-            </div>
+            <MyProfile />
           </div>
         )}
       </div>
     </div>
+    </SessionProvider>
   );
 };
 
