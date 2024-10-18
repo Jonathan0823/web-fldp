@@ -1,6 +1,7 @@
 "use client"
 import { signOut } from 'next-auth/react';
 import React from 'react'
+import { RxExit } from "react-icons/rx";
 
 const LogOut = () => {
     const handleLogout = async () => {
@@ -8,7 +9,9 @@ const LogOut = () => {
     }
 
     return (
-        <span onClick={handleLogout}>LogOut</span>
+        <div onClick={handleLogout} className='text-[#4d459c] flex items-center text-sm font-semibold hover:cursor-pointer'><div className='scale-125'>
+            <RxExit/>
+            </div> <p className='ml-2'>Keluar</p></div>
     )
 }
 
