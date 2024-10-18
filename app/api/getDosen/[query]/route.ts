@@ -9,7 +9,6 @@ export async function GET(
 
   try {
     let dosen;
-
     if (query === "All") {
       dosen = await prisma.dosen.findMany({
         include: { nilai: true }, 
