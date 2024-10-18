@@ -7,7 +7,7 @@ import axios from "axios";
 interface DosenProfile {
   nama: string;
   mataKuliah: string;
-  rating: string;  // Ubah ke string karena toFixed digunakan
+  rating: string; 
   reviews: number;
 }
 
@@ -28,9 +28,6 @@ export default function ProfileList() {
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4 text-gray-800">
-        Profil Dosen Pendidikan Bahasa Inggris
-      </h2>
       <div className="space-y-4">
         {dosen.length > 0 ? (
           dosen.map((profile, index) => (
