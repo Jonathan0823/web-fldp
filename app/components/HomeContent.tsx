@@ -4,6 +4,7 @@ import { FiHome, FiUser } from "react-icons/fi";
 import { RiGroupLine } from "react-icons/ri";
 import MyProfile from "./Home/MyProfile";
 import { SessionProvider } from "next-auth/react";
+import ProfileList from "./ListDosen";
 
 const HomeContent = () => {
   const [activeButton, setActiveButton] = useState("home");
@@ -60,6 +61,7 @@ const HomeContent = () => {
             <p className="mt-2">
               Informasi profil dosen akan ditampilkan di sini.
             </p>
+            <ProfileList/>
           </div>
         )}
         {activeButton === "saya" && (
