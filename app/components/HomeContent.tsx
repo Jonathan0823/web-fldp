@@ -5,6 +5,7 @@ import { RiGroupLine } from "react-icons/ri";
 import MyProfile from "./Home/MyProfile";
 import { SessionProvider } from "next-auth/react";
 import ProfileList from "./ListDosen";
+import ReviewCard from "./review-card";
 
 const HomeContent = () => {
   const [activeButton, setActiveButton] = useState("home");
@@ -62,6 +63,12 @@ const HomeContent = () => {
               Informasi profil dosen akan ditampilkan di sini.
             </p>
             <ProfileList/>
+          </div>
+        )}
+        {activeButton === "home" && (
+          <div>
+            <h3 className="font-bold text-lg">Profil Saya</h3>
+            <ReviewCard />
           </div>
         )}
         {activeButton === "saya" && (
