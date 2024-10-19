@@ -142,12 +142,13 @@ export const createMatakuliah = async (nama: string, fakultasId: string) => {
   }
 };
 
-export const review = async (  pembelajaran: number,
+export const review = async ( 
+    pembelajaran: number,
     kehadiran: number,
     ketepatanWaktu: number,
+    komen:string,
     dosenId: string,
-    userId: string,
-    komentar: string) => {
+    userId: string,) => {
   try {
     const review = await prisma.nilai.create({
       data: {
@@ -156,7 +157,8 @@ export const review = async (  pembelajaran: number,
         pembelajaran,
         dosenId,
         userId,
-        komentar,
+        komen
+
       },
     });
     return review;
@@ -164,3 +166,5 @@ export const review = async (  pembelajaran: number,
     throw new Error(String(error));
   }
 };
+
+

@@ -29,17 +29,17 @@ model User {
 }
 
 model Nilai {
-  id             String   @id @default(cuid())
-  pembelajaran   Int
-  kehadiran      Int
-  ketepatanWaktu Int
-  dosenId        String
-  userId         String
-  komentar       String?
-  penilaian      User     @relation(fields: [userId], references: [id])
-  dosen          Dosen    @relation(fields: [dosenId], references: [id])
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id                  String   @id @default(cuid())
+  pembelajaran        Int
+  kehadiran           Int
+  ketepatanWaktu      Int
+  dosenId             String
+  userId              String
+  komen String?
+  penilaian           User     @relation(fields: [userId], references: [id])
+  dosen               Dosen    @relation(fields: [dosenId], references: [id])
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }
 
 model Dosen {
@@ -86,5 +86,5 @@ model Matakuliah {
   fakultasId String
   Fakultas   Fakultas @relation(fields: [fakultasId], references: [id])
   dosen      Dosen[]
-  dosenId String?
+  dosenId    String?
 }

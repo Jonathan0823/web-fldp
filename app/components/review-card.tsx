@@ -16,30 +16,33 @@ interface ReviewCardProps {
 }
 
 const ReviewCard: React.FC<ReviewCardProps> = ({ items, userId }) => {
-  const [ratings, setRatings] = useState<{ [key: string]: number }>({
-    pembelajaran: 0,
-    tepatWaktu: 0,
-    kehadiran: 0,
-  });
+  const [ratings, setRatings] = useState<{ [key: string]: { [key: string]: number } }>({});
+  const [comment, setComment] = useState<{ [key: string]: string }>({});
 
-  const [comment, setComment] = useState<string>("");
-
-  const handleStarClick = (category: string, index: number) => {
-    setRatings({ ...ratings, [category]: index + 1 });
+  const handleStarClick = (dosenId: number, category: string, index: number) => {
+    setRatings((prev) => ({
+      ...prev,
+      [dosenId]: {
+        ...prev[dosenId],
+        [category]: index + 1,
+      },
+    }));
   };
 
-  const handleSubmit = async (dosenId: string) => {
+  const handleSubmit = async (dosenId: number) => {
     try {
+      const { pembelajaran = 0, tepatWaktu = 0, kehadiran = 0 } = ratings[dosenId] || {};
+      const userComment = comment[dosenId] || "";
       await review(
-        ratings.pembelajaran,
-        ratings.kehadiran,
-        ratings.tepatWaktu,
-        dosenId,
-        userId,
-        comment 
+        pembelajaran,
+        kehadiran,
+        tepatWaktu,
+        userComment,
+        dosenId.toString(),
+        userId
       );
       console.log("Review and comment submitted successfully");
-      setComment(""); 
+      setComment((prev) => ({ ...prev, [dosenId]: "" })); 
     } catch (error) {
       console.error("Error submitting review and comment:", error);
     }
@@ -80,9 +83,9 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ items, userId }) => {
                   {[...Array(5)].map((_, index) => (
                     <button
                       key={index}
-                      onClick={() => handleStarClick(category.key, index)}
+                      onClick={() => handleStarClick(item.id, category.key, index)}
                       className={`text-2xl ${
-                        index < ratings[category.key]
+                        index < (ratings[item.id]?.[category.key] || 0)
                           ? "text-yellow-400"
                           : "text-gray-400"
                       }`}
@@ -91,7 +94,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ items, userId }) => {
                     </button>
                   ))}
                   <span className="text-sm text-gray-600 ml-2">
-                    {ratings[category.key]}/5
+                    {(ratings[item.id]?.[category.key] || 0)}/5
                   </span>
                 </div>
               </div>
@@ -102,14 +105,14 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ items, userId }) => {
             <input
               type="text"
               placeholder="Tambahkan komentar..."
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
+              value={comment[item.id] || ""}
+              onChange={(e) => setComment((prev) => ({ ...prev, [item.id]: e.target.value }))}
               className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
 
           <button
-            onClick={() => handleSubmit(item.id.toString())}
+            onClick={() => handleSubmit(item.id)}
             className="mt-4 w-full bg-green-500 text-white py-2 rounded-lg shadow-md hover:bg-green-600 focus:bg-green-700"
           >
             Submit Review & Comment
