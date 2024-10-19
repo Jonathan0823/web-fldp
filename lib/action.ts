@@ -120,3 +120,25 @@ export const createProdi = async (nama: string, fakultasId: string) => {
         throw new Error(String(error));
     }
 }
+
+export const createMatakuliah = async (nama: string, fakultasId:string) => {
+    try {
+        const validate = await prisma.matakuliah.findFirst({
+            where: {
+                nama,
+            },
+        });
+        if (validate) {
+            return "Matakuliah already exists";
+        }
+        const matakuliah = await prisma.matakuliah.create({
+            data: {
+                nama,
+                fakultasId,
+            },
+        });
+        return matakuliah;
+    } catch (error) {
+        throw new Error(String(error));
+    }
+}
