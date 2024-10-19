@@ -53,14 +53,15 @@ export const editDosen = async (data: DosenData) => {
     }
 }
 
-export const deleteDosen = async (emailuser: string, idDosen:string) => {
+export const deleteDosen = async (idUser: string, idDosen:string) => {
     try {
-        console.log(emailuser, idDosen);
-       const valid = await prisma.user.findFirst({
+        console.log(idUser, idDosen);
+       const valid = await prisma.user.findUnique({
             where: {
-                email: emailuser,
+                id: idUser,
             },
         })
+        
         if(valid?.role != "Admin"){
             throw new Error("User is not an admin");
         }

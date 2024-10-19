@@ -32,8 +32,8 @@ const AdminCrud = () => {
 
   const handleDelete = async (idAdmin:string) => {
     try {
-      if (session?.user?.email) {
-        await deleteDosen(session.user.email, idAdmin);
+      if (session?.user?.id) {
+        await deleteDosen(session.user?.id, idAdmin);
       } else {
         console.error("User email is not available");
       }
