@@ -48,7 +48,6 @@ const CreateFakultas = () => {
           placeholder="Masukkan nama fakultas"
         />
       </div>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
 
       <button
         type="submit"
