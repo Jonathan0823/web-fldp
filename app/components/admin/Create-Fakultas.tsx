@@ -1,26 +1,29 @@
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { createFakultas } from "@/lib/action";
 
 const CreateFakultas = () => {
   const [nama, setNama] = useState("");
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(null); 
-
+    setLoading(true);
+    setError(null);
     try {
       const result = await createFakultas(nama);
       if (typeof result === "string") {
         setError(result);
       } else {
-        router.push("/admin-dashboard");
+        setNama("");
+        setSuccessMessage("Data berhasil ditambahkan");
       }
     } catch (error) {
       console.error("Error creating fakultas:", error);
       setError("Terjadi kesalahan saat menambah fakultas. Coba lagi nanti.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -45,16 +48,20 @@ const CreateFakultas = () => {
           placeholder="Masukkan nama fakultas"
         />
       </div>
-      {error && (
-        <p className="text-red-500 mb-4">{error}</p>
-      )}
+      {error && <p className="text-red-500 mb-4">{error}</p>}
 
       <button
         type="submit"
-        className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition duration-200"
+        className={`w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 ${
+          loading ? "opacity-75" : ""
+        }`}
+        disabled={loading}
       >
-        Tambah Fakultas
+        {loading ? "Menambah Data..." : "Tambah Data"}
       </button>
+      {successMessage && (
+        <p className="text-green-500 mt-4">{successMessage}</p>
+      )}
     </form>
   );
 };

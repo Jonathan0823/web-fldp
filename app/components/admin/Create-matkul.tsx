@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { createMatakuliah } from "@/lib/action";
 
 interface Fakultas {
@@ -15,19 +14,25 @@ const CreateMatakuliah = ({ fakultasList }: CreateMatakuliahProps) => {
   const [nama, setNama] = useState("");
   const [fakultasId, setFakultasId] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
     try {
       const result = await createMatakuliah(nama, fakultasId);
       if (typeof result === "string") {
         setError(result);
       } else {
-        router.push("/admin-dashboard");
+        setNama("");
+        setFakultasId("");
+        setSuccessMessage("Data berhasil ditambahkan");
       }
     } catch (error) {
       console.error("Error creating matakuliah:", error);
+    }finally{
+        setLoading(false);
     }
   };
 
@@ -48,8 +53,9 @@ const CreateMatakuliah = ({ fakultasList }: CreateMatakuliahProps) => {
           />
         </div>
         <div>
-          <label className="block text-gray-600 text-sm font-medium mb-2">Fakultas:</label>
+          <label htmlFor="fakultas" className="block text-gray-600 text-sm font-medium mb-2">Fakultas:</label>
           <select
+            id="fakultas"
             value={fakultasId}
             onChange={(e) => setFakultasId(e.target.value)}
             required
@@ -64,11 +70,15 @@ const CreateMatakuliah = ({ fakultasList }: CreateMatakuliahProps) => {
           </select>
         </div>
         <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600 transition duration-200"
-        >
-          Tambah Mata Kuliah
-        </button>
+            type="submit"
+            className={`w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 ${
+              loading ? "opacity-75" : ""
+            }`}
+            disabled={loading}
+          >
+            {loading ? "Menambah Data..." : "Tambah Data"}
+          </button>
+          {successMessage && <p className="text-green-500 mt-4">{successMessage}</p>}
       </form>
     </div>
   );

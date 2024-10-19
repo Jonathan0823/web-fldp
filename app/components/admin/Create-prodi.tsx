@@ -12,10 +12,11 @@ const CreateProdi = ({ fakultasList }: { fakultasList: Fakultas[] }) => {
   const [fakultasId, setFakultasId] = useState("");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-
+  const [loading, setLoading] = useState(false);
 
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     try {
         const result = await createProdi(nama, fakultasId);
         if (typeof result === "string") {
@@ -53,6 +54,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             Fakultas:
           </label>
           <select
+            aria-label="Pilih Fakultas"
             value={fakultasId}
             onChange={(e) => setFakultasId(e.target.value)}
             required
@@ -67,11 +69,14 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           </select>
         </div>
         <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600 transition duration-200"
-        >
-          Tambah Prodi
-        </button>
+            type="submit"
+            className={`w-full py-2 px-4 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 ${
+              loading ? "opacity-75" : ""
+            }`}
+            disabled={loading}
+          >
+            {loading ? "Menambah Data..." : "Tambah Data"}
+          </button>
         {error && <p className="text-red-500 mt-4">{error}</p>}
       </form>
     </div>

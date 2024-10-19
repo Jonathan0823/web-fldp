@@ -2,7 +2,7 @@
 
 import { createDosen } from "@/lib/action";
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 
 interface Form {
