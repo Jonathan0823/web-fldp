@@ -19,7 +19,7 @@ export async function GET(
           OR: [
             { prodi: { contains: query } },
             { fakultas: { contains: query } },
-            { mataKuliah: { contains: query } },
+            { matakuliah: { contains: query } },
           ],
         },
         include: { nilai: true },
@@ -40,7 +40,7 @@ export async function GET(
 
       return {
         nama: d.nama,
-        mataKuliah: d.mataKuliah,
+        mataKuliah: d.matakuliah,
         rating: formattedRating,
         reviews: d.nilai.length,
         nip: d.nip,
