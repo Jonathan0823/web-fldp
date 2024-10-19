@@ -14,7 +14,6 @@ export const createDosen = async (data: {
         const dosen = await prisma.dosen.create({
             data: {
                 ...data,
-                mataKuliah: data.matakuliah,
             },
         });
         return dosen;

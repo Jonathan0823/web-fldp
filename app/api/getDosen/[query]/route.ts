@@ -43,6 +43,12 @@ export async function GET(
         mataKuliah: d.mataKuliah,
         rating: formattedRating,
         reviews: d.nilai.length,
+        nip: d.nip,
+        fakultas: d.fakultas,
+        prodi: d.prodi,
+        email: d.email,
+        createdAt: d.createdAt,
+        updatedAt: d.updatedAt,
       };
     });
 

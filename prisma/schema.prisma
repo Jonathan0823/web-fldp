@@ -34,7 +34,7 @@ model Dosen {
   fakultas   String
   prodi      String
   email      String   @unique
-  mataKuliah String
+  matakuliah String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   nilai      Nilai[]
