@@ -5,10 +5,10 @@ import { prisma } from "./prisma";
 export const createDosen = async (data: {
     nama: string;
     nip: string;
-    fakultas: string;
-    prodi: string;
+    fakultasId: string;  
+    prodiId: string;     
     email: string;
-    matakuliah: string;
+    matkulId: string; 
 }) => {
     try {
         const dosen = await prisma.dosen.create({
@@ -26,10 +26,10 @@ interface DosenData {
     id: string;
     nama?: string;
     nip?: string;
-    fakultas?: string;
-    prodi?: string;
+    fakultasId?: string; 
+    prodiId?: string;   
     email?: string;
-    matakuliah?: string;
+    matkulId?: string; 
 }
 
 export const editDosen = async (data: DosenData) => {
@@ -41,10 +41,10 @@ export const editDosen = async (data: DosenData) => {
             data: {
                 nama: data.nama,
                 nip: data.nip,
-                fakultas: data.fakultas,
-                prodi: data.prodi,
+                fakultasId: data.fakultasId,
+                prodiId: data.prodiId,
                 email: data.email,
-                matakuliah: data.matakuliah,
+                matkulId: data.matkulId,
             },
         });
         return dosen;
@@ -53,25 +53,26 @@ export const editDosen = async (data: DosenData) => {
     }
 }
 
-export const deleteDosen = async (idUser: string, idDosen:string) => {
+export const deleteDosen = async (idUser: string, idDosen: string) => {
     try {
         console.log(idUser, idDosen);
-       const valid = await prisma.user.findUnique({
+        const valid = await prisma.user.findUnique({
             where: {
                 id: idUser,
             },
-        })
+        });
         
-        if(valid?.role != "Admin"){
+        if (valid?.role !== "Admin") {
             throw new Error("User is not an admin");
         }
+        
         const dosen = await prisma.dosen.delete({
             where: {
                 id: idDosen,
             },
         });
         return dosen;
-    } catch (e) {
-        throw new Error(String(e));
+    } catch (error) {
+        throw new Error(String(error));
     }
 }

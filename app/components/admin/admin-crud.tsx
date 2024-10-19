@@ -80,6 +80,7 @@ const AdminCrud = () => {
     { label: "Ilmu Hukum", value: "ilmu hukum" },
   ];
 
+ 
   return (
     <div>
       <div className="max-w-7xl mx-auto p-6">
