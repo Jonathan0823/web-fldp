@@ -21,11 +21,16 @@ interface User {
 const HomeContent = () => {
   const [activeButton, setActiveButton] = useState("home");
   const { data:session } = useSession();
+  const [filter, setFilter] = useState("All");
   const [user, setUser] = useState<User | null>(null);
+  const [items, setItems] = useState([]);
+
   const fecthUser = async () => {
     try{
       console.log("Session:", session);
       const res = await axios.get(`/api/getUser/${session?.user?.id}`);
+      const response = await axios.get(`/api/getDosen/${filter}`);
+      setItems(response.data);
       setUser(res.data);
       setUser(res.data);
     }catch(error){
@@ -33,6 +38,7 @@ const HomeContent = () => {
     }
   }
   useEffect(() => {
+    setFilter("All");
     fecthUser();
   }, [session?.user.id]);
 
@@ -94,7 +100,7 @@ const HomeContent = () => {
         {activeButton === "home" && (
           <div>
             <h3 className="font-bold text-lg">Profil Saya</h3>
-            <ReviewCard />
+            <ReviewCard items={items} userId={session?.user.id || ""}/>
           </div>
         )}
         {activeButton === "saya" && (

@@ -35,7 +35,7 @@ interface Dosen {
   fakultas: { nama: string };
   prodi: { nama: string };
   email: string;
-  matkul: { nama: string };
+  matakuliah: { nama: string };
 }
 
 
@@ -252,7 +252,7 @@ const Dashboard: React.FC<DashboardProps> = ({ fakultasList, prodiList, matakuli
                 <p className="text-sm text-gray-600">Fakultas: {item.fakultas?.nama}</p>
                 <p className="text-sm text-gray-600">Prodi: {item.prodi?.nama}</p>
                 <p className="text-sm text-gray-600">Email: {item.email}</p>
-                <p className="text-sm text-gray-600">Mata Kuliah: {item.matkul.nama}</p> {/* Ubah matakuliah */}
+                <p className="text-sm text-gray-600">Mata Kuliah: {item.matakuliah.nama}</p> {/* Ubah matakuliah */}
               </li>
             ))}
           </ul>

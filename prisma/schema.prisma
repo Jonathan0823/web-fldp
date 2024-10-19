@@ -35,6 +35,7 @@ model Nilai {
   ketepatanWaktu Int
   dosenId        String
   userId         String
+  komentar       String?
   penilaian      User     @relation(fields: [userId], references: [id])
   dosen          Dosen    @relation(fields: [dosenId], references: [id])
   createdAt      DateTime @default(now())
