@@ -39,14 +39,16 @@ export async function GET(
         : averageRating.toFixed(1);
 
       return {
+        id: d.id,
         nama: d.nama,
-        mataKuliah: d.matakuliah,
+        matakuliah: d.matakuliah,
         rating: formattedRating,
         reviews: d.nilai.length,
         nip: d.nip,
         fakultas: d.fakultas,
         prodi: d.prodi,
         email: d.email,
+
         createdAt: d.createdAt,
         updatedAt: d.updatedAt,
       };

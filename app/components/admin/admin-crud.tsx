@@ -3,6 +3,16 @@
 import axios from "axios";
 import AdminList from "./list";
 import { useState, useEffect } from "react";
+import { editDosen } from "@/lib/action";
+interface DosenData {
+  id: string;
+  nama?: string;
+  nip?: string;
+  fakultas?: string;
+  prodi?: string;
+  email?: string;
+  matakuliah?: string;
+}
 
 const AdminCrud = () => {
   const [items, setItems] = useState([]);
@@ -18,7 +28,7 @@ const AdminCrud = () => {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id:string) => {
     try {
       await axios.delete(`/api/deleteDosen/${id}`);
       fetchData();
@@ -27,9 +37,9 @@ const AdminCrud = () => {
     }
   };
 
-  const handleEdit = async (id) => {
+  const handleEdit = async (data: DosenData) => {
     try {
-      await axios.put(`/api/editDosen/${id}`);
+      await editDosen(data);
       fetchData();
     } catch (error) {
       console.error("Error editing data:", error);
@@ -49,7 +59,6 @@ const AdminCrud = () => {
 
   return (
     <div>
-  
         <div className="max-w-7xl mx-auto p-6">
           <div className="flex justify-center mb-6">
             {filters.map((f) => (
