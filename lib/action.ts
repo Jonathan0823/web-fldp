@@ -97,3 +97,26 @@ export const createFakultas = async (nama: string) => {
         throw new Error(String(error));
     }
 }
+
+
+export const createProdi = async (nama: string, fakultasId: string) => {
+    try {
+        const validate = await prisma.prodi.findFirst({
+            where: {
+                nama,
+            },
+        });
+        if (validate) {
+            return "Prodi already exists";
+        }
+        const prodi = await prisma.prodi.create({
+            data: {
+                nama,
+                fakultasId,
+            },
+        });
+        return prodi;
+    } catch (error) {
+        throw new Error(String(error));
+    }
+}

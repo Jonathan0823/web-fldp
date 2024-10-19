@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Dashboard from "../components/admin/create-dosen";
 import AdminCrud from "../components/admin/admin-crud";
 import CreateFakultas from "../components/admin/Create-Fakultas";
+import CreateProdi from "../components/admin/Create-prodi";
 
 const Sidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,7 +20,6 @@ const Sidebar: React.FC = () => {
 
   return (
     <div className="flex h-screen">
-      {/* Sidebar */}
       <div
         className={`fixed inset-y-0 left-0 transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
@@ -59,10 +59,16 @@ const Sidebar: React.FC = () => {
           >
             Add Fakultas
           </li>
+          <li
+            onClick={() => handlePageChange("add prodi")}
+            className={`mb-3 text-gray-200 hover:text-white cursor-pointer ${
+              activePage === "add prodi" ? "font-bold" : ""
+            }`}
+          >
+            Add prodi
+          </li>
         </ul>
       </div>
-
-      {/* Button to open Sidebar */}
       {!isOpen && (
         <button
           title="Open Sidebar"
@@ -85,13 +91,12 @@ const Sidebar: React.FC = () => {
           </svg>
         </button>
       )}
-
-      {/* Main Content */}
       <div className="flex-1 p-6 bg-gray-100">
         <div className="mt-6">
           {activePage === "edit dosen" && <AdminCrud />}
           {activePage === "add dosen" && <Dashboard />}
           {activePage === "add fakultas" && <CreateFakultas />}
+          {activePage === "add prodi" && <CreateProdi />}
         </div>
       </div>
     </div>
