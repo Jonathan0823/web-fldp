@@ -1,14 +1,40 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { FiHome, FiUser } from "react-icons/fi";
 import { RiGroupLine } from "react-icons/ri";
 import MyProfile from "./Home/MyProfile";
 import { SessionProvider } from "next-auth/react";
 import ProfileList from "./ListDosen";
 import ReviewCard from "./review-card";
+import { useSession } from "next-auth/react";
+import axios from "axios";
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  penilaian: [];
+  createdAt: string;
+  
+}
 
 const HomeContent = () => {
   const [activeButton, setActiveButton] = useState("home");
+  const { data:session } = useSession();
+  const [user, setUser] = useState<User | null>(null);
+  const fecthUser = async () => {
+    try{
+      console.log("Session:", session);
+      const res = await axios.get(`/api/getUser/${session?.user?.id}`);
+      setUser(res.data);
+      setUser(res.data);
+    }catch(error){
+      console.log("Error getting user data:", error);
+    }
+  }
+  useEffect(() => {
+    fecthUser();
+  }, [session?.user.id]);
 
   const handleButtonClick = (buttonName: string) => {
     setActiveButton(buttonName);
@@ -74,7 +100,7 @@ const HomeContent = () => {
         {activeButton === "saya" && (
           <div>
             <h3 className="font-bold text-lg">Profil Saya</h3>
-            <MyProfile />
+            {user && <MyProfile user={user} />}
           </div>
         )}
       </div>

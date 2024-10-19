@@ -25,6 +25,7 @@ model User {
   kadaluarsa  DateTime?
   Status      String?
   role        String?   @default("user")
+  penilaian   Nilai[]
 }
 
 model Nilai {
@@ -33,6 +34,8 @@ model Nilai {
   kehadiran      Int
   ketepatanWaktu Int
   dosenId        String
+  userId         String
+  penilaian      User     @relation(fields: [userId], references: [id])
   dosen          Dosen    @relation(fields: [dosenId], references: [id])
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
