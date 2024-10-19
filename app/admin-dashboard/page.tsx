@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import Dashboard from "../components/admin/create-dosen";
 import AdminCrud from "../components/admin/admin-crud";
@@ -6,7 +7,7 @@ import CreateFakultas from "../components/admin/Create-Fakultas";
 
 const Sidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [activePage, setActivePage] = useState("home");
+  const [activePage, setActivePage] = useState("edit dosen");
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -18,6 +19,7 @@ const Sidebar: React.FC = () => {
 
   return (
     <div className="flex h-screen">
+      {/* Sidebar */}
       <div
         className={`fixed inset-y-0 left-0 transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
@@ -25,7 +27,6 @@ const Sidebar: React.FC = () => {
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-white text-xl font-semibold">Dashboard</h2>
-
           <button
             className="text-white bg-red-500 px-2 py-1 rounded-md focus:outline-none hover:bg-red-600 transition duration-200"
             onClick={toggleSidebar}
@@ -35,24 +36,33 @@ const Sidebar: React.FC = () => {
         </div>
         <ul>
           <li
-            onClick={() => handlePageChange("home")}
+            onClick={() => handlePageChange("edit dosen")}
             className={`mb-3 text-gray-200 hover:text-white cursor-pointer ${
-              activePage === "home" ? "font-bold" : ""
+              activePage === "edit dosen" ? "font-bold" : ""
             }`}
           >
-            Crud
+            CRUD
           </li>
           <li
-            onClick={() => handlePageChange("profile")}
+            onClick={() => handlePageChange("add dosen")}
             className={`mb-3 text-gray-200 hover:text-white cursor-pointer ${
-              activePage === "profile" ? "font-bold" : ""
+              activePage === "add dosen" ? "font-bold" : ""
             }`}
           >
             Create Dosen
           </li>
+          <li
+            onClick={() => handlePageChange("add fakultas")}
+            className={`mb-3 text-gray-200 hover:text-white cursor-pointer ${
+              activePage === "add fakultas" ? "font-bold" : ""
+            }`}
+          >
+            Add Fakultas
+          </li>
         </ul>
       </div>
 
+      {/* Button to open Sidebar */}
       {!isOpen && (
         <button
           title="Open Sidebar"
@@ -65,7 +75,7 @@ const Sidebar: React.FC = () => {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="size-6"
+            className="w-6 h-6"
           >
             <path
               strokeLinecap="round"
@@ -76,11 +86,12 @@ const Sidebar: React.FC = () => {
         </button>
       )}
 
+      {/* Main Content */}
       <div className="flex-1 p-6 bg-gray-100">
         <div className="mt-6">
-          {activePage === "home" && <AdminCrud />}
-          {activePage === "profile" && <Dashboard />}
-          {activePage === "settings" && <CreateFakultas/>}
+          {activePage === "edit dosen" && <AdminCrud />}
+          {activePage === "add dosen" && <Dashboard />}
+          {activePage === "add fakultas" && <CreateFakultas />}
         </div>
       </div>
     </div>

@@ -79,6 +79,14 @@ export const deleteDosen = async (idUser: string, idDosen: string) => {
 
 export const createFakultas = async (nama: string) => {
     try {
+    const validate = await prisma.fakultas.findFirst({
+        where: {
+            nama,
+        },
+    });
+    if (validate) {
+        return "Fakultas already exists";
+    }
         const fakultas = await prisma.fakultas.create({
             data: {
                 nama,
