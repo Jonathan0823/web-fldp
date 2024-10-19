@@ -22,19 +22,6 @@ export const createDosen = async (data: {
     }
 };
 
-export const deleteDosen = async (id: string) => {
-    try {
-        const dosen = await prisma.dosen.delete({
-            where: {
-                id: id,
-            },
-        });
-        return dosen;
-    } catch (error) {
-        throw new Error(String(error));
-    }
-};
-
 interface DosenData {
     id: string;
     nama?: string;
@@ -58,6 +45,27 @@ export const editDosen = async (data: DosenData) => {
                 prodi: data.prodi,
                 email: data.email,
                 matakuliah: data.matakuliah,
+            },
+        });
+        return dosen;
+    } catch (error) {
+        throw new Error(String(error));
+    }
+}
+
+export const deleteDosen = async (idUser: string, idDosen:string) => {
+    try {
+       const valid = await prisma.user.findUnique({
+            where: {
+                id: idUser,
+            },
+        })
+        if(valid?.role != "Admin"){
+            throw new Error("User is not an admin");
+        }
+        const dosen = await prisma.dosen.delete({
+            where: {
+                id: idDosen,
             },
         });
         return dosen;
