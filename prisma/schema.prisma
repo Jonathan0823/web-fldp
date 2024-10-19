@@ -24,6 +24,29 @@ model User {
   veriftToken String?
   kadaluarsa  DateTime?
   Status      String?
-  role        String?  @default("user")
+  role        String?   @default("user")
+}
 
+model Dosen {
+  id         String   @id @default(cuid())
+  nama       String
+  nip        String
+  fakultas   String
+  prodi      String
+  email      String   @unique
+  matakuliah String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  nilai      Nilai[]
+}
+
+model Nilai {
+  id             String   @id @default(cuid())
+  pembelajaran   Int
+  kehadiran      Int
+  ketepatanWaktu Int
+  dosenId        String
+  dosen          Dosen    @relation(fields: [dosenId], references: [id])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
