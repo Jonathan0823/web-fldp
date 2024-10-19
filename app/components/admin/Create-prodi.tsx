@@ -31,7 +31,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             return;
         }else{
             setError(null);
-            router.push("/prodi"); 
+            router.push("/admin-dashboard"); 
         }
       
     } catch (error) {

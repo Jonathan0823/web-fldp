@@ -16,7 +16,7 @@ const CreateFakultas = () => {
       if (typeof result === "string") {
         setError(result);
       } else {
-        router.push("/fakultas");
+        router.push("/admin-dashboard");
       }
     } catch (error) {
       console.error("Error creating fakultas:", error);

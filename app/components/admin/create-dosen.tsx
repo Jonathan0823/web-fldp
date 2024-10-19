@@ -14,7 +14,38 @@ interface Form {
   matkulId: string; 
 }
 
-const Dashboard: React.FC = () => {
+interface Fakultas {
+  id: string;
+  nama: string;
+}
+
+interface Prodi {
+  id: string;
+  nama: string;
+}
+
+interface Matakuliah {
+  id: string;
+  nama: string;
+}
+
+interface Dosen {
+  nama: string;
+  nip: string;
+  fakultas: { nama: string };
+  prodi: { nama: string };
+  email: string;
+  matkul: { nama: string };
+}
+
+
+interface DashboardProps {
+  fakultasList: Fakultas[];
+  prodiList: Prodi[];
+  matakuliahList: Matakuliah[];
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ fakultasList, prodiList, matakuliahList }) => {
   const [form, setForm] = useState<Form>({
     nama: "",
     nip: "",
@@ -23,49 +54,9 @@ const Dashboard: React.FC = () => {
     email: "",
     matkulId: "", 
   });
-
-  interface Dosen {
-    nama: string;
-    nip: string;
-    fakultas: { nama: string };
-    prodi: { nama: string };
-    email: string;
-    matkul: { nama: string };
-  }
-
   const [dataList, setDataList] = useState<Dosen[]>([]);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  interface Fakultas {
-    id: string;
-    nama: string;
-  }
-
-  interface Prodi {
-    id: string;
-    nama: string;
-  }
-
-  interface Matakuliah {
-    id: string;
-    nama: string;
-  }
-
-  const [fakultasList, setFakultasList] = useState<Fakultas[]>([]);
-  const [prodiList, setProdiList] = useState<Prodi[]>([]);
-  const [matakuliahList, setMatakuliahList] = useState<Matakuliah[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const fakultasResponse = await axios.get(`/api/getAlldata/getFakultas`);
-      const prodiResponse = await axios.get(`/api/getAlldata/getProdi`);
-      const matakuliahResponse = await axios.get(`/api/getAlldata/getMatkul`);
-      setFakultasList(fakultasResponse.data);
-      setProdiList(prodiResponse.data);
-      setMatakuliahList(matakuliahResponse.data);
-    };
-    fetchData();
-  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     const { name, value } = e.target;

@@ -1,14 +1,45 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Dashboard from "../components/admin/create-dosen";
 import AdminCrud from "../components/admin/admin-crud";
 import CreateFakultas from "../components/admin/Create-Fakultas";
 import CreateProdi from "../components/admin/Create-prodi";
+import CreateMatakuliah from "../components/admin/Create-matkul";
+import axios from "axios";
+
+interface Fakultas {
+  id: string;
+  nama: string;
+}
+
+interface Prodi {
+  id: string;
+  nama: string;
+}
+
+interface Matakuliah {
+  id: string;
+  nama: string;
+}
 
 const Sidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activePage, setActivePage] = useState("edit dosen");
+  const [fakultasList, setFakultasList] = useState<Fakultas[]>([]);
+  const [prodiList, setProdiList] = useState<Prodi[]>([]);
+  const [matakuliahList, setMatakuliahList] = useState<Matakuliah[]>([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const fakultasResponse = await axios.get(`/api/getAlldata/getFakultas`);
+      const prodiResponse = await axios.get(`/api/getAlldata/getProdi`);
+      const matakuliahResponse = await axios.get(`/api/getAlldata/getMatkul`);
+      setFakultasList(fakultasResponse.data);
+      setProdiList(prodiResponse.data);
+      setMatakuliahList(matakuliahResponse.data);
+    };
+    fetchData();
+  }, []);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -67,6 +98,14 @@ const Sidebar: React.FC = () => {
           >
             Add prodi
           </li>
+          <li
+            onClick={() => handlePageChange("add matkul")}
+            className={`mb-3 text-gray-200 hover:text-white cursor-pointer ${
+              activePage === "add matkul" ? "font-bold" : ""
+            }`}
+          >
+            Add matkul
+          </li>
         </ul>
       </div>
       {!isOpen && (
@@ -94,9 +133,10 @@ const Sidebar: React.FC = () => {
       <div className="flex-1 p-6 bg-gray-100">
         <div className="mt-6">
           {activePage === "edit dosen" && <AdminCrud />}
-          {activePage === "add dosen" && <Dashboard />}
+          {activePage === "add dosen" && <Dashboard fakultasList={fakultasList} prodiList={prodiList} matakuliahList={matakuliahList}/>}
           {activePage === "add fakultas" && <CreateFakultas />}
           {activePage === "add prodi" && <CreateProdi />}
+          {activePage === "add matkul" && <CreateMatakuliah />}
         </div>
       </div>
     </div>

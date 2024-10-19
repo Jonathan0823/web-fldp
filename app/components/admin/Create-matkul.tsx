@@ -29,7 +29,7 @@ const CreateMatakuliah = () => {
       if (typeof result === "string") {
         setError(result);
       } else {
-        router.push("/matakuliah");
+        router.push("/admin-dashboard");
       }
     } catch (error) {
       console.error("Error creating matakuliah:", error);
