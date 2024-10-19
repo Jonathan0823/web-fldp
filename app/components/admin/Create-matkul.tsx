@@ -1,26 +1,21 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createMatakuliah } from "@/lib/action";
 
-const CreateMatakuliah = () => {
+interface Fakultas {
+  id: string;
+  nama: string;
+}
+
+interface CreateMatakuliahProps {
+  fakultasList: Fakultas[];
+}
+
+const CreateMatakuliah = ({ fakultasList }: CreateMatakuliahProps) => {
   const [nama, setNama] = useState("");
   const [fakultasId, setFakultasId] = useState("");
-  const [fakultasList, setFakultasList] = useState<{ id: string; nama: string }[]>([]);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-
-  useEffect(() => {
-    const fetchFakultas = async () => {
-      try {
-        const response = await axios.get("/api/getAlldata/getFakultas");
-        setFakultasList(response.data);
-      } catch (error) {
-        console.error("Error fetching fakultas:", error);
-      }
-    };
-    fetchFakultas();
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
