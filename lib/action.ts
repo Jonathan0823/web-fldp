@@ -76,3 +76,16 @@ export const deleteDosen = async (idUser: string, idDosen: string) => {
         throw new Error(String(error));
     }
 }
+
+export const createFakultas = async (nama: string) => {
+    try {
+        const fakultas = await prisma.fakultas.create({
+            data: {
+                nama,
+            },
+        });
+        return fakultas;
+    } catch (error) {
+        throw new Error(String(error));
+    }
+}

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Dashboard from "../components/admin/create-dosen";
 import AdminCrud from "../components/admin/admin-crud";
+import CreateFakultas from "../components/admin/Create-Fakultas";
 
 const Sidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -79,6 +80,7 @@ const Sidebar: React.FC = () => {
         <div className="mt-6">
           {activePage === "home" && <AdminCrud />}
           {activePage === "profile" && <Dashboard />}
+          {activePage === "settings" && <CreateFakultas/>}
         </div>
       </div>
     </div>
