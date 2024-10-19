@@ -3,7 +3,8 @@
 import axios from "axios";
 import AdminList from "./list";
 import { useState, useEffect } from "react";
-import { editDosen } from "@/lib/action";
+import { deleteDosen, editDosen } from "@/lib/action";
+import { useSession } from "next-auth/react";
 interface DosenData {
   id: string;
   nama?: string;
@@ -17,6 +18,7 @@ interface DosenData {
 const AdminCrud = () => {
   const [items, setItems] = useState([]);
   const [filter, setFilter] = useState("All");
+  const { data: session } = useSession();
 
   const fetchData = async () => {
     try {
@@ -28,9 +30,13 @@ const AdminCrud = () => {
     }
   };
 
-  const handleDelete = async (id:string) => {
+  const handleDelete = async (idAdmin:string) => {
     try {
-      await axios.delete(`/api/deleteDosen/${id}`);
+      if (session?.user?.email) {
+        await deleteDosen(session.user.email, idAdmin);
+      } else {
+        console.error("User email is not available");
+      }
       fetchData();
     } catch (error) {
       console.error("Error deleting data:", error);

@@ -65,6 +65,7 @@ const handler = NextAuth({
         ...session,
         user: {
           ...session.user,
+          email: token.email,
           id: token.id,
           name: token.name,
           createdAt: token.createdAt,

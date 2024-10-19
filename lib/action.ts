@@ -53,11 +53,12 @@ export const editDosen = async (data: DosenData) => {
     }
 }
 
-export const deleteDosen = async (idUser: string, idDosen:string) => {
+export const deleteDosen = async (emailuser: string, idDosen:string) => {
     try {
-       const valid = await prisma.user.findUnique({
+        console.log(emailuser, idDosen);
+       const valid = await prisma.user.findFirst({
             where: {
-                id: idUser,
+                email: emailuser,
             },
         })
         if(valid?.role != "Admin"){
@@ -69,7 +70,7 @@ export const deleteDosen = async (idUser: string, idDosen:string) => {
             },
         });
         return dosen;
-    } catch (error) {
-        throw new Error(String(error));
+    } catch (e) {
+        throw new Error(String(e));
     }
 }
