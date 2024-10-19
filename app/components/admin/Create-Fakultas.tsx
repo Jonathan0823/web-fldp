@@ -30,7 +30,7 @@ const CreateFakultas = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg"
+      className="max-w-lg mx-auto p-6 mt-10 bg-white shadow-md rounded-lg"
     >
       <h2 className="text-2xl font-semibold mb-6 text-gray-700">
         Tambah Fakultas
@@ -59,6 +59,7 @@ const CreateFakultas = () => {
       >
         {loading ? "Menambah Data..." : "Tambah Data"}
       </button>
+      {error && <p className="text-red-500 mt-4">{error}</p>}
       {successMessage && (
         <p className="text-green-500 mt-4">{successMessage}</p>
       )}

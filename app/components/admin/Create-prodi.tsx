@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { createProdi } from "@/lib/action";
 
 interface Fakultas {
@@ -11,11 +10,12 @@ const CreateProdi = ({ fakultasList }: { fakultasList: Fakultas[] }) => {
   const [nama, setNama] = useState("");
   const [fakultasId, setFakultasId] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError(null);
     setLoading(true);
     try {
         const result = await createProdi(nama, fakultasId);
@@ -23,12 +23,17 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             setError(result);
             return;
         }else{
-            setError(null);
-            router.push("/admin-dashboard"); 
+
+            setNama("");
+            setFakultasId("");
+            setSuccessMessage("Data berhasil ditambahkan");
         }
       
     } catch (error) {
         console.error("Error creating prodi:", error);
+    }finally{
+  
+        setLoading(false);
     }
 };
 
@@ -78,6 +83,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             {loading ? "Menambah Data..." : "Tambah Data"}
           </button>
         {error && <p className="text-red-500 mt-4">{error}</p>}
+        {successMessage && <p className="text-green-500 mt-4">{successMessage}</p>}
       </form>
     </div>
   );

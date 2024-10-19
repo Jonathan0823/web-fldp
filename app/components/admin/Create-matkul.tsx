@@ -19,6 +19,7 @@ const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
+    setError(null);
     e.preventDefault();
     try {
       const result = await createMatakuliah(nama, fakultasId);
@@ -27,6 +28,7 @@ const [successMessage, setSuccessMessage] = useState<string | null>(null);
       } else {
         setNama("");
         setFakultasId("");
+        
         setSuccessMessage("Data berhasil ditambahkan");
       }
     } catch (error) {
@@ -78,6 +80,7 @@ const [successMessage, setSuccessMessage] = useState<string | null>(null);
           >
             {loading ? "Menambah Data..." : "Tambah Data"}
           </button>
+          {error && <p className="text-red-500 mt-4">{error}</p>}
           {successMessage && <p className="text-green-500 mt-4">{successMessage}</p>}
       </form>
     </div>
