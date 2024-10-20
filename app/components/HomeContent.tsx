@@ -4,7 +4,6 @@ import { FiHome, FiUser } from "react-icons/fi";
 import { RiGroupLine } from "react-icons/ri";
 import MyProfile from "./Home/MyProfile";
 import ProfileList from "./ListDosen";
-import History from "./history";
 import ReviewCard from "./review-card";
 import axios from "axios";
 import {ThreeCircles } from 'react-loader-spinner'; 
@@ -138,7 +137,6 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
               <div>
                 <h3 className="font-bold text-lg">Profil Saya</h3>
                 {user && <MyProfile user={user} />}
-                {user && <History penilaian={user.penilaian || []} />}
               </div>
             )}
           </>
