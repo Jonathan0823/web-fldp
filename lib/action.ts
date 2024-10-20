@@ -234,13 +234,13 @@ export const review = async (
         <div class="content">
           <p>Anda telah menerima review baru dari mahasiswa.</p>
           <div class="review-item">
-            <strong>Pembelajaran:</strong> ${pembelajaran}/10
+            <strong>Pembelajaran:</strong> ${pembelajaran}/5
           </div>
           <div class="review-item">
-            <strong>Kehadiran:</strong> ${kehadiran}/10
+            <strong>Kehadiran:</strong> ${kehadiran}/5
           </div>
           <div class="review-item">
-            <strong>Ketepatan Waktu:</strong> ${ketepatanWaktu}/10
+            <strong>Ketepatan Waktu:</strong> ${ketepatanWaktu}/5
           </div>
           <div class="review-item">
             <strong>Komentar Mahasiswa:</strong>
