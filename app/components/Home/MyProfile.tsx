@@ -12,7 +12,6 @@ interface User {
 }
 
 const MyProfile = ({ user }: { user: User }) => {
-  console.log("User data:", user);
   return (
     <div className=" bg-white rounded-xl mt-2 shadow-md min-h-32 flex-col pb-4">
       <div className="ml-6">

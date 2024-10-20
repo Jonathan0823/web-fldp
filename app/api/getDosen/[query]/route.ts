@@ -22,6 +22,10 @@ export async function GET(
       dosen = await prisma.dosen.findMany({
         where: {
           OR: [
+            {id: { equals: query }},
+            { nama: { contains: query } },
+            { nip: { contains: query } },
+            { email: { contains: query } },
             { prodi: { nama: { contains: query } }},
             { fakultas: { nama: { contains: query }}},
             { matakuliah: {  nama: { contains: query }  }},
