@@ -43,10 +43,9 @@ const HomeContent = () => {
       const res = await axios.get(`/api/getUser/${session?.user?.id}`);
       const response = await axios.get(`/api/getDosen/${filter}`);
       const reviewsResponse = await axios.get(`/api/getNilai/${session?.user?.id}`);
-      
       setUser(res.data);
-
-      const timeData = reviewsResponse.data.reduce((acc: { [key: string]: Date | null }, review: any) => {
+      setFilter("All");
+      const timeData = reviewsResponse.data.reduce((acc: { [key: string]: Date | null }, review: { dosenId: string; createdAt: string }) => {
         acc[review.dosenId] = new Date(review.createdAt);
         return acc;
       }, {});
