@@ -1,7 +1,6 @@
 "use client";
 
 import { createDosen } from "@/lib/action";
-import axios from "axios";
 import React, { useState } from "react";
 
 
@@ -29,16 +28,6 @@ interface Matakuliah {
   nama: string;
 }
 
-interface Dosen {
-  nama: string;
-  nip: string;
-  fakultas: { nama: string };
-  prodi: { nama: string };
-  email: string;
-  matakuliah: { nama: string };
-}
-
-
 interface DashboardProps {
   fakultasList: Fakultas[];
   prodiList: Prodi[];
@@ -54,7 +43,6 @@ const Dashboard: React.FC<DashboardProps> = ({ fakultasList, prodiList, matakuli
     email: "",
     matkulId: "", 
   });
-  const [dataList, setDataList] = useState<Dosen[]>([]);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -79,8 +67,6 @@ const Dashboard: React.FC<DashboardProps> = ({ fakultasList, prodiList, matakuli
     setLoading(true);
     try {
       await createDosen(form);
-      const result = await axios.get(`/api/getDosen/All`);
-      setDataList(result.data);
       setSuccessMessage("Data berhasil ditambahkan!");
       setForm({
         nama: "",
@@ -100,7 +86,7 @@ const Dashboard: React.FC<DashboardProps> = ({ fakultasList, prodiList, matakuli
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-lg mx-auto bg-white shadow-lg rounded-lg p-6">
         <h1 className="text-2xl font-bold text-center mb-6">Dashboard Admin</h1>
 
@@ -238,27 +224,6 @@ const Dashboard: React.FC<DashboardProps> = ({ fakultasList, prodiList, matakuli
             {loading ? "Menambah Data..." : "Tambah Data"}
           </button>
         </form>
-
-        <h2 className="text-xl font-semibold mt-8">Daftar Data</h2>
-        {dataList.length > 0 ? (
-          <ul className="mt-4 space-y-2">
-            {dataList.map((item, index) => (
-              <li
-                key={index}
-                className="p-4 bg-gray-50 rounded-lg shadow-sm border"
-              >
-                <p className="font-medium text-gray-800">{item.nama}</p>
-                <p className="text-sm text-gray-600">NIP: {item.nip}</p>
-                <p className="text-sm text-gray-600">Fakultas: {item.fakultas?.nama}</p>
-                <p className="text-sm text-gray-600">Prodi: {item.prodi?.nama}</p>
-                <p className="text-sm text-gray-600">Email: {item.email}</p>
-                <p className="text-sm text-gray-600">Mata Kuliah: {item.matakuliah.nama}</p> {/* Ubah matakuliah */}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-sm text-gray-500 mt-4">Belum ada data.</p>
-        )}
       </div>
     </div>
   );

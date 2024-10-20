@@ -6,6 +6,7 @@ import MyProfile from "./Home/MyProfile";
 import ProfileList from "./ListDosen";
 import ReviewCard from "./review-card";
 import axios from "axios";
+import {ThreeCircles } from 'react-loader-spinner'; 
 
 interface User {
   id: string;
@@ -38,10 +39,11 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
   const [items, setItems] = useState<Item[]>([]);
   const [filteredItems, setFilteredItems] = useState<Item[]>([]);
   const [reviewTime, setReviewTime] = useState<{ [key: string]: Date | null }>({});
+  const [loading, setLoading] = useState(true); 
 
   const fetchUser = async () => {
+    setLoading(true); 
     try {
-      console.log("Session:", session);
       const res = await axios.get(`/api/getUser/${session}`);
       const response = await axios.get(`/api/getDosen/${filter}`);
       const reviewsResponse = await axios.get(`/api/getNilai/${session}`);
@@ -52,10 +54,11 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
         return acc;
       }, {});
       setReviewTime(timeData);
-      
       setItems(response.data); 
     } catch (error) {
       console.log("Error getting user data:", error);
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -103,32 +106,40 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
           <p className="ml-2">Profil Saya</p>
         </button>
       </div>
-      <div className="mt-8">
-        {activeButton === "home" && (
-          <div>
-            <h3 className="font-bold text-lg">Beranda</h3>
-            <p className="mt-2">
-              Selamat datang di website penilaian dan umpan balik antara dosen
-              dan mahasiswa dengan realtime.
-            </p>
-            <h3 className="font-bold text-lg">Profil Saya</h3>
-            <ReviewCard items={filteredItems} userId={session|| ""}/>
+      <div className=" mt-8">
+        {loading ? ( 
+          <div className="min-h-dvh flex justify-center items-center">
+            <ThreeCircles color="#5442f6" height={80} width={80} />
           </div>
-        )}
-        {activeButton === "dosen" && (
-          <div>
-            <h3 className="font-bold text-lg">Profil Dosen</h3>
-            <p className="mt-2">
-              Informasi profil dosen akan ditampilkan di sini.
-            </p>
-            <ProfileList />
-          </div>
-        )}
-        {activeButton === "saya" && (
-          <div>
-            <h3 className="font-bold text-lg">Profil Saya</h3>
-            {user && <MyProfile user={user} />}
-          </div>
+        ) : (
+          <>
+            {activeButton === "home" && (
+              <div>
+                <h3 className="font-bold text-lg">Beranda</h3>
+                <p className="mt-2">
+                  Selamat datang di website penilaian dan umpan balik antara dosen
+                  dan mahasiswa dengan realtime.
+                </p>
+                <h3 className="font-bold text-lg mb-3">penilaian hari ini</h3>
+                <ReviewCard items={filteredItems} userId={session || ""}/>
+              </div>
+            )}
+            {activeButton === "dosen" && (
+              <div>
+                <h3 className="font-bold text-lg">Profil Dosen</h3>
+                <p className="mt-2">
+                  Informasi profil dosen akan ditampilkan di sini.
+                </p>
+                <ProfileList />
+              </div>
+            )}
+            {activeButton === "saya" && (
+              <div>
+                <h3 className="font-bold text-lg">Profil Saya</h3>
+                {user && <MyProfile user={user} />}
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
