@@ -23,7 +23,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ items, userId }) => {
   const [ratings, setRatings] = useState<{ [key: string]: { [key: string]: number } }>({});
   const [comment, setComment] = useState<{ [key: string]: string }>({});
   const [reviewTime, setReviewTime] = useState<{ [key: string]: Date | null }>({});
-
+  const [loading, setLoading] = useState(false);
 
 
   const handleStarClick = (dosenId: string, category: string, index: number) => {
@@ -37,6 +37,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ items, userId }) => {
   };
 
   const handleSubmit = async (dosenId: string) => {
+    setLoading(true);
     const lastReviewTime = reviewTime[dosenId];
     const now = new Date();
 
@@ -60,6 +61,8 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ items, userId }) => {
       setReviewTime((prev) => ({ ...prev, [dosenId]: new Date() })); // Update waktu review
     } catch (error) {
       console.error("Error submitting review and comment:", error);
+    }finally{
+        setLoading(false);
     }
   };
 
@@ -69,7 +72,6 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ items, userId }) => {
     { name: "Kehadiran", key: "kehadiran" },
   ];
 
-  // Filter items based on the review time
   const filteredItems = items.filter(item => {
     const lastReviewTime = reviewTime[item.id];
     const now = new Date();
@@ -133,10 +135,11 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ items, userId }) => {
             </div>
 
             <button
+              disabled={loading}
               onClick={() => handleSubmit(item.id)}
               className="mt-4 w-full bg-green-500 text-white py-2 rounded-lg shadow-md hover:bg-green-600 focus:bg-green-700"
             >
-              Submit Review & Comment
+              {loading ? "mengirim rating...." : "Submit Review & Comment"}
             </button>
           </div>
         ))
