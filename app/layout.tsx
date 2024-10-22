@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import ClientWrapper from "./ClientWrapper";
 
 
 
@@ -17,7 +18,7 @@ export default async function RootLayout({
     <html lang="en">
       <body
       >
-        {children}
+        <ClientWrapper>{children}</ClientWrapper>
       </body>
     </html>
   );

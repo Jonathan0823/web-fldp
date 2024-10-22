@@ -25,28 +25,66 @@ model User {
   kadaluarsa  DateTime?
   Status      String?
   role        String?   @default("user")
-}
-
-model Dosen {
-  id         String   @id @default(cuid())
-  nama       String
-  nip        String
-  fakultas   String
-  prodi      String
-  email      String   @unique
-  matakuliah String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  nilai      Nilai[]
+  penilaian   Nilai[]
 }
 
 model Nilai {
-  id             String   @id @default(cuid())
-  pembelajaran   Int
-  kehadiran      Int
-  ketepatanWaktu Int
-  dosenId        String
-  dosen          Dosen    @relation(fields: [dosenId], references: [id])
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id                  String   @id @default(cuid())
+  pembelajaran        Int
+  kehadiran           Int
+  ketepatanWaktu      Int
+  dosenId             String
+  userId              String
+  komen String?
+  penilaian           User     @relation(fields: [userId], references: [id])
+  dosen               Dosen    @relation(fields: [dosenId], references: [id])
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model Dosen {
+  id         String      @id @default(cuid())
+  nama       String
+  nip        String
+  fakultasId String
+  fakultas   Fakultas    @relation(fields: [fakultasId], references: [id])
+  email      String      @unique
+  matkulId   String
+  matakuliah Matakuliah? @relation(fields: [matkulId], references: [id])
+  prodiId    String
+  prodi      Prodi       @relation(fields: [prodiId], references: [id])
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  nilai      Nilai[]
+}
+
+model Fakultas {
+  id         String       @id @default(cuid())
+  nama       String
+  createdAt  DateTime     @default(now())
+  Dosen      Dosen[]
+  Prodi      Prodi[]
+  mataKuliah Matakuliah[]
+  updatedAt  DateTime     @updatedAt
+}
+
+model Prodi {
+  id         String   @id @default(cuid())
+  nama       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  fakultasId String
+  dosens     Dosen[]
+  Fakultas   Fakultas @relation(fields: [fakultasId], references: [id])
+}
+
+model Matakuliah {
+  id         String   @id @default(cuid())
+  nama       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  fakultasId String
+  Fakultas   Fakultas @relation(fields: [fakultasId], references: [id])
+  dosen      Dosen[]
+  dosenId    String?
 }

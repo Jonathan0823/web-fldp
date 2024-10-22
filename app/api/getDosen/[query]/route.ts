@@ -11,18 +11,32 @@ export async function GET(
     let dosen;
     if (query === "All") {
       dosen = await prisma.dosen.findMany({
-        include: { nilai: true }, 
+        include: { 
+          nilai: true, 
+          matakuliah: true, 
+          prodi: true, 
+          fakultas: true 
+        },
       });
     } else {
       dosen = await prisma.dosen.findMany({
         where: {
           OR: [
-            { prodi: { contains: query } },
-            { fakultas: { contains: query } },
-            { matakuliah: { contains: query } },
+            {id: { equals: query }},
+            { nama: { contains: query } },
+            { nip: { contains: query } },
+            { email: { contains: query } },
+            { prodi: { nama: { contains: query } }},
+            { fakultas: { nama: { contains: query }}},
+            { matakuliah: {  nama: { contains: query }  }},
           ],
         },
-        include: { nilai: true },
+        include: { 
+          nilai: true, 
+          matakuliah: true, 
+          prodi: true, 
+          fakultas: true 
+        },
       });
     }
 
@@ -41,14 +55,12 @@ export async function GET(
       return {
         id: d.id,
         nama: d.nama,
-        matakuliah: d.matakuliah,
         rating: formattedRating,
-        reviews: d.nilai.length,
         nip: d.nip,
-        fakultas: d.fakultas,
-        prodi: d.prodi,
+        matakuliah: d.matakuliah?.nama || null,
+        fakultas: d.fakultas.nama, 
+        prodi: d.prodi.nama,
         email: d.email,
-
         createdAt: d.createdAt,
         updatedAt: d.updatedAt,
       };

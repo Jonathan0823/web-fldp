@@ -1,11 +1,63 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import Dashboard from "../components/admin/create-dosen";
 import AdminCrud from "../components/admin/admin-crud";
+import CreateFakultas from "../components/admin/Create-Fakultas";
+import CreateProdi from "../components/admin/Create-prodi";
+import CreateMatakuliah from "../components/admin/Create-matkul";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import Rule from "../components/admin/rule";
+interface Fakultas {
+  id: string;
+  nama: string;
+}
+
+interface Prodi {
+  id: string;
+  nama: string;
+}
+
+interface Matakuliah {
+  id: string;
+  nama: string;
+}
 
 const Sidebar: React.FC = () => {
+  const { data: session } = useSession();
+  const [filter, setFilter] = useState("All");
   const [isOpen, setIsOpen] = useState(false);
-  const [activePage, setActivePage] = useState("home");
+  const [activePage, setActivePage] = useState("Rule");
+  const [fakultasList, setFakultasList] = useState<Fakultas[]>([]);
+  const [prodiList, setProdiList] = useState<Prodi[]>([]);
+  const [matakuliahList, setMatakuliahList] = useState<Matakuliah[]>([]);
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+ 
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const fakultasResponse = await axios.get(`/api/getAlldata/getFakultas`);
+      const prodiResponse = await axios.get(`/api/getAlldata/getProdi`);
+      const matakuliahResponse = await axios.get(`/api/getAlldata/getMatkul`);
+      const response = await axios.get(`/api/getDosen/${filter}`);
+      setItems(response.data);
+      setFakultasList(fakultasResponse.data);
+      setProdiList(prodiResponse.data);
+      setMatakuliahList(matakuliahResponse.data);
+    }catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+
+  };
+  
+  useEffect(() => {
+    fetchData();
+  }, [session?.user.id, filter]);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -24,7 +76,6 @@ const Sidebar: React.FC = () => {
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-white text-xl font-semibold">Dashboard</h2>
-
           <button
             className="text-white bg-red-500 px-2 py-1 rounded-md focus:outline-none hover:bg-red-600 transition duration-200"
             onClick={toggleSidebar}
@@ -33,25 +84,56 @@ const Sidebar: React.FC = () => {
           </button>
         </div>
         <ul>
-          <li
-            onClick={() => handlePageChange("home")}
+        <li
+            onClick={() => handlePageChange("Rule")}
             className={`mb-3 text-gray-200 hover:text-white cursor-pointer ${
-              activePage === "home" ? "font-bold" : ""
+              activePage === "Rule" ? "font-bold" : ""
             }`}
           >
-            Crud
+            Rule
           </li>
           <li
-            onClick={() => handlePageChange("profile")}
+            onClick={() => handlePageChange("edit dosen")}
             className={`mb-3 text-gray-200 hover:text-white cursor-pointer ${
-              activePage === "profile" ? "font-bold" : ""
+              activePage === "edit dosen" ? "font-bold" : ""
+            }`}
+          >
+            CRUD
+          </li>
+          <li
+            onClick={() => handlePageChange("add dosen")}
+            className={`mb-3 text-gray-200 hover:text-white cursor-pointer ${
+              activePage === "add dosen" ? "font-bold" : ""
             }`}
           >
             Create Dosen
           </li>
+          <li
+            onClick={() => handlePageChange("add fakultas")}
+            className={`mb-3 text-gray-200 hover:text-white cursor-pointer ${
+              activePage === "add fakultas" ? "font-bold" : ""
+            }`}
+          >
+            Add Fakultas
+          </li>
+          <li
+            onClick={() => handlePageChange("add prodi")}
+            className={`mb-3 text-gray-200 hover:text-white cursor-pointer ${
+              activePage === "add prodi" ? "font-bold" : ""
+            }`}
+          >
+            Add prodi
+          </li>
+          <li
+            onClick={() => handlePageChange("add matkul")}
+            className={`mb-3 text-gray-200 hover:text-white cursor-pointer ${
+              activePage === "add matkul" ? "font-bold" : ""
+            }`}
+          >
+            Add matkul
+          </li>
         </ul>
       </div>
-
       {!isOpen && (
         <button
           title="Open Sidebar"
@@ -64,7 +146,7 @@ const Sidebar: React.FC = () => {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="size-6"
+            className="w-6 h-6"
           >
             <path
               strokeLinecap="round"
@@ -74,11 +156,14 @@ const Sidebar: React.FC = () => {
           </svg>
         </button>
       )}
-
-      <div className="flex-1 p-6 bg-gray-100">
-        <div className="mt-6">
-          {activePage === "home" && <AdminCrud />}
-          {activePage === "profile" && <Dashboard />}
+      <div className="flex-1  bg-gray-100">
+        <div className="">
+        {activePage === "Rule" && <Rule/>}
+          {activePage === "edit dosen" && <AdminCrud items={items} setFilter={setFilter} fetchData={fetchData} filter={filter} userId={session?.user.id || ''} loading={loading}/>}
+          {activePage === "add dosen" && <Dashboard fakultasList={fakultasList} prodiList={prodiList} matakuliahList={matakuliahList}/>}
+          {activePage === "add fakultas" && <CreateFakultas />}
+          {activePage === "add prodi" && <CreateProdi fakultasList={fakultasList}/>}
+          {activePage === "add matkul" && <CreateMatakuliah fakultasList={fakultasList} />}
         </div>
       </div>
     </div>
