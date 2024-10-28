@@ -46,7 +46,7 @@ const SignIn: React.FC = () => {
 
   return (
     <div className="min-h-dvh flex items-center justify-center bg-[#eff1f3]">
-      <div className="bg-white p-8 rounded-lg  md:max-w-md max-w-sm w-full shadow-md">
+      <div className="bg-white p-8 mx-4 rounded-lg  md:max-w-md max-w-sm w-full shadow-md">
         <h2 className="text-2xl font-bold mb-6 text-center text-black">
           Masuk
         </h2>

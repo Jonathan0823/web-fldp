@@ -45,7 +45,7 @@ const SignUp: React.FC = () => {
 
   return (
     <div className="min-h-dvh flex items-center justify-center bg-[#eff1f3]">
-      <div className="bg-white p-8 rounded-lg md:max-w-md max-w-sm w-full shadow-md">
+      <div className="bg-white mx-4 p-8 rounded-lg md:max-w-md max-w-sm w-full shadow-md">
         <h2 className="text-2xl font-bold text-black mb-6 text-center">
           Daftar Akun Baru
         </h2>

@@ -18,8 +18,8 @@ const MyProfile = ({ user }: { user: User }) => {
         <div className=" flex items-center gap-4 mt-3">
           <FiUser className="text-6xl p-2 rounded-full mt-6 text-[#564add] bg-[#e1e7fe]" />
           <div className="flex flex-col justify-center mt-5">
-            <p className="font-bold text-lg">{user.email}</p>
-            <p className="text-gray-700">{user.name}</p>
+            <p className="font-bold text-lg">{user.name}</p>
+            <p className="text-gray-700">{user.email}</p>
           </div>
         </div>
         <div className="mt-6">
