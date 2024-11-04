@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { IoMdStarOutline } from "react-icons/io";
+import { MdNavigateNext } from "react-icons/md";
 interface DosenProfile {
   nama: string;
   matakuliah: string;
@@ -45,7 +46,9 @@ export default function ProfileList() {
                   </span>
                 </div>
               </div>
-              <button className="text-gray-400 hover:text-gray-600">➔</button>
+              <button className="text-gray-400 hover:text-gray-600">
+                <MdNavigateNext className="w-8 h-8" />
+              </button>
             </div>
           ))
         ) : (
