@@ -38,7 +38,7 @@ export default function ProfileList() {
               <div>
                 <h3 className="text-lg font-semibold text-gray-900">{profile.nama}</h3>
                 <p className="text-sm text-gray-600">Spesialisasi: {profile.matakuliah}</p>
-                <div className="flex items-center mt-3">
+                <div className="flex items-center mt-2">
                   <IoMdStarOutline className="w-7 h-7 text-yellow-400" />
                   <span className="ml-1 text-sm text-gray-600">
                     {profile.rating}/5 ({profile.reviews} penilaian)
