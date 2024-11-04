@@ -126,10 +126,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
             )}
             {activeButton === "dosen" && (
               <div>
-                <h3 className="font-bold text-lg">Profil Dosen</h3>
-                <p className="mt-2">
-                  Informasi profil dosen akan ditampilkan di sini.
-                </p>
+                <h3 className="font-bold text-lg mb-3">Profil Dosen</h3>
                 <ProfileList />
               </div>
             )}
