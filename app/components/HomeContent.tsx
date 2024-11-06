@@ -6,7 +6,7 @@ import MyProfile from "./Home/MyProfile";
 import ProfileList from "./ListDosen";
 import ReviewCard from "./review-card";
 import axios from "axios";
-import {ThreeCircles } from 'react-loader-spinner'; 
+import { ThreeCircles } from "react-loader-spinner";
 
 interface User {
   id: string;
@@ -19,7 +19,7 @@ interface User {
 interface Item {
   id: string;
   nama: string;
-  rating: number; 
+  rating: number;
   nip: string;
   matakuliah: string;
   fakultas: string;
@@ -38,42 +38,55 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
   const [user, setUser] = useState<User | null>(null);
   const [items, setItems] = useState<Item[]>([]);
   const [filteredItems, setFilteredItems] = useState<Item[]>([]);
-  const [reviewTime, setReviewTime] = useState<{ [key: string]: Date | null }>({});
-  const [loading, setLoading] = useState(true); 
+  const [reviewTime, setReviewTime] = useState<{ [key: string]: Date | null }>(
+    {}
+  );
+  const [loading, setLoading] = useState(true);
 
   const fetchUser = async () => {
-    setLoading(true); 
+    setLoading(true);
     try {
-      const res = await axios.get(`/api/getUser/${session}`);
-      const response = await axios.get(`/api/getDosen/${filter}`);
-      const reviewsResponse = await axios.get(`/api/getNilai/${session}`);
+      const [res, response, reviewsResponse] = await Promise.all([
+        axios.get(`/api/getUser/${session}`),
+        axios.get(`/api/getDosen/${filter}`),
+        axios.get(`/api/getNilai/${session}`),
+      ]);
       setUser(res.data);
       setFilter("All");
-      const timeData = reviewsResponse.data.reduce((acc: { [key: string]: Date | null }, review: { dosenId: string; createdAt: string }) => {
-        acc[review.dosenId] = new Date(review.createdAt);
-        return acc;
-      }, {});
+      const timeData = reviewsResponse.data.reduce(
+        (
+          acc: { [key: string]: Date | null },
+          review: { dosenId: string; createdAt: string }
+        ) => {
+          acc[review.dosenId] = new Date(review.createdAt);
+          return acc;
+        },
+        {}
+      );
       setReviewTime(timeData);
-      setItems(response.data); 
+      setItems(response.data);
     } catch (error) {
       console.log("Error getting user data:", error);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchUser();
-  }, [session]);
+  }, []);
 
   useEffect(() => {
     if (items.length > 0 && Object.keys(reviewTime).length > 0) {
-      const filtered = items.filter(item => {
+      const filtered = items.filter((item) => {
         const lastReviewTime = reviewTime[item.id as string];
         const now = new Date();
-        return !lastReviewTime || (now.getTime() - lastReviewTime.getTime() >= 24 * 60 * 60 * 1000);
+        return (
+          !lastReviewTime ||
+          now.getTime() - lastReviewTime.getTime() >= 24 * 60 * 60 * 1000
+        );
       });
-      setFilteredItems(filtered); 
+      setFilteredItems(filtered);
     }
   }, [items, reviewTime]);
 
@@ -85,21 +98,27 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
     <div>
       <div className="flex justify-between text-gray-500 mt-8 md:text-base text-sm">
         <button
-          className={`flex items-center ${activeButton === "home" ? "text-[#5442f6]" : ""}`}
+          className={`flex items-center ${
+            activeButton === "home" ? "text-[#5442f6]" : ""
+          }`}
           onClick={() => handleButtonClick("home")}
         >
           <FiHome className="scale-150" />
           <p className="ml-2">Beranda</p>
         </button>
         <button
-          className={`flex items-center ${activeButton === "dosen" ? "text-[#5442f6]" : ""}`}
+          className={`flex items-center ${
+            activeButton === "dosen" ? "text-[#5442f6]" : ""
+          }`}
           onClick={() => handleButtonClick("dosen")}
         >
           <RiGroupLine className="scale-150" />
           <p className="ml-2">Profil Dosen</p>
         </button>
         <button
-          className={`flex items-center ${activeButton === "saya" ? "text-[#5442f6]" : ""}`}
+          className={`flex items-center ${
+            activeButton === "saya" ? "text-[#5442f6]" : ""
+          }`}
           onClick={() => handleButtonClick("saya")}
         >
           <FiUser className="scale-150" />
@@ -107,7 +126,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
         </button>
       </div>
       <div className=" mt-8">
-        {loading ? ( 
+        {loading ? (
           <div className="min-h-dvh flex justify-center items-center">
             <ThreeCircles color="#5442f6" height={80} width={80} />
           </div>
@@ -117,11 +136,11 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
               <div>
                 <h3 className="font-bold text-lg">Beranda</h3>
                 <p className="mt-2">
-                  Selamat datang di website penilaian dan umpan balik antara dosen
-                  dan mahasiswa dengan realtime.
+                  Selamat datang di website penilaian dan umpan balik antara
+                  dosen dan mahasiswa dengan realtime.
                 </p>
                 <h3 className="font-bold text-lg mb-3">penilaian hari ini</h3>
-                <ReviewCard items={filteredItems} userId={session || ""}/>
+                <ReviewCard items={filteredItems} userId={session || ""} />
               </div>
             )}
             {activeButton === "dosen" && (

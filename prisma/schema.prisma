@@ -54,7 +54,7 @@ model Dosen {
   prodiId    String
   prodi      Prodi       @relation(fields: [prodiId], references: [id])
   createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  updatedAt  DateTime    @updatedAt 
   nilai      Nilai[]
 }
 

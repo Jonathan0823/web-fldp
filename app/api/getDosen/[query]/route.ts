@@ -56,6 +56,7 @@ export async function GET(
         id: d.id,
         nama: d.nama,
         rating: formattedRating,
+        nilai: d.nilai,
         nip: d.nip,
         matakuliah: d.matakuliah?.nama || null,
         fakultas: d.fakultas.nama, 
