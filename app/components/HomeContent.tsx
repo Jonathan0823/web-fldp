@@ -139,7 +139,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
                   Selamat datang di website penilaian dan umpan balik antara
                   dosen dan mahasiswa dengan realtime.
                 </p>
-                <h3 className="font-bold text-lg mb-3">penilaian hari ini</h3>
+                <h3 className="font-bold text-lg mb-3 mt-3">Siapa yang ingin kamu nilai?</h3>
                 <ReviewCard items={filteredItems} userId={session || ""} />
               </div>
             )}
