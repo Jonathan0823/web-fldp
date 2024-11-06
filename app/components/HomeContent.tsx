@@ -6,6 +6,9 @@ import MyProfile from "./Home/MyProfile";
 import ProfileList from "./ListDosen";
 import axios from "axios";
 import { ThreeCircles } from "react-loader-spinner";
+import Link from "next/link";
+import Modal from "./Modal";
+import { useSearchParams } from "next/navigation";
 
 interface User {
   id: string;
@@ -33,10 +36,10 @@ interface HomeContentProps {
 
 const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
   const [activeButton, setActiveButton] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('activeButton') || 'home';
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("activeButton") || "home";
     }
-    return 'home';
+    return "home";
   });
   const [user, setUser] = useState<User | null>(null);
   const [dosen, setDosen] = useState<Item[]>([]);
@@ -59,16 +62,20 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
     }
   };
 
-  const currentButton = localStorage.getItem('activeButton');
+  const params = useSearchParams();
+  const show = params.get("show");
+
+  const currentButton = localStorage.getItem("activeButton");
 
   useEffect(() => {
     fetchUser();
+    console.log(show);
   }, []);
 
   const handleButtonClick = (buttonName: string) => {
     setActiveButton(buttonName);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('activeButton', buttonName);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("activeButton", buttonName);
     }
   };
 
@@ -110,6 +117,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
           </div>
         ) : (
           <>
+            {show && <Modal type={"rate"} />}
             {activeButton === "home" && (
               <div>
                 <h3 className="font-bold text-lg">Beranda</h3>
@@ -135,6 +143,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
                             Spesialisasi: {item.matakuliah}
                           </p>
                         </div>
+                        <Link href={`/?show=true&dosenId=${item.id}`}>Nilai</Link>
                       </div>
                     </div>
                   ))}

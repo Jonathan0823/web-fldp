@@ -5,7 +5,11 @@ import axios from "axios";
 import { IoMdStarOutline } from "react-icons/io";
 import { MdNavigateNext } from "react-icons/md";
 import { ThreeCircles } from "react-loader-spinner";
+import { useSearchParams } from "next/navigation";
+import Modal from "./Modal";
+import Link from "next/link";
 interface DosenProfile {
+  id: string;
   nama: string;
   matakuliah: string;
   rating: string;
@@ -30,6 +34,9 @@ export default function ProfileList() {
     getDosenData();
   }, []);
 
+  const params = useSearchParams();
+  const show = params.get("show");
+
   return (
     <div>
       {loading ? (
@@ -38,6 +45,7 @@ export default function ProfileList() {
         </div>
       ) : (
         <div className="space-y-4">
+          {show && <Modal type={"detail"} />}
           {dosen.length > 0 ? (
             dosen.map((profile, index) => (
               <div
@@ -58,9 +66,9 @@ export default function ProfileList() {
                     </span>
                   </div>
                 </div>
-                <button className="text-gray-400 hover:text-gray-600">
+                <Link href={`/?show=true&dosenId=${profile.id}`} className="text-gray-400 hover:text-gray-600">
                   <MdNavigateNext className="w-8 h-8" />
-                </button>
+                </Link>
               </div>
             ))
           ) : (
