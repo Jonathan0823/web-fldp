@@ -32,7 +32,12 @@ interface HomeContentProps {
 }
 
 const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
-  const [activeButton, setActiveButton] = useState("home");
+  const [activeButton, setActiveButton] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('activeButton') || 'home';
+    }
+    return 'home';
+  });
   const [user, setUser] = useState<User | null>(null);
   const [dosen, setDosen] = useState<Item[]>([]);
 
@@ -54,12 +59,17 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
     }
   };
 
+  const currentButton = localStorage.getItem('activeButton');
+
   useEffect(() => {
     fetchUser();
   }, []);
 
   const handleButtonClick = (buttonName: string) => {
     setActiveButton(buttonName);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('activeButton', buttonName);
+    }
   };
 
   return (
@@ -67,7 +77,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
       <div className="flex justify-between text-gray-500 mt-8 md:text-base text-sm">
         <button
           className={`flex items-center ${
-            activeButton === "home" ? "text-[#5442f6]" : ""
+            currentButton === "home" ? "text-[#5442f6]" : ""
           }`}
           onClick={() => handleButtonClick("home")}
         >
@@ -76,7 +86,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
         </button>
         <button
           className={`flex items-center ${
-            activeButton === "dosen" ? "text-[#5442f6]" : ""
+            currentButton === "dosen" ? "text-[#5442f6]" : ""
           }`}
           onClick={() => handleButtonClick("dosen")}
         >
@@ -85,7 +95,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
         </button>
         <button
           className={`flex items-center ${
-            activeButton === "saya" ? "text-[#5442f6]" : ""
+            currentButton === "saya" ? "text-[#5442f6]" : ""
           }`}
           onClick={() => handleButtonClick("saya")}
         >
