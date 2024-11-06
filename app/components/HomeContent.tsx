@@ -117,7 +117,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
           </div>
         ) : (
           <>
-            {show && <Modal type={"rate"} />}
+            {show && <Modal type={"rate"} userId={session} />}
             {activeButton === "home" && (
               <div>
                 <h3 className="font-bold text-lg">Beranda</h3>
@@ -153,7 +153,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
             {activeButton === "dosen" && (
               <div>
                 <h3 className="font-bold text-lg mb-3">Profil Dosen</h3>
-                <ProfileList />
+                <ProfileList userId={session} />
               </div>
             )}
             {activeButton === "saya" && (

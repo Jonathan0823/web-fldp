@@ -16,7 +16,7 @@ interface DosenProfile {
   nilai: [];
 }
 
-export default function ProfileList() {
+export default function ProfileList({userId}: {userId: string}) {
   const [dosen, setDosen] = useState<DosenProfile[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -45,7 +45,7 @@ export default function ProfileList() {
         </div>
       ) : (
         <div className="space-y-4">
-          {show && <Modal type={"detail"} />}
+          {show && <Modal type={"detail"} userId={userId} />}
           {dosen.length > 0 ? (
             dosen.map((profile, index) => (
               <div

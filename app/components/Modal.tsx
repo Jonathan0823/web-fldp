@@ -4,9 +4,10 @@ import { IoMdClose } from "react-icons/io";
 
 interface ModalProps {
     type: "detail" | "rate";
+    userId: string;
 }
 
-const Modal = ({type}: ModalProps) => {
+const Modal = ({type, userId}: ModalProps) => {
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
       <div className="p-8 relative border w-full shadow-lg rounded-md md:max-w-md max-w-sm h-dvh bg-white">
@@ -15,7 +16,15 @@ const Modal = ({type}: ModalProps) => {
             type === "detail" ? "Detail Dosen" : "Beri Nilai"
             }</h3>
           <div className="mt-2 px-7 py-3">
-            <p className="text-lg text-gray-500">Modal Body</p>
+            {type === "detail" ? (
+                <div>
+                    Detail Dosen
+                </div>
+            ) : (
+                <div>
+                    Beri Nilai
+                </div>
+            )}
           </div>
           <div className="flex justify-center mt-4">
 
