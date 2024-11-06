@@ -38,7 +38,7 @@ const MyProfile = ({ user }: { user: User }) => {
         </div>
         <div className="mt-6">
           <p className="font-semibold">Jumlah Penilaian</p>
-          <p className="font-bold text-[#564add] text-xl">{user.penilaian.length}</p>
+          <p className="font-bold text-[#564add] text-xl">{user.penilaian.length/3}</p>
         </div>
         <div className="mt-4">
           <p className="font-semibold">Bergabung Sejak</p>

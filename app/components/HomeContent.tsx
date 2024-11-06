@@ -4,7 +4,6 @@ import { FiHome, FiUser } from "react-icons/fi";
 import { RiGroupLine } from "react-icons/ri";
 import MyProfile from "./Home/MyProfile";
 import ProfileList from "./ListDosen";
-import ReviewCard from "./review-card";
 import axios from "axios";
 import { ThreeCircles } from "react-loader-spinner";
 
@@ -34,37 +33,20 @@ interface HomeContentProps {
 
 const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
   const [activeButton, setActiveButton] = useState("home");
-  const [filter, setFilter] = useState("All");
   const [user, setUser] = useState<User | null>(null);
-  const [items, setItems] = useState<Item[]>([]);
-  const [filteredItems, setFilteredItems] = useState<Item[]>([]);
-  const [reviewTime, setReviewTime] = useState<{ [key: string]: Date | null }>(
-    {}
-  );
+  const [dosen, setDosen] = useState<Item[]>([]);
+
   const [loading, setLoading] = useState(true);
 
   const fetchUser = async () => {
     setLoading(true);
     try {
-      const [res, response, reviewsResponse] = await Promise.all([
+      const [res, response] = await Promise.all([
         axios.get(`/api/getUser/${session}`),
-        axios.get(`/api/getDosen/${filter}`),
-        axios.get(`/api/getNilai/${session}`),
+        axios.get(`/api/getDosen/All`),
       ]);
       setUser(res.data);
-      setFilter("All");
-      const timeData = reviewsResponse.data.reduce(
-        (
-          acc: { [key: string]: Date | null },
-          review: { dosenId: string; createdAt: string }
-        ) => {
-          acc[review.dosenId] = new Date(review.createdAt);
-          return acc;
-        },
-        {}
-      );
-      setReviewTime(timeData);
-      setItems(response.data);
+      setDosen(response.data);
     } catch (error) {
       console.log("Error getting user data:", error);
     } finally {
@@ -75,20 +57,6 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
   useEffect(() => {
     fetchUser();
   }, []);
-
-  useEffect(() => {
-    if (items.length > 0 && Object.keys(reviewTime).length > 0) {
-      const filtered = items.filter((item) => {
-        const lastReviewTime = reviewTime[item.id as string];
-        const now = new Date();
-        return (
-          !lastReviewTime ||
-          now.getTime() - lastReviewTime.getTime() >= 24 * 60 * 60 * 1000
-        );
-      });
-      setFilteredItems(filtered);
-    }
-  }, [items, reviewTime]);
 
   const handleButtonClick = (buttonName: string) => {
     setActiveButton(buttonName);
@@ -139,8 +107,28 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
                   Selamat datang di website penilaian dan umpan balik antara
                   dosen dan mahasiswa dengan realtime.
                 </p>
-                <h3 className="font-bold text-lg mb-3 mt-3">Siapa yang ingin kamu nilai?</h3>
-                <ReviewCard items={filteredItems} userId={session || ""} />
+                <h3 className="font-bold text-lg mb-3 mt-3">
+                  Siapa yang ingin kamu nilai?
+                </h3>
+                <div>
+                  {dosen.map((item, index) => (
+                    <div key={index}>
+                      <div
+                        key={index}
+                        className="p-4 mb-3 bg-white rounded-lg shadow flex items-center justify-between"
+                      >
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            {item.nama}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            Spesialisasi: {item.matakuliah}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
             {activeButton === "dosen" && (
