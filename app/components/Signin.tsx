@@ -6,12 +6,11 @@ import React from "react";
 import { useState } from "react";
 import { CircularProgress } from "@mui/material"; 
 import { signIn } from "next-auth/react";
+import toast, { Toaster } from 'react-hot-toast';
 
 const SignIn: React.FC = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [error, setError] = useState<string>(" ");
-  const [successMessage, setSuccessMessage] = useState<string>("");
   const [sending, setSending] = useState<boolean>(false);
   
 
@@ -26,22 +25,19 @@ const SignIn: React.FC = () => {
         redirect: false,
       });
       if (res?.error) {
-        setError("Login Failed");
+        toast.error("Login Failed");
         return;
       }
-      setSuccessMessage("Login Success");
+      toast.success("Login Success");
       setEmail("");
       setPassword("");
       window.location.href = "/";
     
       
-    } catch (error) {
-      setError("Login Failed");
-      throw error;
+    } catch {
+      toast.error("Login Failed");
     }finally{
-      if (error) {
-        setSending(false);
-      }
+      setSending(false);
   }};
 
   return (
@@ -50,6 +46,7 @@ const SignIn: React.FC = () => {
         <h2 className="text-2xl font-bold mb-6 text-center text-black">
           Masuk
         </h2>
+        <Toaster/>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label
@@ -93,10 +90,6 @@ const SignIn: React.FC = () => {
           <button disabled={sending} className="w-full bg-[#5046e5] text-white py-2 px-4 rounded-lg hover:bg-[#3b32b0] focus:ring focus:ring-sky-300 focus:outline-none">
             {sending ? <CircularProgress size={24} color="inherit" /> : "Masuk"}
           </button>
-          {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
-          {successMessage && (
-            <p className="mt-2 text-sm text-green-500">{successMessage}</p>
-          )}
         </form>
         <div className="text-center mt-4">
           <p className="mt-2 text-sm">

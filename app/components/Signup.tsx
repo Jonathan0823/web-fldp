@@ -5,14 +5,13 @@ import { MdOutlineEmail } from "react-icons/md";
 import React from "react";
 import { useState } from "react";
 import { CircularProgress } from "@mui/material"; 
+import toast, { Toaster } from 'react-hot-toast';
 
 
 const SignUp: React.FC = () => {
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [error, setError] = useState<string>(" ");
-  const [successMessage, setSuccessMessage] = useState<string>("");
   const [sending, setSending] = useState<boolean>(false);
 
   const handleSignUp = async (event: React.FormEvent) => {
@@ -30,13 +29,13 @@ const SignUp: React.FC = () => {
           "Content-Type": "application/json",
         },
       });
-      setSuccessMessage("Sign Up Success");
+      toast.success('Sign Up Success');
       
         window.location.href = "/signin";
 
       
     } catch (error) {
-      setError("Sign Up Failed");
+      toast.error('Sign Up Failed');
       throw error;
     } finally {
       setSending(false);
@@ -49,6 +48,7 @@ const SignUp: React.FC = () => {
         <h2 className="text-2xl font-bold text-black mb-6 text-center">
           Daftar Akun Baru
         </h2>
+        <Toaster/>
 
         <form onSubmit={handleSignUp}>
           
@@ -120,10 +120,6 @@ const SignUp: React.FC = () => {
           <button disabled={sending} className="w-full mt-3 bg-[#5046e5] text-white py-2 px-4 rounded-lg hover:bg-[#3b32b0] focus:ring focus:ring-sky-300 focus:outline-none">
           {sending ? <CircularProgress size={24} color="inherit" /> : "Daftar"}
           </button>
-          {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
-          {successMessage && (
-            <p className="mt-2 text-sm text-green-500">{successMessage}</p>
-          )}
         </form>
         <div className="text-center mt-4">
           <p className="mt-2 text-sm">
