@@ -52,11 +52,18 @@ export async function GET(
         ? Math.round(averageRating) 
         : averageRating.toFixed(1);
 
+      const nilaiPembelajaran = d.nilai.map((n) => n.pembelajaran);
+      const nilaiKehadiran = d.nilai.map((n) => n.kehadiran);
+      const nilaiKetepatanWaktu = d.nilai.map((n) => n.ketepatanWaktu);
+
       return {
         id: d.id,
         nama: d.nama,
         rating: formattedRating,
         nilai: d.nilai,
+        nilaiPembelajaran,
+        nilaiKehadiran,
+        nilaiKetepatanWaktu,
         nip: d.nip,
         matakuliah: d.matakuliah?.nama || null,
         fakultas: d.fakultas.nama, 

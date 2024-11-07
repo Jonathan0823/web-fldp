@@ -14,6 +14,7 @@ const DetailDosen = () => {
     fakultas: string;
     matakuliah: string;
     rating: number;
+    nilaiPembelajaran: number[];
   }
 
   const [dosen, setDosen] = React.useState<Dosen | null>(null);
@@ -95,6 +96,11 @@ const DetailDosen = () => {
     );
   };
 
+  const ratingPembelajaran = dosen?.nilaiPembelajaran.reduce((acc, curr) => {
+    const total = acc + curr;
+    return total;
+  }, 0);
+
   return (
     <div>
       {dosen && (
@@ -135,8 +141,8 @@ const DetailDosen = () => {
           <div className="border border-slate-300 p-3 h-72 overflow-hidden shadow-md rounded-lg flex flex-col ">
             <h2 className="font-semibold mb-1">Pembelajaran</h2>
             <div className="flex justify-center gap-1 text-sm">
-            {renderStars(dosen.rating)}
-              <p className="ml-1">{dosen.rating}/5</p>
+            {ratingPembelajaran !== undefined && renderStars(ratingPembelajaran / dosen.nilaiPembelajaran.length)}
+              <p className="ml-1">{ratingPembelajaran ? (ratingPembelajaran / dosen.nilaiPembelajaran.length) : 'N/A'}/5</p>
             </div>
             <div className="text-left ml-4 mt-2">
               <p className="font-semibold">Komentar:</p>
