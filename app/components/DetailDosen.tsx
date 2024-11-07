@@ -69,7 +69,17 @@ const DetailDosen = () => {
               <p className="ml-2">{dosen.matakuliah}</p>
             </div>
           </div>
-          <h2 className="mt-3 text-lg font-bold">Penilaian</h2>
+          <h2 className="mt-3 text-lg font-bold mb-3">Penilaian</h2>
+          <div className="border border-slate-300 p-3 h-72 overflow-hidden shadow-md rounded-lg flex flex-col ">
+            <h2 className="font-semibold ">Pembelajaran</h2>
+            <div className="flex justify-center gap-4">
+              <p>{dosen.rating}/5</p>
+            </div>
+            <div className="text-left ml-4 mt-2">
+              <p className="font-semibold">Komentar:</p>
+            </div>
+
+          </div>
         </div>
       )}
     </div>
