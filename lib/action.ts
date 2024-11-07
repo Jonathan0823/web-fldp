@@ -147,11 +147,14 @@ export const review = async (
   pembelajaran: number,
   kehadiran: number,
   ketepatanWaktu: number,
+  pengajaran: number,
+  penyampaianMateri: number,
   komen: string,
   dosenId: string,
   userId: string
 ) => {
   try {
+    console.log(pembelajaran, kehadiran, ketepatanWaktu, pengajaran, penyampaianMateri, komen, dosenId, userId);
     const reciver = await prisma.dosen.findUnique({
       where: {
         id: dosenId,
@@ -163,6 +166,8 @@ export const review = async (
         kehadiran,
         ketepatanWaktu,
         pembelajaran,
+        pengajaran,
+        penyampaianMateri,
         dosenId,
         userId,
         komen,
@@ -178,82 +183,108 @@ export const review = async (
         pass: process.env.SEND,
       },
     });
-    const htmlContent = `
-  <html>
-    <head>
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          color: #333;
-          background-color: #f4f4f4;
-          margin: 0;
-          padding: 0;
-        }
-        .container {
-          max-width: 600px;
-          margin: 20px auto;
-          padding: 20px;
-          background: #fff;
-          border-radius: 8px;
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .header {
-          border-bottom: 2px solid #eee;
-          padding-bottom: 10px;
-          margin-bottom: 20px;
-        }
-        .header h1 {
-          margin: 0;
-          font-size: 24px;
-          color: #333;
-        }
-        .content {
-          font-size: 16px;
-          line-height: 1.6;
-        }
-        .review-item {
-          margin-bottom: 10px;
-        }
-        .review-item strong {
-          color: #555;
-        }
-        .footer {
-          border-top: 2px solid #eee;
-          padding-top: 10px;
-          margin-top: 20px;
-          font-size: 14px;
-          color: #888;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          <h1>Review dan Rating Baru untuk Anda</h1>
+    const htmlContent = `<html>
+  <head>
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 700px;
+        margin: 30px auto;
+        padding: 30px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-top: 5px solid #5442f6;
+      }
+      .header {
+        text-align: center;
+        border-bottom: 3px solid #f1f1f1;
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+        color: #5442f6;
+        font-weight: bold;
+      }
+      .content {
+        font-size: 16px;
+        line-height: 1.8;
+        color: #555;
+        margin-bottom: 30px;
+      }
+      .review-item {
+        background-color: #f9f9f9;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .review-item strong {
+        color: #333;
+        font-weight: 600;
+      }
+      .review-item p {
+        margin: 5px 0 0;
+      }
+      .footer {
+        text-align: center;
+        font-size: 14px;
+        color: #888;
+        border-top: 2px solid #f1f1f1;
+        padding-top: 15px;
+      }
+      .footer a {
+        color: #5442f6;
+        text-decoration: none;
+        font-weight: bold;
+      }
+      .footer a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Review dan Rating Baru untuk Anda</h1>
+      </div>
+      <div class="content">
+        <p>Anda telah menerima review baru dari mahasiswa.</p>
+        <div class="review-item">
+          <strong>Pembelajaran:</strong> ${pembelajaran}/5
         </div>
-        <div class="content">
-          <p>Anda telah menerima review baru dari mahasiswa.</p>
-          <div class="review-item">
-            <strong>Pembelajaran:</strong> ${pembelajaran}/5
-          </div>
-          <div class="review-item">
-            <strong>Kehadiran:</strong> ${kehadiran}/5
-          </div>
-          <div class="review-item">
-            <strong>Ketepatan Waktu:</strong> ${ketepatanWaktu}/5
-          </div>
-          <div class="review-item">
-            <strong>Komentar Mahasiswa:</strong>
-            <p>${komen}</p>
-          </div>
+        <div class="review-item">
+          <strong>Kehadiran:</strong> ${kehadiran}/5
         </div>
-        <div class="footer">
-          <p>Email ini dikirim secara otomatis oleh sistem penilaian.</p>
+        <div class="review-item">
+          <strong>Ketepatan Waktu:</strong> ${ketepatanWaktu}/5
+        </div>
+        <div class="review-item">
+          <strong>Pengajaran:</strong> ${pengajaran}/5
+        </div>
+        <div class="review-item">
+          <strong>Penyampaian Materi:</strong> ${penyampaianMateri}/5
+        </div>
+        <div class="review-item">
+          <strong>Komentar Mahasiswa:</strong>
+          <p>${komen}</p>
         </div>
       </div>
-    </body>
-  </html>
-`;
+      <div class="footer">
+        <p>Email ini dikirim secara otomatis oleh sistem penilaian. Jika Anda memiliki pertanyaan, <a href="mailto:support@domain.com">hubungi kami</a>.</p>
+      </div>
+    </div>
+  </body>
+</html>
+`
     await transporter.sendMail({
       from: process.env.MAIL_USER,
       to: reciver?.email,
