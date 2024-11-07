@@ -4,9 +4,6 @@ import { review } from "@/lib/action";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 
-
-
-
 interface ReviewItem {
   id: string;
   nama: string;
@@ -24,7 +21,6 @@ interface ReviewCardProps {
 }
 
 const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
-
   const [ratings, setRatings] = useState<{ [key: string]: { [key: string]: number } }>({});
   const [comment, setComment] = useState<{ [key: string]: string }>({});
   const [reviewTime, setReviewTime] = useState<{ [key: string]: Date | null }>({});
@@ -34,14 +30,19 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
   const params = useSearchParams();
   const dosenId = params.get("dosenId");
 
-
-
   useEffect(() => {
     const fetchData = async () => {
       setApiLoading(true);
       try {
         const response = await axios.get(`/api/getDosen/${dosenId}`);
+        const reviewsResponse = await axios.get(`/api/getNilai/${userId}`);
         setItems(response.data);
+        setReviewTime(
+          reviewsResponse.data.reduce((acc: { [key: string]: Date }, review: { dosenId: string; lastReviewTime: string }) => {
+            acc[review.dosenId] = new Date(review.lastReviewTime);
+            return acc;
+          }, {})
+        );
       } catch (error) {
         console.error("Error fetching review data", error);
       } finally {
@@ -50,6 +51,13 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
     };
     fetchData();
   }, []);
+
+  const getNextMonday = (date: Date) => {
+    const nextMonday = new Date(date);
+    nextMonday.setDate(date.getDate() + ((8 - date.getDay()) % 7));
+    nextMonday.setHours(0, 0, 0, 0);
+    return nextMonday;
+  };
 
   const handleStarClick = (dosenId: string, category: string, index: number) => {
     setRatings((prev) => ({
@@ -63,25 +71,10 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
 
   const handleSubmit = async (dosenId: string) => {
     setLoading(true);
-    const lastReviewTime = reviewTime[dosenId];
-    const now = new Date();
-
-    if (lastReviewTime && now.getTime() - lastReviewTime.getTime() < 24 * 60 * 60 * 1000) {
-      alert("Anda hanya dapat memberikan rating sekali sehari untuk dosen ini.");
-      return;
-    }
-
     try {
       const { pembelajaran = 0, tepatWaktu = 0, kehadiran = 0 } = ratings[dosenId] || {};
       const userComment = comment[dosenId] || "";
-      await review(
-        pembelajaran,
-        kehadiran,
-        tepatWaktu,
-        userComment,
-        dosenId.toString(),
-        userId
-      );
+      await review(pembelajaran, kehadiran, tepatWaktu, userComment, dosenId.toString(), userId);
       setComment((prev) => ({ ...prev, [dosenId]: "" }));
       setReviewTime((prev) => ({ ...prev, [dosenId]: new Date() }));
     } catch (error) {
@@ -97,12 +90,11 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
     { name: "Kehadiran", key: "kehadiran" },
   ];
 
-  const filteredItems = items.filter(item => {
+  const filteredItems = items.filter((item) => {
     const lastReviewTime = reviewTime[item.id];
     const now = new Date();
-    return !lastReviewTime || (now.getTime() - lastReviewTime.getTime() >= 24 * 60 * 60 * 1000);
+    return !lastReviewTime || now >= getNextMonday(lastReviewTime);
   });
-
 
   return (
     <div>
