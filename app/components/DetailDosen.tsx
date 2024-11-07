@@ -111,162 +111,203 @@ const DetailDosen = () => {
     return total;
   }, 0);
 
-  const ratingKetepatanWaktu = dosen?.nilaiKetepatanWaktu.reduce((acc, curr) => {
-    const total = acc + curr;
-    return total;
-  }, 0);
+  const ratingKetepatanWaktu = dosen?.nilaiKetepatanWaktu.reduce(
+    (acc, curr) => {
+      const total = acc + curr;
+      return total;
+    },
+    0
+  );
 
   const filterRating = (rating: number, type: string) => {
     if (type === "pembelajaran") {
-      return dosen?.nilaiPembelajaran.filter((nilai) => nilai === rating).length;
+      return dosen?.nilaiPembelajaran.filter((nilai) => nilai === rating)
+        .length;
     }
     if (type === "kehadiran") {
       return dosen?.nilaiKehadiran.filter((nilai) => nilai === rating).length;
     }
     if (type === "ketepatanWaktu") {
-      return dosen?.nilaiKetepatanWaktu.filter((nilai) => nilai === rating).length;
+      return dosen?.nilaiKetepatanWaktu.filter((nilai) => nilai === rating)
+        .length;
     }
-  }
+  };
 
   const persentageRating = (rating: number, type: string) => {
     if (type === "pembelajaran") {
       const totalRating = dosen?.nilaiPembelajaran.length;
-      const ratingCount = dosen?.nilaiPembelajaran.filter((nilai) => nilai === rating).length;
-      return ratingCount !== undefined && totalRating !== undefined ? (ratingCount / totalRating) * 100 : 0;
+      const ratingCount = dosen?.nilaiPembelajaran.filter(
+        (nilai) => nilai === rating
+      ).length;
+      return ratingCount !== undefined && totalRating !== undefined
+        ? (ratingCount / totalRating) * 100
+        : 0;
     }
     if (type === "kehadiran") {
       const totalRating = dosen?.nilai.length;
-      const ratingCount = dosen?.nilaiKehadiran.filter((nilai) => nilai === rating).length;
-      return ratingCount !== undefined && totalRating !== undefined ? (ratingCount / totalRating) * 100 : 0;
+      const ratingCount = dosen?.nilaiKehadiran.filter(
+        (nilai) => nilai === rating
+      ).length;
+      return ratingCount !== undefined && totalRating !== undefined
+        ? (ratingCount / totalRating) * 100
+        : 0;
     }
     if (type === "ketepatanWaktu") {
       const totalRating = dosen?.nilaiKetepatanWaktu.length;
-      const ratingCount = dosen?.nilaiKetepatanWaktu.filter((nilai) => nilai === rating).length;
-      return ratingCount !== undefined && totalRating !== undefined ? (ratingCount / totalRating) * 100 : 0;
+      const ratingCount = dosen?.nilaiKetepatanWaktu.filter(
+        (nilai) => nilai === rating
+      ).length;
+      return ratingCount !== undefined && totalRating !== undefined
+        ? (ratingCount / totalRating) * 100
+        : 0;
     }
-  }
+  };
 
   return (
     <div>
       {dosen && (
         <div className="flex flex-col h-full">
-            <div className="text-left text-base">
-              {[
+          <div className="text-left text-base">
+            {[
               { label: "Nama", value: dosen.nama },
               { label: "NIP", value: dosen.nip },
               { label: "Email", value: dosen.email },
               { label: "Prodi", value: dosen.prodi },
               { label: "Fakultas", value: dosen.fakultas },
               { label: "Matakuliah", value: dosen.matakuliah },
-              ].map((item, index) => (
+            ].map((item, index) => (
               <div key={index} className="flex">
                 <p className="w-24 font-semibold">{item.label}</p>
                 <p>:</p>
                 <p className="ml-2">{item.value}</p>
               </div>
-              ))}
-            </div>
+            ))}
+          </div>
           <h2 className="mt-3 text-lg font-bold mb-3">Penilaian</h2>
           <div className="flex flex-col gap-4">
-            
-            <div className="border border-slate-300 p-3 overflow-hidden shadow-md rounded-lg flex flex-col ">
-              <h2 className="font-semibold mb-1">Pembelajaran</h2>
-              <div className="flex justify-center gap-1 text-sm">
-                {ratingPembelajaran !== undefined &&
-                  renderStars(
-                    ratingPembelajaran / dosen.nilaiPembelajaran.length
-                  )}
-                <div className="flex justify-center items-center gap-2">
-                  <p className="ml-1">
-                    {ratingPembelajaran
-                      ? ratingPembelajaran / dosen.nilaiPembelajaran.length
-                      : "N/A"}
-                    /5
-                  </p>
-                  <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
-                </div>
-              </div>
-              <div className="mx-4 mt-6">
-                <h3 className="font-semibold text-left">Distribusi Rating:</h3>
-                {[1, 2, 3, 4, 5].map((rating) => (
-                  <div key={rating} className="flex items-center justify-center gap-3">
-                  <p className="w-14">{rating} Star</p>
-                  <Progress value={persentageRating(rating, "pembelajaran")} />
-                  <p>{filterRating(rating, "pembelajaran")}</p>
+            {dosen.nilai.length > 0 ? (
+              <div>
+                <div className="border border-slate-300 p-3 overflow-hidden shadow-md rounded-lg flex flex-col ">
+                  <h2 className="font-semibold mb-1">Pembelajaran</h2>
+                  <div className="flex justify-center gap-1 text-sm">
+                    {ratingPembelajaran !== undefined &&
+                      renderStars(
+                        ratingPembelajaran / dosen.nilaiPembelajaran.length
+                      )}
+                    <div className="flex justify-center items-center gap-2">
+                      <p className="ml-1">
+                        {ratingPembelajaran
+                          ? ratingPembelajaran / dosen.nilaiPembelajaran.length
+                          : "N/A"}
+                        /5
+                      </p>
+                      <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
+                    </div>
                   </div>
-                ))}
-              </div>
-              <div className="text-left ml-4 mt-2">
-                <p className="font-semibold">Komentar:</p>
-                <div></div>
-              </div>
-            </div>
+                  <div className="mx-4 mt-6">
+                    <h3 className="font-semibold text-left">
+                      Distribusi Rating:
+                    </h3>
+                    {[1, 2, 3, 4, 5].map((rating) => (
+                      <div
+                        key={rating}
+                        className="flex items-center justify-center gap-3"
+                      >
+                        <p className="w-14">{rating} Star</p>
+                        <Progress
+                          value={persentageRating(rating, "pembelajaran")}
+                        />
+                        <p>{filterRating(rating, "pembelajaran")}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-left ml-4 mt-2">
+                    <p className="font-semibold">Komentar:</p>
+                    <div></div>
+                  </div>
+                </div>
 
-            <div className="border border-slate-300 p-3 h-72 overflow-hidden shadow-md rounded-lg flex flex-col ">
-              <h2 className="font-semibold mb-1">Kehadiran</h2>
-              <div className="flex justify-center gap-1 text-sm">
-                {ratingKehadiran !== undefined &&
-                  renderStars(
-                    ratingKehadiran / dosen.nilai.length
-                  )}
-                <div className="flex justify-center items-center gap-2">
-                  <p className="ml-1">
-                    {ratingKehadiran
-                      ? ratingKehadiran / dosen.nilai.length
-                      : "N/A"}
-                    /5
-                  </p>
-                  <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
-                </div>
-              </div>
-              <div className="mx-4 mt-6">
-                <h3 className="font-semibold text-left">Distribusi Rating:</h3>
-                {[1, 2, 3, 4, 5].map((rating) => (
-                  <div key={rating} className="flex items-center justify-center gap-3">
-                  <p className="w-14">{rating} Star</p>
-                  <Progress value={persentageRating(rating, "kehadiran")} />
-                  <p>{filterRating(rating, "kehadiran")}</p>
+                <div className="border border-slate-300 p-3 h-72 overflow-hidden shadow-md rounded-lg flex flex-col ">
+                  <h2 className="font-semibold mb-1">Kehadiran</h2>
+                  <div className="flex justify-center gap-1 text-sm">
+                    {ratingKehadiran !== undefined &&
+                      renderStars(ratingKehadiran / dosen.nilai.length)}
+                    <div className="flex justify-center items-center gap-2">
+                      <p className="ml-1">
+                        {ratingKehadiran
+                          ? ratingKehadiran / dosen.nilai.length
+                          : "N/A"}
+                        /5
+                      </p>
+                      <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
+                    </div>
                   </div>
-                ))}
-              </div>
-              <div className="text-left ml-4 mt-2">
-                <p className="font-semibold">Komentar:</p>
-                <div></div>
-              </div>
-            </div>
+                  <div className="mx-4 mt-6">
+                    <h3 className="font-semibold text-left">
+                      Distribusi Rating:
+                    </h3>
+                    {[1, 2, 3, 4, 5].map((rating) => (
+                      <div
+                        key={rating}
+                        className="flex items-center justify-center gap-3"
+                      >
+                        <p className="w-14">{rating} Star</p>
+                        <Progress
+                          value={persentageRating(rating, "kehadiran")}
+                        />
+                        <p>{filterRating(rating, "kehadiran")}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-left ml-4 mt-2">
+                    <p className="font-semibold">Komentar:</p>
+                    <div></div>
+                  </div>
+                </div>
 
-            <div className="border border-slate-300 p-3 h-72 overflow-hidden shadow-md rounded-lg flex flex-col ">
-              <h2 className="font-semibold mb-1">Ketepatan Waktu</h2>
-              <div className="flex justify-center gap-1 text-sm">
-                {ratingKetepatanWaktu !== undefined &&
-                  renderStars(
-                    ratingKetepatanWaktu / dosen.nilai.length
-                  )}
-                <div className="flex justify-center items-center gap-2">
-                  <p className="ml-1">
-                    {ratingKetepatanWaktu
-                      ? ratingKetepatanWaktu / dosen.nilai.length
-                      : "N/A"}
-                    /5
-                  </p>
-                  <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
+                <div className="border border-slate-300 p-3 h-72 overflow-hidden shadow-md rounded-lg flex flex-col ">
+                  <h2 className="font-semibold mb-1">Ketepatan Waktu</h2>
+                  <div className="flex justify-center gap-1 text-sm">
+                    {ratingKetepatanWaktu !== undefined &&
+                      renderStars(ratingKetepatanWaktu / dosen.nilai.length)}
+                    <div className="flex justify-center items-center gap-2">
+                      <p className="ml-1">
+                        {ratingKetepatanWaktu
+                          ? ratingKetepatanWaktu / dosen.nilai.length
+                          : "N/A"}
+                        /5
+                      </p>
+                      <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
+                    </div>
+                  </div>
+                  <div className="mx-4 mt-6">
+                    <h3 className="font-semibold text-left">
+                      Distribusi Rating:
+                    </h3>
+                    {[1, 2, 3, 4, 5].map((rating) => (
+                      <div
+                        key={rating}
+                        className="flex items-center justify-center gap-3"
+                      >
+                        <p className="w-14">{rating} Star</p>
+                        <Progress
+                          value={persentageRating(rating, "ketepatanWaktu")}
+                        />
+                        <p>{filterRating(rating, "ketepatanWaktu")}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-left ml-4 mt-2">
+                    <p className="font-semibold">Komentar:</p>
+                    <div></div>
+                  </div>
                 </div>
               </div>
-              <div className="mx-4 mt-6">
-                <h3 className="font-semibold text-left">Distribusi Rating:</h3>
-                {[1, 2, 3, 4, 5].map((rating) => (
-                  <div key={rating} className="flex items-center justify-center gap-3">
-                  <p className="w-14">{rating} Star</p>
-                  <Progress value={persentageRating(rating, "ketepatanWaktu")} />
-                  <p>{filterRating(rating, "ketepatanWaktu")}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="text-left ml-4 mt-2">
-                <p className="font-semibold">Komentar:</p>
-                <div></div>
-              </div>
-            </div>
+            ) : (
+              <>
+                <h2 className="text-center">Belum ada penilaian</h2>
+              </>
+            )}
           </div>
         </div>
       )}
