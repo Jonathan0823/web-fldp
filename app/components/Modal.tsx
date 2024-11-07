@@ -25,7 +25,10 @@ const Modal = ({ type, userId }: ModalProps) => {
               </div>
             ) : (
                 // Todo: Add rate dosen
-              <div>Beri Nilai</div>
+              <div>
+                <div>Beri Nilai</div>
+                <p>{userId}</p>
+              </div>
             )}
           </div>
           <div className="flex justify-center mt-4">
