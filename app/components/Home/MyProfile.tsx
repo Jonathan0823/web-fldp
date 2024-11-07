@@ -10,8 +10,22 @@ interface User {
   penilaian: []; 
   createdAt: string;
 }
+interface Nilai{
+  pembelajaran: number;
+  kehadiran: number;
+  ketepatanWaktu: number;
+}
 
 const MyProfile = ({ user }: { user: User }) => {
+  console.log(user);
+
+  
+    const totalPenilaian = user.penilaian.length;
+    const totalRating = user.penilaian.reduce((acc: number, nilai: Nilai) => {
+      return acc + nilai.pembelajaran + nilai.kehadiran + nilai.ketepatanWaktu;
+    }, 0);
+    const averageRating = totalRating / (totalPenilaian * 3) || 0;
+  
   return (
     <div className=" bg-white rounded-xl mt-2 shadow-md min-h-32 flex-col pb-4">
       <div className="ml-6">
@@ -24,7 +38,7 @@ const MyProfile = ({ user }: { user: User }) => {
         </div>
         <div className="mt-6">
           <p className="font-semibold">Jumlah Penilaian</p>
-          <p className="font-bold text-[#564add] text-xl">{user.penilaian.length}</p>
+          <p className="font-bold text-[#564add] text-xl">{user.penilaian.length/3}</p>
         </div>
         <div className="mt-4">
           <p className="font-semibold">Bergabung Sejak</p>
@@ -32,7 +46,7 @@ const MyProfile = ({ user }: { user: User }) => {
         </div>
         <div className="mt-4">
           <p className="font-semibold">Rata-Rata Penilaian</p>
-          <p>4.5</p>
+          <p>{averageRating}</p>
         </div>
       </div>
     </div>

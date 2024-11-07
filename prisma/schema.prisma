@@ -30,9 +30,11 @@ model User {
 
 model Nilai {
   id                  String   @id @default(cuid())
-  pembelajaran        Int
-  kehadiran           Int
-  ketepatanWaktu      Int
+  pembelajaran        Int     @default(0)
+  kehadiran           Int     @default(0)
+  ketepatanWaktu      Int     @default(0)
+  pengajaran          Int     @default(0)
+  penyampaianMateri   Int     @default(0)
   dosenId             String
   userId              String
   komen String?
@@ -54,7 +56,7 @@ model Dosen {
   prodiId    String
   prodi      Prodi       @relation(fields: [prodiId], references: [id])
   createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  updatedAt  DateTime    @updatedAt 
   nilai      Nilai[]
 }
 

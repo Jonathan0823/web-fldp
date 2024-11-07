@@ -42,20 +42,32 @@ export async function GET(
 
     const dosenWithRatings = dosen.map((d) => {
       const totalNilai = d.nilai.reduce((acc, curr) => {
-        return acc + curr.pembelajaran + curr.kehadiran + curr.ketepatanWaktu;
+        return acc + curr.pembelajaran + curr.kehadiran + curr.ketepatanWaktu + curr.pengajaran + curr.penyampaianMateri;
       }, 0);
       
-      let averageRating = totalNilai / (d.nilai.length * 3) || 0;
+      let averageRating = totalNilai / (d.nilai.length * 5) || 0;
       averageRating = Math.min(averageRating, 5);
 
       const formattedRating = Number.isInteger(averageRating) 
         ? Math.round(averageRating) 
         : averageRating.toFixed(1);
 
+      const nilaiPembelajaran = d.nilai.map((n) => n.pembelajaran);
+      const nilaiKehadiran = d.nilai.map((n) => n.kehadiran);
+      const nilaiKetepatanWaktu = d.nilai.map((n) => n.ketepatanWaktu);
+      const nilaiPengajaran = d.nilai.map((n) => n.pengajaran);
+      const nilaiPenyampaianMateri = d.nilai.map((n) => n.penyampaianMateri);
+
       return {
         id: d.id,
         nama: d.nama,
         rating: formattedRating,
+        nilai: d.nilai,
+        nilaiPembelajaran,
+        nilaiKehadiran,
+        nilaiKetepatanWaktu,
+        nilaiPengajaran,
+        nilaiPenyampaianMateri,
         nip: d.nip,
         matakuliah: d.matakuliah?.nama || null,
         fakultas: d.fakultas.nama, 

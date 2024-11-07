@@ -4,9 +4,11 @@ import { FiHome, FiUser } from "react-icons/fi";
 import { RiGroupLine } from "react-icons/ri";
 import MyProfile from "./Home/MyProfile";
 import ProfileList from "./ListDosen";
-import ReviewCard from "./review-card";
 import axios from "axios";
-import {ThreeCircles } from 'react-loader-spinner'; 
+import { ThreeCircles } from "react-loader-spinner";
+import Link from "next/link";
+import Modal from "./Modal";
+import { useSearchParams } from "next/navigation";
 
 interface User {
   id: string;
@@ -19,7 +21,7 @@ interface User {
 interface Item {
   id: string;
   nama: string;
-  rating: number; 
+  rating: number;
   nip: string;
   matakuliah: string;
   fakultas: string;
@@ -33,73 +35,75 @@ interface HomeContentProps {
 }
 
 const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
-  const [activeButton, setActiveButton] = useState("home");
-  const [filter, setFilter] = useState("All");
+  const [activeButton, setActiveButton] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("activeButton") || "home";
+    }
+    return "home";
+  });
   const [user, setUser] = useState<User | null>(null);
-  const [items, setItems] = useState<Item[]>([]);
-  const [filteredItems, setFilteredItems] = useState<Item[]>([]);
-  const [reviewTime, setReviewTime] = useState<{ [key: string]: Date | null }>({});
-  const [loading, setLoading] = useState(true); 
+  const [dosen, setDosen] = useState<Item[]>([]);
+
+  const [loading, setLoading] = useState(true);
 
   const fetchUser = async () => {
-    setLoading(true); 
+    setLoading(true);
     try {
-      const res = await axios.get(`/api/getUser/${session}`);
-      const response = await axios.get(`/api/getDosen/${filter}`);
-      const reviewsResponse = await axios.get(`/api/getNilai/${session}`);
+      const [res, response] = await Promise.all([
+        axios.get(`/api/getUser/${session}`),
+        axios.get(`/api/getDosen/All`),
+      ]);
       setUser(res.data);
-      setFilter("All");
-      const timeData = reviewsResponse.data.reduce((acc: { [key: string]: Date | null }, review: { dosenId: string; createdAt: string }) => {
-        acc[review.dosenId] = new Date(review.createdAt);
-        return acc;
-      }, {});
-      setReviewTime(timeData);
-      setItems(response.data); 
+      setDosen(response.data);
     } catch (error) {
       console.log("Error getting user data:", error);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchUser();
-  }, [session]);
+  const params = useSearchParams();
+  const show = params.get("show");
+
+  const currentButton = localStorage.getItem("activeButton");
 
   useEffect(() => {
-    if (items.length > 0 && Object.keys(reviewTime).length > 0) {
-      const filtered = items.filter(item => {
-        const lastReviewTime = reviewTime[item.id as string];
-        const now = new Date();
-        return !lastReviewTime || (now.getTime() - lastReviewTime.getTime() >= 24 * 60 * 60 * 1000);
-      });
-      setFilteredItems(filtered); 
-    }
-  }, [items, reviewTime]);
+    fetchUser();
+    console.log(show);
+  }, []);
 
   const handleButtonClick = (buttonName: string) => {
     setActiveButton(buttonName);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("activeButton", buttonName);
+    }
   };
 
   return (
     <div>
       <div className="flex justify-between text-gray-500 mt-8 md:text-base text-sm">
         <button
-          className={`flex items-center ${activeButton === "home" ? "text-[#5442f6]" : ""}`}
+          className={`flex items-center ${
+            currentButton === "home" ? "text-[#5442f6]" : ""
+          }`}
           onClick={() => handleButtonClick("home")}
         >
           <FiHome className="scale-150" />
           <p className="ml-2">Beranda</p>
         </button>
         <button
-          className={`flex items-center ${activeButton === "dosen" ? "text-[#5442f6]" : ""}`}
+          className={`flex items-center ${
+            currentButton === "dosen" ? "text-[#5442f6]" : ""
+          }`}
           onClick={() => handleButtonClick("dosen")}
         >
           <RiGroupLine className="scale-150" />
           <p className="ml-2">Profil Dosen</p>
         </button>
         <button
-          className={`flex items-center ${activeButton === "saya" ? "text-[#5442f6]" : ""}`}
+          className={`flex items-center ${
+            currentButton === "saya" ? "text-[#5442f6]" : ""
+          }`}
           onClick={() => handleButtonClick("saya")}
         >
           <FiUser className="scale-150" />
@@ -107,27 +111,49 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
         </button>
       </div>
       <div className=" mt-8">
-        {loading ? ( 
+        {loading ? (
           <div className="min-h-dvh flex justify-center items-center">
             <ThreeCircles color="#5442f6" height={80} width={80} />
           </div>
         ) : (
           <>
+            {show && <Modal type={"rate"} userId={session} />}
             {activeButton === "home" && (
               <div>
                 <h3 className="font-bold text-lg">Beranda</h3>
                 <p className="mt-2">
-                  Selamat datang di website penilaian dan umpan balik antara dosen
-                  dan mahasiswa dengan realtime.
+                  Selamat datang di website penilaian dan umpan balik antara
+                  dosen dan mahasiswa dengan realtime.
                 </p>
-                <h3 className="font-bold text-lg mb-3">penilaian hari ini</h3>
-                <ReviewCard items={filteredItems} userId={session || ""}/>
+                <h3 className="font-bold text-lg mb-3 mt-3">
+                  Siapa yang ingin kamu nilai?
+                </h3>
+                <div>
+                  {dosen.map((item, index) => (
+                    <div key={index}>
+                      <div
+                        key={index}
+                        className="p-4 mb-3 bg-white rounded-lg shadow flex items-center justify-between"
+                      >
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            {item.nama}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            Spesialisasi: {item.matakuliah}
+                          </p>
+                        </div>
+                        <Link href={`/?show=true&dosenId=${item.id}`}>Nilai</Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
             {activeButton === "dosen" && (
               <div>
                 <h3 className="font-bold text-lg mb-3">Profil Dosen</h3>
-                <ProfileList />
+                <ProfileList userId={session} />
               </div>
             )}
             {activeButton === "saya" && (
