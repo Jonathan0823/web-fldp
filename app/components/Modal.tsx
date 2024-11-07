@@ -31,7 +31,10 @@ const Modal = ({ type, userId }: ModalProps) => {
             ) : (
                 // Todo: Add rate dosen
               <div>
-                <ReviewCard userId={userId}/> 
+                <div>Beri Nilai</div>
+                <p>{userId}</p>
+                <div>
+                  <ReviewCard userId={userId}/></div>
               </div>
             )}
           </div>
