@@ -36,17 +36,40 @@ const DetailDosen = () => {
   return (
     <div>
       {dosen && (
-        <div className="flex flex-col">
-          <div className="text-left">
-            <h1>{dosen.nama}</h1>
-            <p>{dosen.nip}</p>
-            <p>{dosen.email}</p>
-            <p>{dosen.prodi}</p>
-            <p>{dosen.fakultas}</p>
-            <p>{dosen.matakuliah}</p>
-            <p>{dosen.rating}</p>
+        <div className="flex flex-col ">
+          <div className="text-left text-sm">
+            <div className="flex">
+              <p className="w-24 font-semibold">Nama</p>
+              <p>:</p>
+              <p className="ml-2">{dosen.nama}</p>
+            </div>
+            <div className="flex">
+              <p className="w-24 font-semibold">NIP</p>
+              <p>:</p>
+              <p className="ml-2">{dosen.nip}</p>
+            </div>
+            <div className="flex">
+              <p className="w-24 font-semibold">Email</p>
+              <p>:</p>
+              <p className="ml-2">{dosen.email}</p>
+            </div>
+            <div className="flex">
+              <p className="w-24 font-semibold">Prodi</p>
+              <p>:</p>
+              <p className="ml-2">{dosen.prodi}</p>
+            </div>
+            <div className="flex">
+              <p className="w-24 font-semibold">Fakultas</p>
+              <p>:</p>
+              <p className="ml-2">{dosen.fakultas}</p>
+            </div>
+            <div className="flex">
+              <p className="w-24 font-semibold">Matakuliah</p>
+              <p>:</p>
+              <p className="ml-2">{dosen.matakuliah}</p>
+            </div>
           </div>
-          <h2>Penilaian</h2>
+          <h2 className="mt-3 text-lg font-bold">Penilaian</h2>
         </div>
       )}
     </div>
