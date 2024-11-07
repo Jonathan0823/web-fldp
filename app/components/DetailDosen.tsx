@@ -1,4 +1,5 @@
 "use client";
+import { Progress } from "@/components/ui/progress";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
@@ -102,6 +103,14 @@ const DetailDosen = () => {
     return total;
   }, 0);
 
+  const filterRating = (rating: number) => {
+    return dosen?.nilaiPembelajaran.filter((nilai) => nilai === rating).length;
+  }
+
+  const persentageRating = (rating: number) => {
+    return dosen?.nilaiPembelajaran ? dosen.nilaiPembelajaran.filter((nilai) => nilai === rating).length / dosen.nilaiPembelajaran.length * 100 : 0;
+  }
+
   return (
     <div>
       {dosen && (
@@ -157,6 +166,7 @@ const DetailDosen = () => {
                   <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
                 </div>
               </div>
+              <h3 className="font-semibold">Rating Distribution</h3>
               <div className="text-left ml-4 mt-2">
                 <p className="font-semibold">Komentar:</p>
                 <div></div>
@@ -177,6 +187,34 @@ const DetailDosen = () => {
                     /5
                   </p>
                   <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
+                </div>
+              </div>
+              <div className="mx-4">
+                <h3 className="font-semibold text-left">Distribusi Rating:</h3>
+                <div className="flex items-center justify-center gap-3">
+                  <p>1 Star</p>
+                  <Progress value={persentageRating(1)} />
+                    <p>{filterRating(1)}</p>
+                </div>
+                <div className="flex items-center justify-center gap-3">
+                  <p>2 Star</p>
+                  <Progress value={persentageRating(2)} />
+                    <p>{filterRating(2)}</p>
+                </div>
+                <div className="flex items-center justify-center gap-3">
+                  <p>3 Star</p>
+                  <Progress value={persentageRating(3)} />
+                    <p>{filterRating(3)}</p>
+                </div>
+                <div className="flex items-center justify-center gap-3">
+                  <p>4 Star</p>
+                  <Progress value={persentageRating(4)} />
+                    <p>{filterRating(4)}</p>
+                </div>
+                <div className="flex items-center justify-center gap-3">
+                  <p>5 Star</p>
+                  <Progress value={persentageRating(5)} />
+                    <p>{filterRating(5)}</p>
                 </div>
               </div>
               <div className="text-left ml-4 mt-2">
