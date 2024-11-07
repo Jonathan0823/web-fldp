@@ -20,6 +20,8 @@ const DetailDosen = () => {
     nilaiPembelajaran: number[];
     nilaiKehadiran: number[];
     nilaiKetepatanWaktu: number[];
+    nilaiPengajaran: number[];
+    nilaiPenyampaianMateri: number[];
   }
 
   const [dosen, setDosen] = React.useState<Dosen | null>(null);
@@ -119,6 +121,19 @@ const DetailDosen = () => {
     0
   );
 
+  const ratingPengajaran = dosen?.nilaiPengajaran.reduce((acc, curr) => {
+    const total = acc + curr;
+    return total;
+  }, 0);
+
+  const ratingPenyampaianMateri = dosen?.nilaiPenyampaianMateri.reduce(
+    (acc, curr) => {
+      const total = acc + curr;
+      return total;
+    },
+    0
+  );
+
   const filterRating = (rating: number, type: string) => {
     if (type === "pembelajaran") {
       return dosen?.nilaiPembelajaran.filter((nilai) => nilai === rating)
@@ -129,6 +144,13 @@ const DetailDosen = () => {
     }
     if (type === "ketepatanWaktu") {
       return dosen?.nilaiKetepatanWaktu.filter((nilai) => nilai === rating)
+        .length;
+    }
+    if (type === "pengajaran") {
+      return dosen?.nilaiPengajaran.filter((nilai) => nilai === rating).length;
+    }
+    if (type === "penyampaianMateri") {
+      return dosen?.nilaiPenyampaianMateri.filter((nilai) => nilai === rating)
         .length;
     }
   };
@@ -155,6 +177,24 @@ const DetailDosen = () => {
     if (type === "ketepatanWaktu") {
       const totalRating = dosen?.nilaiKetepatanWaktu.length;
       const ratingCount = dosen?.nilaiKetepatanWaktu.filter(
+        (nilai) => nilai === rating
+      ).length;
+      return ratingCount !== undefined && totalRating !== undefined
+        ? (ratingCount / totalRating) * 100
+        : 0;
+    }
+    if (type === "pengajaran") {
+      const totalRating = dosen?.nilaiPengajaran.length;
+      const ratingCount = dosen?.nilaiPengajaran.filter(
+        (nilai) => nilai === rating
+      ).length;
+      return ratingCount !== undefined && totalRating !== undefined
+        ? (ratingCount / totalRating) * 100
+        : 0;
+    }
+    if (type === "penyampaianMateri") {
+      const totalRating = dosen?.nilaiPenyampaianMateri.length;
+      const ratingCount = dosen?.nilaiPenyampaianMateri.filter(
         (nilai) => nilai === rating
       ).length;
       return ratingCount !== undefined && totalRating !== undefined
@@ -188,6 +228,44 @@ const DetailDosen = () => {
             {dosen.nilai.length > 0 ? (
               <div>
                 <div className="border border-slate-300 p-3 overflow-hidden shadow-md rounded-lg flex flex-col ">
+                  <h2 className="font-semibold mb-1">Metode Pengajaran</h2>
+                  <div className="flex justify-center gap-1 text-sm">
+                    {ratingPengajaran !== undefined &&
+                      renderStars(ratingPengajaran / dosen.nilai.length)}
+                    <div className="flex justify-center items-center gap-2">
+                      <p className="ml-1">
+                        {ratingPengajaran
+                          ? ratingPengajaran / dosen.nilai.length
+                          : "0"}
+                        /5
+                      </p>
+                      <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
+                    </div>
+                  </div>
+                  <div className="mx-4 mt-6">
+                    <h3 className="font-semibold text-left">
+                      Distribusi Rating:
+                    </h3>
+                    {[1, 2, 3, 4, 5].map((rating) => (
+                      <div
+                        key={rating}
+                        className="flex items-center justify-center gap-3"
+                      >
+                        <p className="w-14">{rating} Star</p>
+                        <Progress
+                          value={persentageRating(rating, "pengajaran")}
+                        />
+                        <p>{filterRating(rating, "pengajaran")}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-left ml-4 mt-2">
+                    <p className="font-semibold">Komentar:</p>
+                    <div></div>
+                  </div>
+                </div>
+
+                <div className="border border-slate-300 p-3 overflow-hidden shadow-md rounded-lg flex flex-col ">
                   <h2 className="font-semibold mb-1">Media Pembelajaran</h2>
                   <div className="flex justify-center gap-1 text-sm">
                     {ratingPembelajaran !== undefined &&
@@ -218,6 +296,44 @@ const DetailDosen = () => {
                           value={persentageRating(rating, "pembelajaran")}
                         />
                         <p>{filterRating(rating, "pembelajaran")}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-left ml-4 mt-2">
+                    <p className="font-semibold">Komentar:</p>
+                    <div></div>
+                  </div>
+                </div>
+
+                <div className="border border-slate-300 p-3 overflow-hidden shadow-md rounded-lg flex flex-col ">
+                  <h2 className="font-semibold mb-1">Penyampaian Materi</h2>
+                  <div className="flex justify-center gap-1 text-sm">
+                    {ratingPenyampaianMateri !== undefined &&
+                      renderStars(ratingPenyampaianMateri / dosen.nilai.length)}
+                    <div className="flex justify-center items-center gap-2">
+                      <p className="ml-1">
+                        {ratingPenyampaianMateri
+                          ? ratingPenyampaianMateri / dosen.nilai.length
+                          : "0"}
+                        /5
+                      </p>
+                      <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
+                    </div>
+                  </div>
+                  <div className="mx-4 mt-6">
+                    <h3 className="font-semibold text-left">
+                      Distribusi Rating:
+                    </h3>
+                    {[1, 2, 3, 4, 5].map((rating) => (
+                      <div
+                        key={rating}
+                        className="flex items-center justify-center gap-3"
+                      >
+                        <p className="w-14">{rating} Star</p>
+                        <Progress
+                          value={persentageRating(rating, "penyampaianMateri")}
+                        />
+                        <p>{filterRating(rating, "penyampaianMateri")}</p>
                       </div>
                     ))}
                   </div>
