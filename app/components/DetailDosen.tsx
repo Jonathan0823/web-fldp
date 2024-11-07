@@ -37,7 +37,7 @@ const DetailDosen = () => {
     <div>
       {dosen && (
         <div className="flex flex-col ">
-          <div className="text-left text-sm">
+          <div className="text-left text-base">
             <div className="flex">
               <p className="w-24 font-semibold">Nama</p>
               <p>:</p>
