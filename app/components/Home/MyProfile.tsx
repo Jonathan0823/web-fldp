@@ -24,7 +24,7 @@ const MyProfile = ({ user }: { user: User }) => {
     const totalRating = user.penilaian.reduce((acc: number, nilai: Nilai) => {
       return acc + nilai.pembelajaran + nilai.kehadiran + nilai.ketepatanWaktu;
     }, 0);
-    const averageRating = totalRating / (totalPenilaian * 3) || 0;
+    const averageRating = totalRating / (totalPenilaian * 5) || 0;
   
   return (
     <div className=" bg-white rounded-xl mt-2 shadow-md min-h-32 flex-col pb-4">
@@ -38,7 +38,7 @@ const MyProfile = ({ user }: { user: User }) => {
         </div>
         <div className="mt-6">
           <p className="font-semibold">Jumlah Penilaian</p>
-          <p className="font-bold text-[#564add] text-xl">{user.penilaian.length/3}</p>
+          <p className="font-bold text-[#564add] text-xl">{user.penilaian.length}</p>
         </div>
         <div className="mt-4">
           <p className="font-semibold">Bergabung Sejak</p>
