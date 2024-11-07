@@ -224,9 +224,9 @@ const DetailDosen = () => {
             ))}
           </div>
           <h2 className="mt-3 text-lg font-bold mb-3">Penilaian</h2>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col">
             {dosen.nilai.length > 0 ? (
-              <div>
+              <div className="flex flex-col gap-5">
                 <div className="border border-slate-300 p-3 overflow-hidden shadow-md rounded-lg flex flex-col ">
                   <h2 className="font-semibold mb-1">Metode Pengajaran</h2>
                   <div className="flex justify-center gap-1 text-sm">
@@ -251,7 +251,7 @@ const DetailDosen = () => {
                         key={rating}
                         className="flex items-center justify-center gap-3"
                       >
-                        <p className="w-14">{rating} Star</p>
+                        <p className="w-20">{rating} Star</p>
                         <Progress
                           value={persentageRating(rating, "pengajaran")}
                         />
@@ -291,7 +291,7 @@ const DetailDosen = () => {
                         key={rating}
                         className="flex items-center justify-center gap-3"
                       >
-                        <p className="w-14">{rating} Star</p>
+                        <p className="w-20">{rating} Star</p>
                         <Progress
                           value={persentageRating(rating, "pembelajaran")}
                         />
@@ -329,7 +329,7 @@ const DetailDosen = () => {
                         key={rating}
                         className="flex items-center justify-center gap-3"
                       >
-                        <p className="w-14">{rating} Star</p>
+                        <p className="w-20">{rating} Star</p>
                         <Progress
                           value={persentageRating(rating, "penyampaianMateri")}
                         />
@@ -367,7 +367,7 @@ const DetailDosen = () => {
                         key={rating}
                         className="flex items-center justify-center gap-3"
                       >
-                        <p className="w-14">{rating} Star</p>
+                        <p className="w-20">{rating} Star</p>
                         <Progress
                           value={persentageRating(rating, "kehadiran")}
                         />
@@ -405,7 +405,7 @@ const DetailDosen = () => {
                         key={rating}
                         className="flex items-center justify-center gap-3"
                       >
-                        <p className="w-14">{rating} Star</p>
+                        <p className="w-20">{rating} Star</p>
                         <Progress
                           value={persentageRating(rating, "ketepatanWaktu")}
                         />
