@@ -9,6 +9,7 @@ const DetailDosen = () => {
   const params = useSearchParams();
   const dosenId = params.get("dosenId");
   interface Dosen {
+    nilai: [];
     nama: string;
     nip: string;
     email: string;
@@ -17,6 +18,8 @@ const DetailDosen = () => {
     matakuliah: string;
     rating: number;
     nilaiPembelajaran: number[];
+    nilaiKehadiran: number[];
+    nilaiKetepatanWaktu: number[];
   }
 
   const [dosen, setDosen] = React.useState<Dosen | null>(null);
@@ -103,53 +106,70 @@ const DetailDosen = () => {
     return total;
   }, 0);
 
-  const filterRating = (rating: number) => {
-    return dosen?.nilaiPembelajaran.filter((nilai) => nilai === rating).length;
+  const ratingKehadiran = dosen?.nilaiKehadiran.reduce((acc, curr) => {
+    const total = acc + curr;
+    return total;
+  }, 0);
+
+  const ratingKetepatanWaktu = dosen?.nilaiKetepatanWaktu.reduce((acc, curr) => {
+    const total = acc + curr;
+    return total;
+  }, 0);
+
+  const filterRating = (rating: number, type: string) => {
+    if (type === "pembelajaran") {
+      return dosen?.nilaiPembelajaran.filter((nilai) => nilai === rating).length;
+    }
+    if (type === "kehadiran") {
+      return dosen?.nilaiKehadiran.filter((nilai) => nilai === rating).length;
+    }
+    if (type === "ketepatanWaktu") {
+      return dosen?.nilaiKetepatanWaktu.filter((nilai) => nilai === rating).length;
+    }
   }
 
-  const persentageRating = (rating: number) => {
-    return dosen?.nilaiPembelajaran ? dosen.nilaiPembelajaran.filter((nilai) => nilai === rating).length / dosen.nilaiPembelajaran.length * 100 : 0;
+  const persentageRating = (rating: number, type: string) => {
+    if (type === "pembelajaran") {
+      const totalRating = dosen?.nilaiPembelajaran.length;
+      const ratingCount = dosen?.nilaiPembelajaran.filter((nilai) => nilai === rating).length;
+      return ratingCount !== undefined && totalRating !== undefined ? (ratingCount / totalRating) * 100 : 0;
+    }
+    if (type === "kehadiran") {
+      const totalRating = dosen?.nilai.length;
+      const ratingCount = dosen?.nilaiKehadiran.filter((nilai) => nilai === rating).length;
+      return ratingCount !== undefined && totalRating !== undefined ? (ratingCount / totalRating) * 100 : 0;
+    }
+    if (type === "ketepatanWaktu") {
+      const totalRating = dosen?.nilaiKetepatanWaktu.length;
+      const ratingCount = dosen?.nilaiKetepatanWaktu.filter((nilai) => nilai === rating).length;
+      return ratingCount !== undefined && totalRating !== undefined ? (ratingCount / totalRating) * 100 : 0;
+    }
   }
 
   return (
     <div>
       {dosen && (
         <div className="flex flex-col h-full">
-          <div className="text-left text-base">
-            <div className="flex">
-              <p className="w-24 font-semibold">Nama</p>
-              <p>:</p>
-              <p className="ml-2">{dosen.nama}</p>
+            <div className="text-left text-base">
+              {[
+              { label: "Nama", value: dosen.nama },
+              { label: "NIP", value: dosen.nip },
+              { label: "Email", value: dosen.email },
+              { label: "Prodi", value: dosen.prodi },
+              { label: "Fakultas", value: dosen.fakultas },
+              { label: "Matakuliah", value: dosen.matakuliah },
+              ].map((item, index) => (
+              <div key={index} className="flex">
+                <p className="w-24 font-semibold">{item.label}</p>
+                <p>:</p>
+                <p className="ml-2">{item.value}</p>
+              </div>
+              ))}
             </div>
-            <div className="flex">
-              <p className="w-24 font-semibold">NIP</p>
-              <p>:</p>
-              <p className="ml-2">{dosen.nip}</p>
-            </div>
-            <div className="flex">
-              <p className="w-24 font-semibold">Email</p>
-              <p>:</p>
-              <p className="ml-2">{dosen.email}</p>
-            </div>
-            <div className="flex">
-              <p className="w-24 font-semibold">Prodi</p>
-              <p>:</p>
-              <p className="ml-2">{dosen.prodi}</p>
-            </div>
-            <div className="flex">
-              <p className="w-24 font-semibold">Fakultas</p>
-              <p>:</p>
-              <p className="ml-2">{dosen.fakultas}</p>
-            </div>
-            <div className="flex">
-              <p className="w-24 font-semibold">Matakuliah</p>
-              <p>:</p>
-              <p className="ml-2">{dosen.matakuliah}</p>
-            </div>
-          </div>
           <h2 className="mt-3 text-lg font-bold mb-3">Penilaian</h2>
           <div className="flex flex-col gap-4">
-            <div className="border border-slate-300 p-3 h-72 overflow-hidden shadow-md rounded-lg flex flex-col ">
+            
+            <div className="border border-slate-300 p-3 overflow-hidden shadow-md rounded-lg flex flex-col ">
               <h2 className="font-semibold mb-1">Pembelajaran</h2>
               <div className="flex justify-center gap-1 text-sm">
                 {ratingPembelajaran !== undefined &&
@@ -166,56 +186,81 @@ const DetailDosen = () => {
                   <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
                 </div>
               </div>
-              <h3 className="font-semibold">Rating Distribution</h3>
+              <div className="mx-4 mt-6">
+                <h3 className="font-semibold text-left">Distribusi Rating:</h3>
+                {[1, 2, 3, 4, 5].map((rating) => (
+                  <div key={rating} className="flex items-center justify-center gap-3">
+                  <p className="w-14">{rating} Star</p>
+                  <Progress value={persentageRating(rating, "pembelajaran")} />
+                  <p>{filterRating(rating, "pembelajaran")}</p>
+                  </div>
+                ))}
+              </div>
               <div className="text-left ml-4 mt-2">
                 <p className="font-semibold">Komentar:</p>
                 <div></div>
               </div>
             </div>
+
             <div className="border border-slate-300 p-3 h-72 overflow-hidden shadow-md rounded-lg flex flex-col ">
-              <h2 className="font-semibold mb-1">Pembelajaran</h2>
+              <h2 className="font-semibold mb-1">Kehadiran</h2>
               <div className="flex justify-center gap-1 text-sm">
-                {ratingPembelajaran !== undefined &&
+                {ratingKehadiran !== undefined &&
                   renderStars(
-                    ratingPembelajaran / dosen.nilaiPembelajaran.length
+                    ratingKehadiran / dosen.nilai.length
                   )}
                 <div className="flex justify-center items-center gap-2">
                   <p className="ml-1">
-                    {ratingPembelajaran
-                      ? ratingPembelajaran / dosen.nilaiPembelajaran.length
+                    {ratingKehadiran
+                      ? ratingKehadiran / dosen.nilai.length
                       : "N/A"}
                     /5
                   </p>
                   <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
                 </div>
               </div>
-              <div className="mx-4">
+              <div className="mx-4 mt-6">
                 <h3 className="font-semibold text-left">Distribusi Rating:</h3>
-                <div className="flex items-center justify-center gap-3">
-                  <p>1 Star</p>
-                  <Progress value={persentageRating(1)} />
-                    <p>{filterRating(1)}</p>
+                {[1, 2, 3, 4, 5].map((rating) => (
+                  <div key={rating} className="flex items-center justify-center gap-3">
+                  <p className="w-14">{rating} Star</p>
+                  <Progress value={persentageRating(rating, "kehadiran")} />
+                  <p>{filterRating(rating, "kehadiran")}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="text-left ml-4 mt-2">
+                <p className="font-semibold">Komentar:</p>
+                <div></div>
+              </div>
+            </div>
+
+            <div className="border border-slate-300 p-3 h-72 overflow-hidden shadow-md rounded-lg flex flex-col ">
+              <h2 className="font-semibold mb-1">Ketepatan Waktu</h2>
+              <div className="flex justify-center gap-1 text-sm">
+                {ratingKetepatanWaktu !== undefined &&
+                  renderStars(
+                    ratingKetepatanWaktu / dosen.nilai.length
+                  )}
+                <div className="flex justify-center items-center gap-2">
+                  <p className="ml-1">
+                    {ratingKetepatanWaktu
+                      ? ratingKetepatanWaktu / dosen.nilai.length
+                      : "N/A"}
+                    /5
+                  </p>
+                  <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
                 </div>
-                <div className="flex items-center justify-center gap-3">
-                  <p>2 Star</p>
-                  <Progress value={persentageRating(2)} />
-                    <p>{filterRating(2)}</p>
-                </div>
-                <div className="flex items-center justify-center gap-3">
-                  <p>3 Star</p>
-                  <Progress value={persentageRating(3)} />
-                    <p>{filterRating(3)}</p>
-                </div>
-                <div className="flex items-center justify-center gap-3">
-                  <p>4 Star</p>
-                  <Progress value={persentageRating(4)} />
-                    <p>{filterRating(4)}</p>
-                </div>
-                <div className="flex items-center justify-center gap-3">
-                  <p>5 Star</p>
-                  <Progress value={persentageRating(5)} />
-                    <p>{filterRating(5)}</p>
-                </div>
+              </div>
+              <div className="mx-4 mt-6">
+                <h3 className="font-semibold text-left">Distribusi Rating:</h3>
+                {[1, 2, 3, 4, 5].map((rating) => (
+                  <div key={rating} className="flex items-center justify-center gap-3">
+                  <p className="w-14">{rating} Star</p>
+                  <Progress value={persentageRating(rating, "ketepatanWaktu")} />
+                  <p>{filterRating(rating, "ketepatanWaktu")}</p>
+                  </div>
+                ))}
               </div>
               <div className="text-left ml-4 mt-2">
                 <p className="font-semibold">Komentar:</p>
