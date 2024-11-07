@@ -2,6 +2,7 @@
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
+import { MdLeaderboard } from "react-icons/md";
 
 const DetailDosen = () => {
   const params = useSearchParams();
@@ -104,7 +105,7 @@ const DetailDosen = () => {
   return (
     <div>
       {dosen && (
-        <div className="flex flex-col ">
+        <div className="flex flex-col h-full">
           <div className="text-left text-base">
             <div className="flex">
               <p className="w-24 font-semibold">Nama</p>
@@ -138,16 +139,51 @@ const DetailDosen = () => {
             </div>
           </div>
           <h2 className="mt-3 text-lg font-bold mb-3">Penilaian</h2>
-          <div className="border border-slate-300 p-3 h-72 overflow-hidden shadow-md rounded-lg flex flex-col ">
-            <h2 className="font-semibold mb-1">Pembelajaran</h2>
-            <div className="flex justify-center gap-1 text-sm">
-            {ratingPembelajaran !== undefined && renderStars(ratingPembelajaran / dosen.nilaiPembelajaran.length)}
-              <p className="ml-1">{ratingPembelajaran ? (ratingPembelajaran / dosen.nilaiPembelajaran.length) : 'N/A'}/5</p>
+          <div className="flex flex-col gap-4">
+            <div className="border border-slate-300 p-3 h-72 overflow-hidden shadow-md rounded-lg flex flex-col ">
+              <h2 className="font-semibold mb-1">Pembelajaran</h2>
+              <div className="flex justify-center gap-1 text-sm">
+                {ratingPembelajaran !== undefined &&
+                  renderStars(
+                    ratingPembelajaran / dosen.nilaiPembelajaran.length
+                  )}
+                <div className="flex justify-center items-center gap-2">
+                  <p className="ml-1">
+                    {ratingPembelajaran
+                      ? ratingPembelajaran / dosen.nilaiPembelajaran.length
+                      : "N/A"}
+                    /5
+                  </p>
+                  <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
+                </div>
+              </div>
+              <div className="text-left ml-4 mt-2">
+                <p className="font-semibold">Komentar:</p>
+                <div></div>
+              </div>
             </div>
-            <div className="text-left ml-4 mt-2">
-              <p className="font-semibold">Komentar:</p>
+            <div className="border border-slate-300 p-3 h-72 overflow-hidden shadow-md rounded-lg flex flex-col ">
+              <h2 className="font-semibold mb-1">Pembelajaran</h2>
+              <div className="flex justify-center gap-1 text-sm">
+                {ratingPembelajaran !== undefined &&
+                  renderStars(
+                    ratingPembelajaran / dosen.nilaiPembelajaran.length
+                  )}
+                <div className="flex justify-center items-center gap-2">
+                  <p className="ml-1">
+                    {ratingPembelajaran
+                      ? ratingPembelajaran / dosen.nilaiPembelajaran.length
+                      : "N/A"}
+                    /5
+                  </p>
+                  <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
+                </div>
+              </div>
+              <div className="text-left ml-4 mt-2">
+                <p className="font-semibold">Komentar:</p>
+                <div></div>
+              </div>
             </div>
-
           </div>
         </div>
       )}
