@@ -188,7 +188,7 @@ const DetailDosen = () => {
             {dosen.nilai.length > 0 ? (
               <div>
                 <div className="border border-slate-300 p-3 overflow-hidden shadow-md rounded-lg flex flex-col ">
-                  <h2 className="font-semibold mb-1">Pembelajaran</h2>
+                  <h2 className="font-semibold mb-1">Media Pembelajaran</h2>
                   <div className="flex justify-center gap-1 text-sm">
                     {ratingPembelajaran !== undefined &&
                       renderStars(
