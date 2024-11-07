@@ -1,11 +1,16 @@
-import { review } from "@/lib/action"; 
-import React, {  useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FiUser } from "react-icons/fi";
+import { review } from "@/lib/action";
+import axios from "axios";
+import { useSearchParams } from "next/navigation";
+
+
+
 
 interface ReviewItem {
   id: string;
   nama: string;
-  rating: number; 
+  rating: number;
   nip: string;
   matakuliah: string;
   fakultas: string;
@@ -15,16 +20,36 @@ interface ReviewItem {
 }
 
 interface ReviewCardProps {
-  items: ReviewItem[];
   userId: string;
 }
 
-const ReviewCard: React.FC<ReviewCardProps> = ({ items, userId }) => {
+const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
+
   const [ratings, setRatings] = useState<{ [key: string]: { [key: string]: number } }>({});
   const [comment, setComment] = useState<{ [key: string]: string }>({});
   const [reviewTime, setReviewTime] = useState<{ [key: string]: Date | null }>({});
   const [loading, setLoading] = useState(false);
+  const [items, setItems] = useState<ReviewItem[]>([]);
+  const [apiLoading, setApiLoading] = useState(true);
+  const params = useSearchParams();
+  const dosenId = params.get("dosenId");
 
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setApiLoading(true);
+      try {
+        const response = await axios.get(`/api/getDosen/${dosenId}`);
+        setItems(response.data);
+      } catch (error) {
+        console.error("Error fetching review data", error);
+      } finally {
+        setApiLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleStarClick = (dosenId: string, category: string, index: number) => {
     setRatings((prev) => ({
@@ -58,11 +83,11 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ items, userId }) => {
         userId
       );
       setComment((prev) => ({ ...prev, [dosenId]: "" }));
-      setReviewTime((prev) => ({ ...prev, [dosenId]: new Date() })); // Update waktu review
+      setReviewTime((prev) => ({ ...prev, [dosenId]: new Date() }));
     } catch (error) {
       console.error("Error submitting review and comment:", error);
-    }finally{
-        setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -78,16 +103,16 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ items, userId }) => {
     return !lastReviewTime || (now.getTime() - lastReviewTime.getTime() >= 24 * 60 * 60 * 1000);
   });
 
+
   return (
     <div>
-      {filteredItems.length === 0 ? (
+      {apiLoading ? (
+        <div className="text-center text-gray-500">Loading data...</div>
+      ) : filteredItems.length === 0 ? (
         <p className="text-center text-gray-500">Tidak ada dosen yang perlu direview saat ini.</p>
       ) : (
         filteredItems.map((item) => (
-          <div
-            key={item.id}
-            className="p-4 max-w-md mx-auto bg-white rounded-xl shadow-md mb-4 space-y-4"
-          >
+          <div key={item.id} className="p-4 max-w-md mx-auto bg-white rounded-xl shadow-md mb-4 space-y-4">
             <div className="flex items-center space-x-4">
               <FiUser className="text-6xl p-2 rounded-full mt-6 text-[#564add] bg-[#e1e7fe]" />
               <div className="text-xs text-gray-500">
@@ -98,14 +123,9 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ items, userId }) => {
             </div>
 
             {categories.map((category) => (
-              <div
-                key={category.key}
-                className="p-4 bg-gray-50 rounded-xl space-y-2 mb-4"
-              >
+              <div key={category.key} className="p-4 bg-gray-50 rounded-xl space-y-2 mb-4">
                 <div className="flex items-center">
-                  <h2 className="text-base font-semibold text-gray-900">
-                    {category.name}
-                  </h2>
+                  <h2 className="text-base font-semibold text-gray-900">{category.name}</h2>
                   <div className="ml-auto flex items-center space-x-1">
                     {[...Array(5)].map((_, index) => (
                       <button
@@ -139,7 +159,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ items, userId }) => {
               onClick={() => handleSubmit(item.id)}
               className="mt-4 w-full bg-green-500 text-white py-2 rounded-lg shadow-md hover:bg-green-600 focus:bg-green-700"
             >
-              {loading ? "mengirim rating...." : "Submit Review & Comment"}
+              {loading ? "Mengirim rating...." : "Submit Review & Comment"}
             </button>
           </div>
         ))

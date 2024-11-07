@@ -2,6 +2,7 @@ import Link from "next/link";
 import React from "react";
 import { IoMdClose } from "react-icons/io";
 import DetailDosen from "./DetailDosen";
+import ReviewCard from "./review-card";
 
 interface ModalProps {
   type: "detail" | "rate";
@@ -9,7 +10,11 @@ interface ModalProps {
 }
 
 
+
+
 const Modal = ({ type, userId }: ModalProps) => {
+
+
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
       <div className="p-5 py-8 relative border w-full shadow-lg rounded-md md:max-w-md max-w-sm hide-scrollbar h-screen overflow-y-auto bg-white">
@@ -25,7 +30,9 @@ const Modal = ({ type, userId }: ModalProps) => {
               </div>
             ) : (
                 // Todo: Add rate dosen
-              <div>Beri Nilai</div>
+              <div>
+                <ReviewCard userId={userId}/> 
+              </div>
             )}
           </div>
           <div className="flex justify-center mt-4">
