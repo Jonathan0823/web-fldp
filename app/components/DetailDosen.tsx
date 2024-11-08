@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 import { MdLeaderboard } from "react-icons/md";
 import CommentBox from "./CommentBox";
+import { formatToTitleCase } from "./ListDosen";
 
 const DetailDosen = ({ userId }: { userId: string }) => {
   const params = useSearchParams();
@@ -214,12 +215,12 @@ const DetailDosen = ({ userId }: { userId: string }) => {
         <div className="flex flex-col">
           <div className="text-left text-base">
             {[
-              { label: "Nama", value: dosen.nama },
+              { label: "Nama", value: formatToTitleCase(dosen.nama) },
               { label: "NIP", value: dosen.nip },
               { label: "Email", value: dosen.email },
-              { label: "Prodi", value: dosen.prodi },
-              { label: "Fakultas", value: dosen.fakultas },
-              { label: "Matakuliah", value: dosen.matakuliah },
+              { label: "Prodi", value: formatToTitleCase(dosen.prodi) },
+              { label: "Fakultas", value: formatToTitleCase(dosen.fakultas) },
+              { label: "Matakuliah", value: formatToTitleCase(dosen.matakuliah) },
             ].map((item, index) => (
               <div key={index} className="flex">
                 <p className="w-24 font-semibold">{item.label}</p>

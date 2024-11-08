@@ -3,12 +3,13 @@ import React, { useState, useEffect } from "react";
 import { FiHome, FiUser } from "react-icons/fi";
 import { RiGroupLine } from "react-icons/ri";
 import MyProfile from "./Home/MyProfile";
-import ProfileList from "./ListDosen";
+import ProfileList, { formatToTitleCase } from "./ListDosen";
 import axios from "axios";
 import { ThreeCircles } from "react-loader-spinner";
 import Link from "next/link";
 import Modal from "./Modal";
 import { useSearchParams } from "next/navigation";
+import { format } from "path";
 
 interface User {
   id: string;
@@ -137,10 +138,10 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
                       >
                         <div>
                           <h3 className="text-lg font-semibold text-gray-900">
-                            {item.nama}
+                            {formatToTitleCase(item.nama)}
                           </h3>
                           <p className="text-sm text-gray-600">
-                            Spesialisasi: {item.matakuliah}
+                            Spesialisasi: {formatToTitleCase(item.matakuliah)}
                           </p>
                         </div>
                         <Link href={`/?show=true&dosenId=${item.id}`}>Nilai</Link>

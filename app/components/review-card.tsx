@@ -4,6 +4,7 @@ import { review, sendComments } from "@/lib/action";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import toast, { Toaster } from 'react-hot-toast';
+import { formatToTitleCase } from "./ListDosen";
 
 interface ReviewItem {
   id: string;
@@ -175,11 +176,11 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
             className="p-4 max-w-md mx-auto bg-white rounded-xl shadow-md mb-4 space-y-4"
           >
             <div className="flex items-center space-x-4">
-              <FiUser className="text-6xl p-2 rounded-full mt-6 text-[#564add] bg-[#e1e7fe]" />
-              <div className="text-xs text-gray-500">
-                <p className="font-bold text-gray-900">{item.nama}</p>
-                <p>{item.fakultas}</p>
-                <p>{item.matakuliah}</p>
+              <FiUser className="text-6xl p-2 rounded-full text-[#564add] bg-[#e1e7fe]" />
+              <div className="text-xs text-gray-500 text-left">
+                <p className="font-bold text-gray-900">{formatToTitleCase(item.nama)}</p>
+                <p>{formatToTitleCase(item.fakultas)}</p>
+                <p>{formatToTitleCase(item.matakuliah)}</p>
               </div>
             </div>
 
