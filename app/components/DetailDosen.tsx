@@ -6,7 +6,7 @@ import React, { useEffect } from "react";
 import { MdLeaderboard } from "react-icons/md";
 import CommentBox from "./CommentBox";
 
-const DetailDosen = () => {
+const DetailDosen = ({ userId }: { userId: string }) => {
   const params = useSearchParams();
   const dosenId = params.get("dosenId");
   interface Dosen {
@@ -267,7 +267,9 @@ const DetailDosen = () => {
                   <div className="text-left ml-4 mt-2">
                     <p className="font-semibold">Komentar:</p>
                     <div>
-                      {dosenId && <CommentBox type="pengajaran" dosenId={dosenId} />}
+                      {dosenId && (
+                        <CommentBox type="pengajaran" dosenId={dosenId} userId={userId} />
+                      )}
                     </div>
                   </div>
                 </div>
@@ -312,7 +314,9 @@ const DetailDosen = () => {
                   <div className="text-left ml-4 mt-2">
                     <p className="font-semibold">Komentar:</p>
                     <div>
-                    {dosenId && <CommentBox type="pembelajaran" dosenId={dosenId} />}
+                      {dosenId && (
+                        <CommentBox type="pembelajaran" dosenId={dosenId} userId={userId} />
+                      )}
                     </div>
                   </div>
                 </div>
@@ -354,7 +358,13 @@ const DetailDosen = () => {
                   <div className="text-left ml-4 mt-2">
                     <p className="font-semibold">Komentar:</p>
                     <div>
-                    {dosenId && <CommentBox type="penyampaianMateri" dosenId={dosenId} />}
+                      {dosenId && (
+                        <CommentBox
+                          type="penyampaianMateri"
+                          dosenId={dosenId}
+                          userId={userId}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
@@ -367,9 +377,7 @@ const DetailDosen = () => {
                     <div className="flex justify-center items-center gap-2">
                       <p className="ml-1">
                         {ratingKehadiran
-                          ? renderRating(
-                              ratingKehadiran / dosen.nilai.length
-                            )
+                          ? renderRating(ratingKehadiran / dosen.nilai.length)
                           : "0"}
                         /5
                       </p>
@@ -396,7 +404,9 @@ const DetailDosen = () => {
                   <div className="text-left ml-4 mt-2">
                     <p className="font-semibold">Komentar:</p>
                     <div>
-                    {dosenId && <CommentBox type="kehadiran" dosenId={dosenId} />}
+                      {dosenId && (
+                        <CommentBox type="kehadiran" dosenId={dosenId} userId={userId}/>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -438,7 +448,9 @@ const DetailDosen = () => {
                   <div className="text-left ml-4 mt-2">
                     <p className="font-semibold">Komentar:</p>
                     <div>
-                    {dosenId && <CommentBox type="tepatWaktu" dosenId={dosenId} />}
+                      {dosenId && (
+                        <CommentBox type="tepatWaktu" dosenId={dosenId} userId={userId} />
+                      )}
                     </div>
                   </div>
                 </div>

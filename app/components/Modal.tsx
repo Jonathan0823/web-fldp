@@ -20,7 +20,7 @@ const Modal = ({ type, userId }: ModalProps) => {
           <div className="mt-2 px-2 py-3">
             {type === "detail" ? (
               <div>
-                <DetailDosen />
+                <DetailDosen userId={userId} />
               </div>
             ) : (
               <div>
