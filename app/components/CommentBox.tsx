@@ -15,7 +15,7 @@ interface Comment{
 }
 
 const CommentBox = ({ type, dosenId }: { type: string; dosenId: string }) => {
-  const [comments, setComments] = React.useState([]);
+  const [comments, setComments] = React.useState<Comment[]>([]);
   const getComments = async () => {
     const res = await axios.get(`/api/getComments/${dosenId}`);
     setComments(res.data.data);
@@ -27,8 +27,10 @@ const CommentBox = ({ type, dosenId }: { type: string; dosenId: string }) => {
   }, []);
 
 
-  const filteredComments = comments.filter((comment: Comment) => comment.type === type);
-
+  const filteredComments = comments
+  .filter((comment: Comment) => comment.type === type)
+  .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  
   return (
     <div className="h-48 relative overflow-y-auto">
      <div className="overflow-y-auto">
