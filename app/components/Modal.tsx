@@ -24,8 +24,6 @@ const Modal = ({ type, userId }: ModalProps) => {
               </div>
             ) : (
               <div>
-                <div>Beri Nilai</div>
-
                 <div>
                   <ReviewCard userId={userId} />
                 </div>
