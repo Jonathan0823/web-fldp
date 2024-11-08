@@ -154,6 +154,7 @@ export const sendComments = async (dosenId: string, userId: string, komen: strin
         type: type,
       },
     });
+    return comments;  
   } catch (error) {
     throw new Error(String(error));
   }
