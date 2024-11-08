@@ -43,7 +43,6 @@ const Sidebar: React.FC = () => {
 
   const fetchData = async () => {
     try {
-
       setLoading(true);
       const res = await axios.get(`/api/getUser/${session?.user.id}`);
       setUser(res.data);
@@ -90,9 +89,9 @@ const Sidebar: React.FC = () => {
   return (
     <div className="flex h-screen">
       <div
-        className={`fixed inset-y-0 left-0 transform ${
+        className={`fixed inset-y-0 left-0 transform  ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out bg-gray-800 w-64 p-4`}
+        } transition-transform duration-300 ease-in-out bg-gray-800 w-64 p-4 flex flex-col`}
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-white text-xl font-semibold">Dashboard</h2>
@@ -103,7 +102,7 @@ const Sidebar: React.FC = () => {
             Close
           </button>
         </div>
-        <ul>
+        <ul className="flex-grow">
           <li
             onClick={() => handlePageChange("Rule")}
             className={`mb-3 text-gray-200 hover:text-white cursor-pointer ${
@@ -153,6 +152,14 @@ const Sidebar: React.FC = () => {
             Add matkul
           </li>
         </ul>
+        <div className="mt-auto mb-3 flex justify-center">
+          <a
+            href="/"
+            className="bg-red-500 px-5 rounded-lg py-1 hover:bg-red-600 transition duration-200 text-white cursor-pointer"
+          >
+            Exit
+          </a>
+        </div>
       </div>
       {!isOpen && (
         <button
