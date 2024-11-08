@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FiUser } from "react-icons/fi";
-import { review } from "@/lib/action";
+import { review, sendComments } from "@/lib/action";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 
@@ -25,6 +25,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
     [key: string]: { [key: string]: number };
   }>({});
   const [comment, setComment] = useState<{ [key: string]: string }>({});
+  const [comments, setComments] = useState<{ [key: string]: string }>({});
   const [reviewTime, setReviewTime] = useState<{ [key: string]: Date | null }>(
     {}
   );
@@ -83,6 +84,41 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
     }));
   };
 
+  const handleCommentChange = (categoryKey: string, value: string) => {
+    setComments((prev) => ({ ...prev, [categoryKey]: value }));
+  };
+
+  const testSubmit = async (dosenId: string) => {
+    try {
+      const commentPembelajaran = comments["pembelajaran"] || "";
+      const commentKehadiran = comments["kehadiran"] || "";
+      const commentTepatWaktu = comments["tepatWaktu"] || "";
+      const commentPengajaran = comments["pengajaran"] || "";
+      const commentPenyampaianMateri = comments["penyampaianMateri"] || "";
+      await Promise.all([
+        sendComments(dosenId, userId, commentPembelajaran, "pembelajaran"),
+        sendComments(dosenId, userId, commentKehadiran, "kehadiran"),
+        sendComments(dosenId, userId, commentTepatWaktu, "tepatWaktu"),
+        sendComments(dosenId, userId, commentPengajaran, "pengajaran"),
+        sendComments(
+          dosenId,
+          userId,
+          commentPenyampaianMateri,
+          "penyampaianMateri"
+        ),
+      ]);
+      setComments(() => ({
+        pembelajaran: "",
+        kehadiran: "",
+        tepatWaktu: "",
+        pengajaran: "",
+        penyampaianMateri: "",
+      }));
+    } catch (error) {
+      console.error("Error submitting comment:", error);
+    }
+  }
+
   const handleSubmit = async (dosenId: string) => {
     setLoading(true);
     try {
@@ -94,6 +130,11 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
         penyampaianMateri = 0,
       } = ratings[dosenId] || {};
       const userComment = comment[dosenId] || "";
+      const commentPembelajaran = comments["pembelajaran"] || "";
+      const commentKehadiran = comments["kehadiran"] || "";
+      const commentTepatWaktu = comments["tepatWaktu"] || "";
+      const commentPengajaran = comments["pengajaran"] || "";
+      const commentPenyampaianMateri = comments["penyampaianMateri"] || "";
       await review(
         pembelajaran,
         kehadiran,
@@ -104,6 +145,25 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
         dosenId.toString(),
         userId
       );
+      await Promise.all([
+        sendComments(dosenId, userId, commentPembelajaran, "pembelajaran"),
+        sendComments(dosenId, userId, commentKehadiran, "kehadiran"),
+        sendComments(dosenId, userId, commentTepatWaktu, "tepatWaktu"),
+        sendComments(dosenId, userId, commentPengajaran, "pengajaran"),
+        sendComments(
+          dosenId,
+          userId,
+          commentPenyampaianMateri,
+          "penyampaianMateri"
+        ),
+      ]);
+      setComments(() => ({
+        pembelajaran: "",
+        kehadiran: "",
+        tepatWaktu: "",
+        pengajaran: "",
+        penyampaianMateri: "",
+      }));
       setComment((prev) => ({ ...prev, [dosenId]: "" }));
       setReviewTime((prev) => ({ ...prev, [dosenId]: new Date() }));
     } catch (error) {
@@ -117,8 +177,8 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
     { name: "Pembelajaran", key: "pembelajaran" },
     { name: "Ketepatan Waktu", key: "tepatWaktu" },
     { name: "Kehadiran", key: "kehadiran" },
-    { name: "pengajaran", key: "pengajaran" },
-    { name: "penyampaian materi", key: "penyampaianMateri" },
+    { name: "Pengajaran", key: "pengajaran" },
+    { name: "Penyampaian Materi", key: "penyampaianMateri" },
   ];
 
   const filteredItems = items.filter((item) => {
@@ -180,6 +240,15 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
                     </span>
                   </div>
                 </div>
+                <input
+                  type="text"
+                  className="w-full p-2 border rounded"
+                  value={comments[category.key] || ""}
+                  onChange={(e) =>
+                    handleCommentChange(category.key, e.target.value)
+                  }
+                  placeholder={`Add a comment for ${category.name}`}
+                />
               </div>
             ))}
 
@@ -201,6 +270,13 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
               className="mt-4 w-full bg-green-500 text-white py-2 rounded-lg shadow-md hover:bg-green-600 focus:bg-green-700"
             >
               {loading ? "Mengirim rating...." : "Submit Review & Comment"}
+            </button>
+            <button
+              disabled={loading}
+              onClick={() => testSubmit(item.id)}
+              className="mt-4 w-full bg-green-500 text-white py-2 rounded-lg shadow-md hover:bg-green-600 focus:bg-green-700"
+            >
+              {loading ? "Mengirim rating...." : "consolelog"}
             </button>
           </div>
         ))

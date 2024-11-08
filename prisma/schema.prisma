@@ -39,7 +39,6 @@ model Nilai {
   dosenId             String
   userId              String
   komen String?
-  comment             Comment[]
   penilaian           User     @relation(fields: [userId], references: [id])
   dosen               Dosen    @relation(fields: [dosenId], references: [id])
   createdAt           DateTime @default(now())
@@ -102,8 +101,6 @@ model Comment {
   type      String
   user      User     @relation(fields: [userId], references: [id])
   dosen     Dosen    @relation(fields: [dosenId], references: [id])
-  nilaiId   String
-  nilai     Nilai    @relation(fields: [nilaiId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
