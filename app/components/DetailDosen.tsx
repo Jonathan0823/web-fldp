@@ -203,6 +203,10 @@ const DetailDosen = () => {
     }
   };
 
+  const renderRating = (rating: number) => {
+    return rating % 1 === 0 ? rating : rating.toFixed(2);
+  };
+
   return (
     <div>
       {dosen && (
@@ -235,7 +239,7 @@ const DetailDosen = () => {
                     <div className="flex justify-center items-center gap-2">
                       <p className="ml-1">
                         {ratingPengajaran
-                          ? ratingPengajaran / dosen.nilai.length
+                          ? renderRating(ratingPengajaran / dosen.nilai.length)
                           : "0"}
                         /5
                       </p>
@@ -275,8 +279,11 @@ const DetailDosen = () => {
                     <div className="flex justify-center items-center gap-2">
                       <p className="ml-1">
                         {ratingPembelajaran
-                          ? ratingPembelajaran / dosen.nilaiPembelajaran.length
-                          : "N/A"}
+                          ? renderRating(
+                              ratingPembelajaran /
+                                dosen.nilaiPembelajaran.length
+                            )
+                          : "0"}
                         /5
                       </p>
                       <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
@@ -313,7 +320,9 @@ const DetailDosen = () => {
                     <div className="flex justify-center items-center gap-2">
                       <p className="ml-1">
                         {ratingPenyampaianMateri
-                          ? ratingPenyampaianMateri / dosen.nilai.length
+                          ? renderRating(
+                              ratingPenyampaianMateri / dosen.nilai.length
+                            )
                           : "0"}
                         /5
                       </p>
@@ -351,8 +360,8 @@ const DetailDosen = () => {
                     <div className="flex justify-center items-center gap-2">
                       <p className="ml-1">
                         {ratingKehadiran
-                          ? ratingKehadiran / dosen.nilai.length
-                          : "N/A"}
+                          ? renderRating(ratingKehadiran / dosen.nilai.length)
+                          : "0"}
                         /5
                       </p>
                       <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
@@ -389,8 +398,8 @@ const DetailDosen = () => {
                     <div className="flex justify-center items-center gap-2">
                       <p className="ml-1">
                         {ratingKetepatanWaktu
-                          ? ratingKetepatanWaktu / dosen.nilai.length
-                          : "N/A"}
+                          ? renderRating(ratingKetepatanWaktu / dosen.nilai.length)
+                          : "0"}
                         /5
                       </p>
                       <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
