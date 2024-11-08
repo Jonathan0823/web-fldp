@@ -15,7 +15,7 @@ export async function GET(
           nilai: true, 
           matakuliah: true, 
           prodi: true, 
-          fakultas: true 
+          fakultas: true,
         },
       });
     } else {
@@ -35,7 +35,7 @@ export async function GET(
           nilai: true, 
           matakuliah: true, 
           prodi: true, 
-          fakultas: true 
+          fakultas: true,
         },
       });
     }
@@ -58,6 +58,9 @@ export async function GET(
       const nilaiPengajaran = d.nilai.map((n) => n.pengajaran);
       const nilaiPenyampaianMateri = d.nilai.map((n) => n.penyampaianMateri);
 
+   
+
+
       return {
         id: d.id,
         nama: d.nama,
@@ -72,7 +75,6 @@ export async function GET(
         matakuliah: d.matakuliah?.nama || null,
         fakultas: d.fakultas.nama, 
         prodi: d.prodi.nama,
-        email: d.email,
         createdAt: d.createdAt,
         updatedAt: d.updatedAt,
       };
