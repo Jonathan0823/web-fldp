@@ -3,6 +3,7 @@ import { FiUser } from "react-icons/fi";
 import { review, sendComments } from "@/lib/action";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
+import toast, { Toaster } from 'react-hot-toast';
 
 interface ReviewItem {
   id: string;
@@ -88,36 +89,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
     setComments((prev) => ({ ...prev, [categoryKey]: value }));
   };
 
-  const testSubmit = async (dosenId: string) => {
-    try {
-      const commentPembelajaran = comments["pembelajaran"] || "";
-      const commentKehadiran = comments["kehadiran"] || "";
-      const commentTepatWaktu = comments["tepatWaktu"] || "";
-      const commentPengajaran = comments["pengajaran"] || "";
-      const commentPenyampaianMateri = comments["penyampaianMateri"] || "";
-      await Promise.all([
-        sendComments(dosenId, userId, commentPembelajaran, "pembelajaran"),
-        sendComments(dosenId, userId, commentKehadiran, "kehadiran"),
-        sendComments(dosenId, userId, commentTepatWaktu, "tepatWaktu"),
-        sendComments(dosenId, userId, commentPengajaran, "pengajaran"),
-        sendComments(
-          dosenId,
-          userId,
-          commentPenyampaianMateri,
-          "penyampaianMateri"
-        ),
-      ]);
-      setComments(() => ({
-        pembelajaran: "",
-        kehadiran: "",
-        tepatWaktu: "",
-        pengajaran: "",
-        penyampaianMateri: "",
-      }));
-    } catch (error) {
-      console.error("Error submitting comment:", error);
-    }
-  }
+  
 
   const handleSubmit = async (dosenId: string) => {
     setLoading(true);
@@ -135,16 +107,6 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
       const commentTepatWaktu = comments["tepatWaktu"] || "";
       const commentPengajaran = comments["pengajaran"] || "";
       const commentPenyampaianMateri = comments["penyampaianMateri"] || "";
-      await review(
-        pembelajaran,
-        kehadiran,
-        tepatWaktu,
-        pengajaran,
-        penyampaianMateri,
-        userComment,
-        dosenId.toString(),
-        userId
-      );
       await Promise.all([
         sendComments(dosenId, userId, commentPembelajaran, "pembelajaran"),
         sendComments(dosenId, userId, commentKehadiran, "kehadiran"),
@@ -157,6 +119,17 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
           "penyampaianMateri"
         ),
       ]);
+      await review(
+        pembelajaran,
+        kehadiran,
+        tepatWaktu,
+        pengajaran,
+        penyampaianMateri,
+        userComment,
+        dosenId.toString(),
+        userId
+      );
+     
       setComments(() => ({
         pembelajaran: "",
         kehadiran: "",
@@ -166,8 +139,10 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
       }));
       setComment((prev) => ({ ...prev, [dosenId]: "" }));
       setReviewTime((prev) => ({ ...prev, [dosenId]: new Date() }));
+      toast.success("Review berhasil dikirim");
     } catch (error) {
       console.error("Error submitting review and comment:", error);
+      toast.error("Gagal mengirim review");
     } finally {
       setLoading(false);
     }
@@ -189,6 +164,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
 
   return (
     <div>
+      <Toaster />
       {apiLoading ? (
         <div className="text-center text-gray-500">Loading data...</div>
       ) : filteredItems.length === 0 ? (
@@ -271,13 +247,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
             >
               {loading ? "Mengirim rating...." : "Submit Review & Comment"}
             </button>
-            <button
-              disabled={loading}
-              onClick={() => testSubmit(item.id)}
-              className="mt-4 w-full bg-green-500 text-white py-2 rounded-lg shadow-md hover:bg-green-600 focus:bg-green-700"
-            >
-              {loading ? "Mengirim rating...." : "consolelog"}
-            </button>
+            
           </div>
         ))
       )}

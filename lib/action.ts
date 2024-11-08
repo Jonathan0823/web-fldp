@@ -145,7 +145,6 @@ export const createMatakuliah = async (nama: string, fakultasId: string) => {
 
 export const sendComments = async (dosenId: string, userId: string, komen: string, type: string) => {
   try{
-    console.log(dosenId, userId, komen, type);
     const comments = await prisma.comment.create({
       data: {
         dosenId,
