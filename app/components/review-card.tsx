@@ -3,7 +3,7 @@ import { FiUser } from "react-icons/fi";
 import { review, sendComments } from "@/lib/action";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
 import { formatToTitleCase } from "./ListDosen";
 
 interface ReviewItem {
@@ -89,8 +89,6 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
     setComments((prev) => ({ ...prev, [categoryKey]: value }));
   };
 
-  
-
   const handleSubmit = async (dosenId: string) => {
     setLoading(true);
     try {
@@ -128,7 +126,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
         dosenId.toString(),
         userId
       );
-     
+
       setComments(() => ({
         pembelajaran: "",
         kehadiran: "",
@@ -147,11 +145,11 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
   };
 
   const categories = [
-    { name: "Pembelajaran", key: "pembelajaran" },
+    { name: "Metode Pengajaran", key: "pengajaran" },
+    { name: "Media Pembelajaran", key: "pembelajaran" },
+    { name: "Penyampaian Materi", key: "penyampaianMateri" },
     { name: "Ketepatan Waktu", key: "tepatWaktu" },
     { name: "Kehadiran", key: "kehadiran" },
-    { name: "Pengajaran", key: "pengajaran" },
-    { name: "Penyampaian Materi", key: "penyampaianMateri" },
   ];
 
   const filteredItems = items.filter((item) => {
@@ -178,7 +176,9 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
             <div className="flex items-center space-x-4">
               <FiUser className="text-6xl p-2 rounded-full text-[#564add] bg-[#e1e7fe]" />
               <div className="text-xs text-gray-500 text-left">
-                <p className="font-bold text-gray-900">{formatToTitleCase(item.nama)}</p>
+                <p className="font-bold text-gray-900">
+                  {formatToTitleCase(item.nama)}
+                </p>
                 <p>{formatToTitleCase(item.fakultas)}</p>
                 <p>{formatToTitleCase(item.matakuliah)}</p>
               </div>
@@ -187,13 +187,13 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
             {categories.map((category) => (
               <div
                 key={category.key}
-                className="p-4 bg-gray-50 rounded-xl space-y-2 mb-4"
+                className=" rounded-xl space-y-2 mb-4"
               >
-                <div className="flex items-center">
-                  <h2 className="text-base font-semibold text-gray-900">
+                <div className="flex flex-col items-center">
+                  <h2 className="mr-auto text-sm font-semibold text-gray-900">
                     {category.name}
                   </h2>
-                  <div className="ml-auto flex items-center space-x-1">
+                  <div className="flex mr-auto items-center space-x-1">
                     {[...Array(5)].map((_, index) => (
                       <button
                         key={index}
@@ -209,31 +209,44 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
                         ★
                       </button>
                     ))}
-                    <span className="text-sm text-gray-600 ml-2">
-                      {ratings[item.id]?.[category.key] || 0}/5
-                    </span>
                   </div>
                 </div>
-                <input
-                  type="text"
-                  className="w-full p-2 border rounded"
-                  value={comments[category.key] || ""}
-                  onChange={(e) =>
-                    handleCommentChange(category.key, e.target.value)
-                  }
-                  placeholder={`Add a comment for ${category.name}`}
-                />
+                <div className="relative">
+                  <textarea
+                    className="w-full p-2 border rounded text-xs h-24 resize-none"
+                    value={comments[category.key] || ""}
+                    onChange={(e) =>
+                      handleCommentChange(category.key, e.target.value)
+                    }
+                    placeholder={`Berikan komentar tentang ${category.name}`}
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width={30}
+                    height={30}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    className="absolute bottom-2 right-1"
+                  >
+                    <path
+                      stroke="#797979"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="m21 15-6 6m6-13L8 21"
+                    />
+                  </svg>
+                </div>
               </div>
             ))}
 
             <button
               disabled={loading}
               onClick={() => handleSubmit(item.id)}
-              className="mt-4 w-full bg-green-500 text-white py-2 rounded-lg shadow-md hover:bg-green-600 focus:bg-green-700"
+              className="mt-4 w-full bg-[#3b82f6] text-white py-2 rounded-lg shadow-md hover:bg-[#326fd2]"
             >
-              {loading ? "Mengirim rating...." : "Submit Review & Comment"}
+              {loading ? "Mengirim Evaluasi...." : "Kirim Evaluasi"}
             </button>
-            
           </div>
         ))
       )}
