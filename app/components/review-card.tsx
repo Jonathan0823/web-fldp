@@ -25,7 +25,6 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
   const [ratings, setRatings] = useState<{
     [key: string]: { [key: string]: number };
   }>({});
-  const [comment, setComment] = useState<{ [key: string]: string }>({});
   const [comments, setComments] = useState<{ [key: string]: string }>({});
   const [reviewTime, setReviewTime] = useState<{ [key: string]: Date | null }>(
     {}
@@ -101,7 +100,6 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
         pengajaran = 0,
         penyampaianMateri = 0,
       } = ratings[dosenId] || {};
-      const userComment = comment[dosenId] || "";
       const commentPembelajaran = comments["pembelajaran"] || "";
       const commentKehadiran = comments["kehadiran"] || "";
       const commentTepatWaktu = comments["tepatWaktu"] || "";
@@ -125,7 +123,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
         tepatWaktu,
         pengajaran,
         penyampaianMateri,
-        userComment,
+        "",
         dosenId.toString(),
         userId
       );
@@ -137,7 +135,6 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
         pengajaran: "",
         penyampaianMateri: "",
       }));
-      setComment((prev) => ({ ...prev, [dosenId]: "" }));
       setReviewTime((prev) => ({ ...prev, [dosenId]: new Date() }));
       toast.success("Review berhasil dikirim");
     } catch (error) {
@@ -227,18 +224,6 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
                 />
               </div>
             ))}
-
-            <div>
-              <input
-                type="text"
-                placeholder="Tambahkan komentar..."
-                value={comment[item.id] || ""}
-                onChange={(e) =>
-                  setComment((prev) => ({ ...prev, [item.id]: e.target.value }))
-                }
-                className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
 
             <button
               disabled={loading}
