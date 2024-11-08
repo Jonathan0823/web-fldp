@@ -242,7 +242,7 @@ export const review = async (
           - Anonymous Student
         </p>
       </div>
-      <a href="#" style="display: inline-block; background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-size: 16px;">View Feedback</a>
+      <a href="https://web-fldp.vercel.app/?show=true&dosenId=${dosenId}" style="display: inline-block; background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-size: 16px;">View Feedback</a>
     </td>
   </tr>
 </table>
