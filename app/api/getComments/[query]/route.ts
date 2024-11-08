@@ -10,7 +10,7 @@ export async function GET(
   try {
     const comments = await prisma.comment.findMany({
       where: {
-        dosenId: { equals: query },
+        dosenId: query,
       },
       include: {
         user: true,

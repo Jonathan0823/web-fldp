@@ -4,6 +4,7 @@ import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 import { MdLeaderboard } from "react-icons/md";
+import CommentBox from "./CommentBox";
 
 const DetailDosen = () => {
   const params = useSearchParams();
@@ -210,7 +211,7 @@ const DetailDosen = () => {
   return (
     <div>
       {dosen && (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col">
           <div className="text-left text-base">
             {[
               { label: "Nama", value: dosen.nama },
@@ -265,7 +266,9 @@ const DetailDosen = () => {
                   </div>
                   <div className="text-left ml-4 mt-2">
                     <p className="font-semibold">Komentar:</p>
-                    <div></div>
+                    <div>
+                      {dosenId && <CommentBox type="pengajaran" dosenId={dosenId} />}
+                    </div>
                   </div>
                 </div>
 
@@ -308,7 +311,9 @@ const DetailDosen = () => {
                   </div>
                   <div className="text-left ml-4 mt-2">
                     <p className="font-semibold">Komentar:</p>
-                    <div></div>
+                    <div>
+                    {dosenId && <CommentBox type="pembelajaran" dosenId={dosenId} />}
+                    </div>
                   </div>
                 </div>
 
@@ -348,11 +353,13 @@ const DetailDosen = () => {
                   </div>
                   <div className="text-left ml-4 mt-2">
                     <p className="font-semibold">Komentar:</p>
-                    <div></div>
+                    <div>
+                    {dosenId && <CommentBox type="penyampaianMateri" dosenId={dosenId} />}
+                    </div>
                   </div>
                 </div>
 
-                <div className="border border-slate-300 p-3 h-72 overflow-hidden shadow-md rounded-lg flex flex-col ">
+                <div className="border border-slate-300 p-3 overflow-hidden shadow-md rounded-lg flex flex-col ">
                   <h2 className="font-semibold mb-1">Kehadiran</h2>
                   <div className="flex justify-center gap-1 text-sm">
                     {ratingKehadiran !== undefined &&
@@ -360,7 +367,9 @@ const DetailDosen = () => {
                     <div className="flex justify-center items-center gap-2">
                       <p className="ml-1">
                         {ratingKehadiran
-                          ? renderRating(ratingKehadiran / dosen.nilai.length)
+                          ? renderRating(
+                              ratingKehadiran / dosen.nilai.length
+                            )
                           : "0"}
                         /5
                       </p>
@@ -386,11 +395,13 @@ const DetailDosen = () => {
                   </div>
                   <div className="text-left ml-4 mt-2">
                     <p className="font-semibold">Komentar:</p>
-                    <div></div>
+                    <div>
+                    {dosenId && <CommentBox type="kehadiran" dosenId={dosenId} />}
+                    </div>
                   </div>
                 </div>
 
-                <div className="border border-slate-300 p-3 h-72 overflow-hidden shadow-md rounded-lg flex flex-col ">
+                <div className="border border-slate-300 p-3 overflow-hidden shadow-md rounded-lg flex flex-col ">
                   <h2 className="font-semibold mb-1">Ketepatan Waktu</h2>
                   <div className="flex justify-center gap-1 text-sm">
                     {ratingKetepatanWaktu !== undefined &&
@@ -398,7 +409,9 @@ const DetailDosen = () => {
                     <div className="flex justify-center items-center gap-2">
                       <p className="ml-1">
                         {ratingKetepatanWaktu
-                          ? renderRating(ratingKetepatanWaktu / dosen.nilai.length)
+                          ? renderRating(
+                              ratingKetepatanWaktu / dosen.nilai.length
+                            )
                           : "0"}
                         /5
                       </p>
@@ -424,7 +437,9 @@ const DetailDosen = () => {
                   </div>
                   <div className="text-left ml-4 mt-2">
                     <p className="font-semibold">Komentar:</p>
-                    <div></div>
+                    <div>
+                    {dosenId && <CommentBox type="tepatWaktu" dosenId={dosenId} />}
+                    </div>
                   </div>
                 </div>
               </div>

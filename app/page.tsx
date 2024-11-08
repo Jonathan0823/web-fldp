@@ -14,9 +14,6 @@ export default async function Home() {
           <h2 className="font-bold text-2xl w-3/5">
             Selamat datang, {session?.user?.name}
           </h2>
-          <h2>
-            {JSON.stringify(session)}
-          </h2>
           <LogOut />
         </div>
         <HomeContent session={session?.user?.id || ""}  />
