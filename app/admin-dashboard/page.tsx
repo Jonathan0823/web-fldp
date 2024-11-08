@@ -65,7 +65,7 @@ const Sidebar: React.FC = () => {
 
   useEffect(() => {
     fetchData();
-  }, [session?.user.id, filter]);
+  }, [session, filter]);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -118,7 +118,7 @@ const Sidebar: React.FC = () => {
               activePage === "edit dosen" ? "font-bold" : ""
             }`}
           >
-            CRUD
+            Data Dosen
           </li>
           <li
             onClick={() => handlePageChange("add dosen")}
