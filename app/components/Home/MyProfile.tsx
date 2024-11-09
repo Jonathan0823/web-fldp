@@ -1,16 +1,14 @@
-
 import React from "react";
 import { FiUser } from "react-icons/fi";
 import { formatDateToIndonesian } from "@/lib/utilis";
 
-
 interface User {
   email: string;
   name: string;
-  penilaian: []; 
+  penilaian: [];
   createdAt: string;
 }
-interface Nilai{
+interface Nilai {
   pembelajaran: number;
   kehadiran: number;
   ketepatanWaktu: number;
@@ -19,13 +17,74 @@ interface Nilai{
 const MyProfile = ({ user }: { user: User }) => {
   console.log(user);
 
-  
-    const totalPenilaian = user.penilaian.length;
-    const totalRating = user.penilaian.reduce((acc: number, nilai: Nilai) => {
-      return acc + nilai.pembelajaran + nilai.kehadiran + nilai.ketepatanWaktu;
-    }, 0);
-    const averageRating = totalRating / (totalPenilaian * 3) || 0;
-  
+  const totalPenilaian = user.penilaian.length;
+  const totalRating = user.penilaian.reduce((acc: number, nilai: Nilai) => {
+    return acc + nilai.pembelajaran + nilai.kehadiran + nilai.ketepatanWaktu;
+  }, 0);
+  const averageRating = totalRating / (totalPenilaian * 5) || 0;
+
+  const renderStars = (rating: number) => {
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 >= 0.5 ? 1 : 0;
+    const emptyStars = 5 - fullStars - halfStar;
+
+    return (
+      <>
+        {[...Array(fullStars)].map((_, index) => (
+          <svg
+            key={`full-${index}`}
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            className="w-4 text-yellow-500"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l2.286 7.042a1 1 0 00.95.69h7.416c.969 0 1.371 1.24.588 1.81l-6.01 4.36a1 1 0 00-.364 1.118l2.286 7.042c.3.921-.755 1.688-1.54 1.118l-6.01-4.36a1 1 0 00-1.176 0l-6.01 4.36c-.784.57-1.838-.197-1.54-1.118l2.286-7.042a1 1 0 00-.364-1.118l-6.01-4.36c-.783-.57-.38-1.81.588-1.81h7.416a1 1 0 00.95-.69l2.286-7.042z"
+            />
+          </svg>
+        ))}
+        {halfStar === 1 && (
+          <svg
+            key="half"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            className="w-4 text-yellow-500"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l2.286 7.042a1 1 0 00.95.69h7.416c.969 0 1.371 1.24.588 1.81l-6.01 4.36a1 1 0 00-.364 1.118l2.286 7.042c.3.921-.755 1.688-1.54 1.118l-6.01-4.36a1 1 0 00-1.176 0l-6.01 4.36c-.784.57-1.838-.197-1.54-1.118l2.286-7.042a1 1 0 00-.364-1.118l-6.01-4.36c-.783-.57-.38-1.81.588-1.81h7.416a1 1 0 00.95-.69l2.286-7.042z"
+            />
+          </svg>
+        )}
+        {[...Array(emptyStars)].map((_, index) => (
+          <svg
+            key={`empty-${index}`}
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            className="w-4 text-yellow-500"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l2.286 7.042a1 1 0 00.95.69h7.416c.969 0 1.371 1.24.588 1.81l-6.01 4.36a1 1 0 00-.364 1.118l2.286 7.042c.3.921-.755 1.688-1.54 1.118l-6.01-4.36a1 1 0 00-1.176 0l-6.01 4.36c-.784.57-1.838-.197-1.54-1.118l2.286-7.042a1 1 0 00-.364-1.118l-6.01-4.36c-.783-.57-.38-1.81.588-1.81h7.416a1 1 0 00.95-.69l2.286-7.042z"
+            />
+          </svg>
+        ))}
+      </>
+    );
+  };
+
   return (
     <div className=" bg-white rounded-xl mt-2 shadow-md min-h-32 flex-col pb-4">
       <div className="ml-6">
@@ -38,7 +97,9 @@ const MyProfile = ({ user }: { user: User }) => {
         </div>
         <div className="mt-6">
           <p className="font-semibold">Jumlah Penilaian</p>
-          <p className="font-bold text-[#564add] text-xl">{user.penilaian.length/3}</p>
+          <p className="font-bold text-[#564add] text-xl">
+            {user.penilaian.length}
+          </p>
         </div>
         <div className="mt-4">
           <p className="font-semibold">Bergabung Sejak</p>
@@ -46,7 +107,10 @@ const MyProfile = ({ user }: { user: User }) => {
         </div>
         <div className="mt-4">
           <p className="font-semibold">Rata-Rata Penilaian</p>
-          <p>{averageRating}</p>
+          <div className="flex gap-3">
+            <div className="flex gap-1">{renderStars(averageRating)}</div>
+            <p className="mt-[3px]">{averageRating}</p>
+          </div>
         </div>
       </div>
     </div>

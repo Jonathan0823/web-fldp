@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { FiHome, FiUser } from "react-icons/fi";
 import { RiGroupLine } from "react-icons/ri";
 import MyProfile from "./Home/MyProfile";
-import ProfileList from "./ListDosen";
+import ProfileList, { formatToTitleCase } from "./ListDosen";
 import axios from "axios";
 import { ThreeCircles } from "react-loader-spinner";
 import Link from "next/link";
@@ -32,9 +32,10 @@ interface Item {
 
 interface HomeContentProps {
   session: string;
+  role: string;
 }
 
-const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
+const HomeContent: React.FC<HomeContentProps> = ({ session, role }) => {
   const [activeButton, setActiveButton] = useState(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("activeButton") || "home";
@@ -117,7 +118,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
           </div>
         ) : (
           <>
-            {show && <Modal type={"rate"} userId={session} />}
+            {show && <Modal type={"rate"} userId={session} role={role} />}
             {activeButton === "home" && (
               <div>
                 <h3 className="font-bold text-lg">Beranda</h3>
@@ -137,10 +138,10 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
                       >
                         <div>
                           <h3 className="text-lg font-semibold text-gray-900">
-                            {item.nama}
+                            {formatToTitleCase(item.nama)}
                           </h3>
                           <p className="text-sm text-gray-600">
-                            Spesialisasi: {item.matakuliah}
+                            Spesialisasi: {formatToTitleCase(item.matakuliah)}
                           </p>
                         </div>
                         <Link href={`/?show=true&dosenId=${item.id}`}>Nilai</Link>
@@ -153,7 +154,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
             {activeButton === "dosen" && (
               <div>
                 <h3 className="font-bold text-lg mb-3">Profil Dosen</h3>
-                <ProfileList userId={session} />
+                <ProfileList userId={session} role={role}/>
               </div>
             )}
             {activeButton === "saya" && (

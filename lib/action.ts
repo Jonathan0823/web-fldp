@@ -143,15 +143,34 @@ export const createMatakuliah = async (nama: string, fakultasId: string) => {
   }
 };
 
+export const sendComments = async (dosenId: string, userId: string, komen: string, type: string) => {
+  try{
+    const comments = await prisma.comment.create({
+      data: {
+        dosenId,
+        userId,
+        comment: komen,
+        type: type,
+      },
+    });
+    return comments;  
+  } catch (error) {
+    throw new Error(String(error));
+  }
+}
+
 export const review = async (
   pembelajaran: number,
   kehadiran: number,
   ketepatanWaktu: number,
+  pengajaran: number,
+  penyampaianMateri: number,
   komen: string,
   dosenId: string,
   userId: string
 ) => {
   try {
+    console.log(pembelajaran, kehadiran, ketepatanWaktu, pengajaran, penyampaianMateri, komen, dosenId, userId);
     const reciver = await prisma.dosen.findUnique({
       where: {
         id: dosenId,
@@ -163,6 +182,8 @@ export const review = async (
         kehadiran,
         ketepatanWaktu,
         pembelajaran,
+        pengajaran,
+        penyampaianMateri,
         dosenId,
         userId,
         komen,
@@ -178,82 +199,55 @@ export const review = async (
         pass: process.env.SEND,
       },
     });
-    const htmlContent = `
-  <html>
-    <head>
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          color: #333;
-          background-color: #f4f4f4;
-          margin: 0;
-          padding: 0;
-        }
-        .container {
-          max-width: 600px;
-          margin: 20px auto;
-          padding: 20px;
-          background: #fff;
-          border-radius: 8px;
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .header {
-          border-bottom: 2px solid #eee;
-          padding-bottom: 10px;
-          margin-bottom: 20px;
-        }
-        .header h1 {
-          margin: 0;
-          font-size: 24px;
-          color: #333;
-        }
-        .content {
-          font-size: 16px;
-          line-height: 1.6;
-        }
-        .review-item {
-          margin-bottom: 10px;
-        }
-        .review-item strong {
-          color: #555;
-        }
-        .footer {
-          border-top: 2px solid #eee;
-          padding-top: 10px;
-          margin-top: 20px;
-          font-size: 14px;
-          color: #888;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          <h1>Review dan Rating Baru untuk Anda</h1>
-        </div>
-        <div class="content">
-          <p>Anda telah menerima review baru dari mahasiswa.</p>
-          <div class="review-item">
-            <strong>Pembelajaran:</strong> ${pembelajaran}/5
-          </div>
-          <div class="review-item">
-            <strong>Kehadiran:</strong> ${kehadiran}/5
-          </div>
-          <div class="review-item">
-            <strong>Ketepatan Waktu:</strong> ${ketepatanWaktu}/5
-          </div>
-          <div class="review-item">
-            <strong>Komentar Mahasiswa:</strong>
-            <p>${komen}</p>
-          </div>
-        </div>
-        <div class="footer">
-          <p>Email ini dikirim secara otomatis oleh sistem penilaian.</p>
-        </div>
+    const htmlContent = `<html>
+  <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 600px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+  <tr>
+    <td style="background-color: #2563eb; padding: 12px 16px; border-radius: 6px;">
+      <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+        <tr>
+          <td>
+            <div style="color: white; font-size: 16px; display: flex; align-items: center;">
+              <span style="margin-right: 8px;">📧</span>
+              New Feedback Notification
+              <span style="margin-left: auto;">🔔</span>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding: 20px 0;">
+      <h2 style="margin: 0 0 16px 0; font-size: 20px; color: #111827;">New Student Feedback</h2>
+      <p style="margin: 0 0 16px 0; font-size: 16px; color: #374151; line-height: 1.5;">
+        You have received new feedback on your teaching performance. Log in to view the details and respond if necessary.
+      </p>
+      <div style="background-color: #f3f4f6; border-radius: 6px; padding: 16px; margin-bottom: 20px;">
+        <p style="margin: 0 0 8px 0; font-size: 16px; color: #374151; font-style: italic;">
+          <strong>Media Pembelajaran:</strong> ${pembelajaran}/5
+        </p>
+        <p style="margin: 0 0 8px 0; font-size: 16px; color: #374151; font-style: italic;">
+          <strong>Kehadiran:</strong> ${kehadiran}/5
+        </p>
+        <p style="margin: 0 0 8px 0; font-size: 16px; color: #374151; font-style: italic;">
+          <strong>Ketepatan Waktu:</strong> ${ketepatanWaktu}/5
+        </p>
+        <p style="margin: 0 0 8px 0; font-size: 16px; color: #374151; font-style: italic;">
+          <strong>Metode Pengajaran:</strong> ${pengajaran}/5
+        </p>
+        <p style="margin: 0 0 8px 0; font-size: 16px; color: #374151; font-style: italic;">
+          <strong>Penyampaian Materi:</strong> ${penyampaianMateri}/5
+        </p>
+        <p style="margin: 0; font-size: 14px; color: #6b7280;">
+          - Anonymous Student
+        </p>
       </div>
-    </body>
-  </html>
-`;
+      <a href="https://web-fldp.vercel.app/?show=true&dosenId=${dosenId}" style="display: inline-block; background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-size: 16px;">View Feedback</a>
+    </td>
+  </tr>
+</table>
+</html>
+`
     await transporter.sendMail({
       from: process.env.MAIL_USER,
       to: reciver?.email,

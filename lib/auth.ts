@@ -1,10 +1,11 @@
+
 import { prisma } from "./prisma";
 import { compare } from "bcrypt";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions: NextAuthOptions = {
-    
+
   session: {
     strategy: "jwt",
   },
@@ -26,25 +27,26 @@ export const authOptions: NextAuthOptions = {
               email: credentials?.email,
             },
           });
-          
+          console.log("User data:", user);
+
           if (!user) {
             console.log("User not found");
             return null;
           }
-      
+
           const passwordCorrect = await compare(credentials?.password || "", user.password);
-      
+
           if (!passwordCorrect) {
             console.log("Password is incorrect");
             return null;
           }
-      
-          return { id: user.id, email: user.email, name: user.name }; 
+
+          return { id: user.id, email: user.email, name: user.name, role: user.role ?? undefined };
         } catch (error) {
           console.error("Authorization error:", error);
           return null;
         }
-      }      
+      }
     }),
   ],
   callbacks: {
@@ -52,15 +54,18 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         return {
           ...token,
+
           id: user.id,
           email: user.email,
           name: user.name,
-          image: user.image
+          image: user.image,
+          role: user.role,
         };
       }
       return token;
     },
     session({ session, token }) {
+   
       return {
         ...session,
         user: {
@@ -69,6 +74,7 @@ export const authOptions: NextAuthOptions = {
           id: token.id,
           name: token.name,
           createdAt: token.createdAt,
+          role: token.role,
         },
       };
     },

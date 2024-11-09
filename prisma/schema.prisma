@@ -26,6 +26,7 @@ model User {
   Status      String?
   role        String?   @default("user")
   penilaian   Nilai[]
+  comment     Comment[]
 }
 
 model Nilai {
@@ -58,6 +59,7 @@ model Dosen {
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt 
   nilai      Nilai[]
+  comments    Comment[]
 }
 
 model Fakultas {
@@ -89,4 +91,16 @@ model Matakuliah {
   Fakultas   Fakultas @relation(fields: [fakultasId], references: [id])
   dosen      Dosen[]
   dosenId    String?
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  userId    String
+  dosenId   String
+  comment   String
+  type      String
+  user      User     @relation(fields: [userId], references: [id])
+  dosen     Dosen    @relation(fields: [dosenId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

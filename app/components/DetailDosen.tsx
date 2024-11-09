@@ -4,8 +4,10 @@ import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 import { MdLeaderboard } from "react-icons/md";
+import CommentBox from "./CommentBox";
+import { formatToTitleCase } from "./ListDosen";
 
-const DetailDosen = () => {
+const DetailDosen = ({ userId, role }: { userId: string, role: string }) => {
   const params = useSearchParams();
   const dosenId = params.get("dosenId");
   interface Dosen {
@@ -203,18 +205,22 @@ const DetailDosen = () => {
     }
   };
 
+  const renderRating = (rating: number) => {
+    return rating % 1 === 0 ? rating : rating.toFixed(2);
+  };
+
   return (
     <div>
       {dosen && (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col">
           <div className="text-left text-base">
             {[
-              { label: "Nama", value: dosen.nama },
+              { label: "Nama", value: formatToTitleCase(dosen.nama) },
               { label: "NIP", value: dosen.nip },
               { label: "Email", value: dosen.email },
-              { label: "Prodi", value: dosen.prodi },
-              { label: "Fakultas", value: dosen.fakultas },
-              { label: "Matakuliah", value: dosen.matakuliah },
+              { label: "Prodi", value: formatToTitleCase(dosen.prodi) },
+              { label: "Fakultas", value: formatToTitleCase(dosen.fakultas) },
+              { label: "Matakuliah", value: formatToTitleCase(dosen.matakuliah) },
             ].map((item, index) => (
               <div key={index} className="flex">
                 <p className="w-24 font-semibold">{item.label}</p>
@@ -224,9 +230,9 @@ const DetailDosen = () => {
             ))}
           </div>
           <h2 className="mt-3 text-lg font-bold mb-3">Penilaian</h2>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col">
             {dosen.nilai.length > 0 ? (
-              <div>
+              <div className="flex flex-col gap-5">
                 <div className="border border-slate-300 p-3 overflow-hidden shadow-md rounded-lg flex flex-col ">
                   <h2 className="font-semibold mb-1">Metode Pengajaran</h2>
                   <div className="flex justify-center gap-1 text-sm">
@@ -235,7 +241,7 @@ const DetailDosen = () => {
                     <div className="flex justify-center items-center gap-2">
                       <p className="ml-1">
                         {ratingPengajaran
-                          ? ratingPengajaran / dosen.nilai.length
+                          ? renderRating(ratingPengajaran / dosen.nilai.length)
                           : "0"}
                         /5
                       </p>
@@ -251,7 +257,7 @@ const DetailDosen = () => {
                         key={rating}
                         className="flex items-center justify-center gap-3"
                       >
-                        <p className="w-14">{rating} Star</p>
+                        <p className="w-20">{rating} Star</p>
                         <Progress
                           value={persentageRating(rating, "pengajaran")}
                         />
@@ -261,7 +267,11 @@ const DetailDosen = () => {
                   </div>
                   <div className="text-left ml-4 mt-2">
                     <p className="font-semibold">Komentar:</p>
-                    <div></div>
+                    <div>
+                      {dosenId && (
+                        <CommentBox type="pengajaran" dosenId={dosenId} userId={userId} role={role} />
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -275,45 +285,10 @@ const DetailDosen = () => {
                     <div className="flex justify-center items-center gap-2">
                       <p className="ml-1">
                         {ratingPembelajaran
-                          ? ratingPembelajaran / dosen.nilaiPembelajaran.length
-                          : "N/A"}
-                        /5
-                      </p>
-                      <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
-                    </div>
-                  </div>
-                  <div className="mx-4 mt-6">
-                    <h3 className="font-semibold text-left">
-                      Distribusi Rating:
-                    </h3>
-                    {[1, 2, 3, 4, 5].map((rating) => (
-                      <div
-                        key={rating}
-                        className="flex items-center justify-center gap-3"
-                      >
-                        <p className="w-14">{rating} Star</p>
-                        <Progress
-                          value={persentageRating(rating, "pembelajaran")}
-                        />
-                        <p>{filterRating(rating, "pembelajaran")}</p>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="text-left ml-4 mt-2">
-                    <p className="font-semibold">Komentar:</p>
-                    <div></div>
-                  </div>
-                </div>
-
-                <div className="border border-slate-300 p-3 overflow-hidden shadow-md rounded-lg flex flex-col ">
-                  <h2 className="font-semibold mb-1">Penyampaian Materi</h2>
-                  <div className="flex justify-center gap-1 text-sm">
-                    {ratingPenyampaianMateri !== undefined &&
-                      renderStars(ratingPenyampaianMateri / dosen.nilai.length)}
-                    <div className="flex justify-center items-center gap-2">
-                      <p className="ml-1">
-                        {ratingPenyampaianMateri
-                          ? ratingPenyampaianMateri / dosen.nilai.length
+                          ? renderRating(
+                              ratingPembelajaran /
+                                dosen.nilaiPembelajaran.length
+                            )
                           : "0"}
                         /5
                       </p>
@@ -329,7 +304,51 @@ const DetailDosen = () => {
                         key={rating}
                         className="flex items-center justify-center gap-3"
                       >
-                        <p className="w-14">{rating} Star</p>
+                        <p className="w-20">{rating} Star</p>
+                        <Progress
+                          value={persentageRating(rating, "pembelajaran")}
+                        />
+                        <p>{filterRating(rating, "pembelajaran")}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-left ml-4 mt-2">
+                    <p className="font-semibold">Komentar:</p>
+                    <div>
+                      {dosenId && (
+                        <CommentBox type="pembelajaran" dosenId={dosenId} userId={userId} role={role} />
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border border-slate-300 p-3 overflow-hidden shadow-md rounded-lg flex flex-col ">
+                  <h2 className="font-semibold mb-1">Penyampaian Materi</h2>
+                  <div className="flex justify-center gap-1 text-sm">
+                    {ratingPenyampaianMateri !== undefined &&
+                      renderStars(ratingPenyampaianMateri / dosen.nilai.length)}
+                    <div className="flex justify-center items-center gap-2">
+                      <p className="ml-1">
+                        {ratingPenyampaianMateri
+                          ? renderRating(
+                              ratingPenyampaianMateri / dosen.nilai.length
+                            )
+                          : "0"}
+                        /5
+                      </p>
+                      <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
+                    </div>
+                  </div>
+                  <div className="mx-4 mt-6">
+                    <h3 className="font-semibold text-left">
+                      Distribusi Rating:
+                    </h3>
+                    {[1, 2, 3, 4, 5].map((rating) => (
+                      <div
+                        key={rating}
+                        className="flex items-center justify-center gap-3"
+                      >
+                        <p className="w-20">{rating} Star</p>
                         <Progress
                           value={persentageRating(rating, "penyampaianMateri")}
                         />
@@ -339,11 +358,20 @@ const DetailDosen = () => {
                   </div>
                   <div className="text-left ml-4 mt-2">
                     <p className="font-semibold">Komentar:</p>
-                    <div></div>
+                    <div>
+                      {dosenId && (
+                        <CommentBox
+                          type="penyampaianMateri"
+                          dosenId={dosenId}
+                          userId={userId}
+                          role={role}
+                        />
+                      )}
+                    </div>
                   </div>
                 </div>
 
-                <div className="border border-slate-300 p-3 h-72 overflow-hidden shadow-md rounded-lg flex flex-col ">
+                <div className="border border-slate-300 p-3 overflow-hidden shadow-md rounded-lg flex flex-col ">
                   <h2 className="font-semibold mb-1">Kehadiran</h2>
                   <div className="flex justify-center gap-1 text-sm">
                     {ratingKehadiran !== undefined &&
@@ -351,8 +379,8 @@ const DetailDosen = () => {
                     <div className="flex justify-center items-center gap-2">
                       <p className="ml-1">
                         {ratingKehadiran
-                          ? ratingKehadiran / dosen.nilai.length
-                          : "N/A"}
+                          ? renderRating(ratingKehadiran / dosen.nilai.length)
+                          : "0"}
                         /5
                       </p>
                       <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
@@ -367,7 +395,7 @@ const DetailDosen = () => {
                         key={rating}
                         className="flex items-center justify-center gap-3"
                       >
-                        <p className="w-14">{rating} Star</p>
+                        <p className="w-20">{rating} Star</p>
                         <Progress
                           value={persentageRating(rating, "kehadiran")}
                         />
@@ -377,11 +405,15 @@ const DetailDosen = () => {
                   </div>
                   <div className="text-left ml-4 mt-2">
                     <p className="font-semibold">Komentar:</p>
-                    <div></div>
+                    <div>
+                      {dosenId && (
+                        <CommentBox type="kehadiran" dosenId={dosenId} userId={userId} role={role}/>
+                      )}
+                    </div>
                   </div>
                 </div>
 
-                <div className="border border-slate-300 p-3 h-72 overflow-hidden shadow-md rounded-lg flex flex-col ">
+                <div className="border border-slate-300 p-3 overflow-hidden shadow-md rounded-lg flex flex-col ">
                   <h2 className="font-semibold mb-1">Ketepatan Waktu</h2>
                   <div className="flex justify-center gap-1 text-sm">
                     {ratingKetepatanWaktu !== undefined &&
@@ -389,8 +421,10 @@ const DetailDosen = () => {
                     <div className="flex justify-center items-center gap-2">
                       <p className="ml-1">
                         {ratingKetepatanWaktu
-                          ? ratingKetepatanWaktu / dosen.nilai.length
-                          : "N/A"}
+                          ? renderRating(
+                              ratingKetepatanWaktu / dosen.nilai.length
+                            )
+                          : "0"}
                         /5
                       </p>
                       <MdLeaderboard className="w-6 h-6 text-[#935cc4]" />
@@ -405,7 +439,7 @@ const DetailDosen = () => {
                         key={rating}
                         className="flex items-center justify-center gap-3"
                       >
-                        <p className="w-14">{rating} Star</p>
+                        <p className="w-20">{rating} Star</p>
                         <Progress
                           value={persentageRating(rating, "ketepatanWaktu")}
                         />
@@ -415,7 +449,11 @@ const DetailDosen = () => {
                   </div>
                   <div className="text-left ml-4 mt-2">
                     <p className="font-semibold">Komentar:</p>
-                    <div></div>
+                    <div>
+                      {dosenId && (
+                        <CommentBox type="tepatWaktu" dosenId={dosenId} userId={userId} role={role}/>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

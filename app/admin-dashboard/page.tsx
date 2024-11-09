@@ -34,30 +34,37 @@ const Sidebar: React.FC = () => {
   const [matakuliahList, setMatakuliahList] = useState<Matakuliah[]>([]);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
- 
+  const [user, setUser] = useState({
+    id: "",
+    name: "",
+    email: "",
+    role: "",
+  });
 
   const fetchData = async () => {
     try {
       setLoading(true);
+      const res = await axios.get(`/api/getUser/${session?.user.id}`);
+      setUser(res.data);
       const fakultasResponse = await axios.get(`/api/getAlldata/getFakultas`);
       const prodiResponse = await axios.get(`/api/getAlldata/getProdi`);
       const matakuliahResponse = await axios.get(`/api/getAlldata/getMatkul`);
       const response = await axios.get(`/api/getDosen/${filter}`);
+
       setItems(response.data);
       setFakultasList(fakultasResponse.data);
       setProdiList(prodiResponse.data);
       setMatakuliahList(matakuliahResponse.data);
-    }catch (error) {
+    } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
     }
-
   };
-  
+
   useEffect(() => {
     fetchData();
-  }, [session?.user.id, filter]);
+  }, [session, filter]);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -67,12 +74,24 @@ const Sidebar: React.FC = () => {
     setActivePage(page);
   };
 
+  if (user?.role !== "Admin") {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-black text-white">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4">Access Denied</h1>
+          <p className="text-lg">
+            You do not have permission to view this page.
+          </p>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="flex h-screen">
       <div
-        className={`fixed inset-y-0 left-0 transform ${
+        className={`fixed inset-y-0 left-0 transform  ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out bg-gray-800 w-64 p-4`}
+        } transition-transform duration-300 ease-in-out bg-gray-800 w-64 p-4 flex flex-col`}
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-white text-xl font-semibold">Dashboard</h2>
@@ -83,8 +102,8 @@ const Sidebar: React.FC = () => {
             Close
           </button>
         </div>
-        <ul>
-        <li
+        <ul className="flex-grow">
+          <li
             onClick={() => handlePageChange("Rule")}
             className={`mb-3 text-gray-200 hover:text-white cursor-pointer ${
               activePage === "Rule" ? "font-bold" : ""
@@ -98,7 +117,7 @@ const Sidebar: React.FC = () => {
               activePage === "edit dosen" ? "font-bold" : ""
             }`}
           >
-            CRUD
+            Data Dosen
           </li>
           <li
             onClick={() => handlePageChange("add dosen")}
@@ -133,6 +152,14 @@ const Sidebar: React.FC = () => {
             Add matkul
           </li>
         </ul>
+        <div className="mt-auto mb-3 flex justify-center">
+          <a
+            href="/"
+            className="bg-red-500 px-5 rounded-lg py-1 hover:bg-red-600 transition duration-200 text-white cursor-pointer"
+          >
+            Exit
+          </a>
+        </div>
       </div>
       {!isOpen && (
         <button
@@ -158,12 +185,31 @@ const Sidebar: React.FC = () => {
       )}
       <div className="flex-1  bg-gray-100">
         <div className="">
-        {activePage === "Rule" && <Rule/>}
-          {activePage === "edit dosen" && <AdminCrud items={items} setFilter={setFilter} fetchData={fetchData} filter={filter} userId={session?.user.id || ''} loading={loading}/>}
-          {activePage === "add dosen" && <Dashboard fakultasList={fakultasList} prodiList={prodiList} matakuliahList={matakuliahList}/>}
+          {activePage === "Rule" && <Rule />}
+          {activePage === "edit dosen" && (
+            <AdminCrud
+              items={items}
+              setFilter={setFilter}
+              fetchData={fetchData}
+              filter={filter}
+              userId={session?.user.id || ""}
+              loading={loading}
+            />
+          )}
+          {activePage === "add dosen" && (
+            <Dashboard
+              fakultasList={fakultasList}
+              prodiList={prodiList}
+              matakuliahList={matakuliahList}
+            />
+          )}
           {activePage === "add fakultas" && <CreateFakultas />}
-          {activePage === "add prodi" && <CreateProdi fakultasList={fakultasList}/>}
-          {activePage === "add matkul" && <CreateMatakuliah fakultasList={fakultasList} />}
+          {activePage === "add prodi" && (
+            <CreateProdi fakultasList={fakultasList} />
+          )}
+          {activePage === "add matkul" && (
+            <CreateMatakuliah fakultasList={fakultasList} />
+          )}
         </div>
       </div>
     </div>

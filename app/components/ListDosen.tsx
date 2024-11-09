@@ -16,7 +16,14 @@ interface DosenProfile {
   nilai: [];
 }
 
-export default function ProfileList({userId}: {userId: string}) {
+export const formatToTitleCase = (str: string) => {
+  return str.replace(/\w\S*/g, function (txt) {
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  });
+}
+
+
+export default function ProfileList({userId, role}: {userId: string, role: string}) {
   const [dosen, setDosen] = useState<DosenProfile[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -37,6 +44,7 @@ export default function ProfileList({userId}: {userId: string}) {
   const params = useSearchParams();
   const show = params.get("show");
 
+ 
   return (
     <div>
       {loading ? (
@@ -45,7 +53,7 @@ export default function ProfileList({userId}: {userId: string}) {
         </div>
       ) : (
         <div className="space-y-4">
-          {show && <Modal type={"detail"} userId={userId} />}
+          {show && <Modal type={"detail"} userId={userId} role={role}/>}
           {dosen.length > 0 ? (
             dosen.map((profile, index) => (
               <div
@@ -54,10 +62,10 @@ export default function ProfileList({userId}: {userId: string}) {
               >
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900">
-                    {profile.nama}
+                    {formatToTitleCase(profile.nama)}
                   </h3>
                   <p className="text-sm text-gray-600">
-                    Spesialisasi: {profile.matakuliah}
+                    Spesialisasi: {formatToTitleCase(profile.matakuliah)}
                   </p>
                   <div className="flex items-center mt-2">
                     <IoMdStarOutline className="w-7 h-7 text-yellow-400" />
@@ -79,3 +87,4 @@ export default function ProfileList({userId}: {userId: string}) {
     </div>
   );
 }
+
