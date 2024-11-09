@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
+    console.log(id);
     const response = await prisma.comment.delete({
       where: {
         id: id,

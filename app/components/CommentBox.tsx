@@ -21,7 +21,7 @@ const CommentBox = ({
   type,
   dosenId,
   userId,
-  role
+  role,
 }: {
   type: string;
   dosenId: string;
@@ -76,8 +76,13 @@ const CommentBox = ({
                 <MdDelete
                   className="text-red-500 w-6 h-6"
                   onClick={async () => {
-                    await axios.delete(`/api/deleteComment/${comment.id}`);
-                    getComments();
+                    try {
+                      await axios.post(`/api/deleteComment/${comment.id}`);
+                      getComments();
+                      toast.success("Komentar berhasil dihapus");
+                    } catch {
+                      toast.error("Gagal menghapus komentar");
+                    }
                   }}
                 />
               )}
