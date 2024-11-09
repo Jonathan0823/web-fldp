@@ -7,9 +7,10 @@ import ReviewCard from "./review-card";
 interface ModalProps {
   type: "detail" | "rate";
   userId: string;
+  role: string;
 }
 
-const Modal = ({ type, userId }: ModalProps) => {
+const Modal = ({ type, userId, role }: ModalProps) => {
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-auto w-full flex items-center justify-center">
       <div className="p-5 py-8 relative border w-full shadow-lg rounded-md md:max-w-md max-w-sm hide-scrollbar h-screen overflow-y-auto bg-white">
@@ -20,7 +21,7 @@ const Modal = ({ type, userId }: ModalProps) => {
           <div className="mt-2 px-2 py-3">
             {type === "detail" ? (
               <div>
-                <DetailDosen userId={userId} />
+                <DetailDosen userId={userId} role={role} />
               </div>
             ) : (
               <div>

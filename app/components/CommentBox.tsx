@@ -4,6 +4,7 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { LuSend } from "react-icons/lu";
+import { MdDelete } from "react-icons/md";
 interface Comment {
   id: string;
   dosenId: string;
@@ -20,10 +21,12 @@ const CommentBox = ({
   type,
   dosenId,
   userId,
+  role
 }: {
   type: string;
   dosenId: string;
   userId: string;
+  role: string;
 }) => {
   const [comments, setComments] = React.useState<Comment[]>([]);
   const [comment, setComment] = React.useState("");
@@ -63,9 +66,22 @@ const CommentBox = ({
           <div className="text-center text-gray-400">Belum ada komentar</div>
         )}
         {filteredComments.map((comment: Comment) => (
-          <div key={comment.id} className="my-3">
-            <h2>{comment.comment}</h2>
-            <p className="text-sm text-slate-500">- {comment.user.name}</p>
+          <div key={comment.id} className="my-3 flex justify-between">
+            <div>
+              <h2>{comment.comment}</h2>
+              <p className="text-xs text-slate-500">- {comment.user.name}</p>
+            </div>
+            <div>
+              {role === "Admin" && (
+                <MdDelete
+                  className="text-red-500 w-6 h-6"
+                  onClick={async () => {
+                    await axios.delete(`/api/deleteComment/${comment.id}`);
+                    getComments();
+                  }}
+                />
+              )}
+            </div>
           </div>
         ))}
       </div>
@@ -77,7 +93,10 @@ const CommentBox = ({
           onChange={(e) => setComment(e.target.value)}
           className="w-full bg-[#f3f4f6] rounded-lg px-4 relative py-2"
         />
-        <button className=" text-[#9956d4] py-2 absolute right-0 mr-2" onClick={handleSubmit}>
+        <button
+          className=" text-[#9956d4] py-2 absolute right-0 mr-2"
+          onClick={handleSubmit}
+        >
           <LuSend className="w-6 h-6" />
         </button>
       </div>

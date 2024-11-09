@@ -25,7 +25,7 @@ export default async function Home() {
             <LogOut />
           </div>
         </div>
-        <HomeContent session={session?.user?.id || ""} />
+        <HomeContent session={session?.user?.id || ""} role={session?.user?.role || ""} />
       </div>
     </div>
   );

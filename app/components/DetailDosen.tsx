@@ -7,7 +7,7 @@ import { MdLeaderboard } from "react-icons/md";
 import CommentBox from "./CommentBox";
 import { formatToTitleCase } from "./ListDosen";
 
-const DetailDosen = ({ userId }: { userId: string }) => {
+const DetailDosen = ({ userId, role }: { userId: string, role: string }) => {
   const params = useSearchParams();
   const dosenId = params.get("dosenId");
   interface Dosen {
@@ -269,7 +269,7 @@ const DetailDosen = ({ userId }: { userId: string }) => {
                     <p className="font-semibold">Komentar:</p>
                     <div>
                       {dosenId && (
-                        <CommentBox type="pengajaran" dosenId={dosenId} userId={userId} />
+                        <CommentBox type="pengajaran" dosenId={dosenId} userId={userId} role={role} />
                       )}
                     </div>
                   </div>
@@ -316,7 +316,7 @@ const DetailDosen = ({ userId }: { userId: string }) => {
                     <p className="font-semibold">Komentar:</p>
                     <div>
                       {dosenId && (
-                        <CommentBox type="pembelajaran" dosenId={dosenId} userId={userId} />
+                        <CommentBox type="pembelajaran" dosenId={dosenId} userId={userId} role={role} />
                       )}
                     </div>
                   </div>
@@ -364,6 +364,7 @@ const DetailDosen = ({ userId }: { userId: string }) => {
                           type="penyampaianMateri"
                           dosenId={dosenId}
                           userId={userId}
+                          role={role}
                         />
                       )}
                     </div>
@@ -406,7 +407,7 @@ const DetailDosen = ({ userId }: { userId: string }) => {
                     <p className="font-semibold">Komentar:</p>
                     <div>
                       {dosenId && (
-                        <CommentBox type="kehadiran" dosenId={dosenId} userId={userId}/>
+                        <CommentBox type="kehadiran" dosenId={dosenId} userId={userId} role={role}/>
                       )}
                     </div>
                   </div>
@@ -450,7 +451,7 @@ const DetailDosen = ({ userId }: { userId: string }) => {
                     <p className="font-semibold">Komentar:</p>
                     <div>
                       {dosenId && (
-                        <CommentBox type="tepatWaktu" dosenId={dosenId} userId={userId} />
+                        <CommentBox type="tepatWaktu" dosenId={dosenId} userId={userId} role={role}/>
                       )}
                     </div>
                   </div>

@@ -23,7 +23,7 @@ export const formatToTitleCase = (str: string) => {
 }
 
 
-export default function ProfileList({userId}: {userId: string}) {
+export default function ProfileList({userId, role}: {userId: string, role: string}) {
   const [dosen, setDosen] = useState<DosenProfile[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -53,7 +53,7 @@ export default function ProfileList({userId}: {userId: string}) {
         </div>
       ) : (
         <div className="space-y-4">
-          {show && <Modal type={"detail"} userId={userId} />}
+          {show && <Modal type={"detail"} userId={userId} role={role}/>}
           {dosen.length > 0 ? (
             dosen.map((profile, index) => (
               <div

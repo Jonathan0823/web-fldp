@@ -9,7 +9,6 @@ import { ThreeCircles } from "react-loader-spinner";
 import Link from "next/link";
 import Modal from "./Modal";
 import { useSearchParams } from "next/navigation";
-import { format } from "path";
 
 interface User {
   id: string;
@@ -33,9 +32,10 @@ interface Item {
 
 interface HomeContentProps {
   session: string;
+  role: string;
 }
 
-const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
+const HomeContent: React.FC<HomeContentProps> = ({ session, role }) => {
   const [activeButton, setActiveButton] = useState(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("activeButton") || "home";
@@ -118,7 +118,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
           </div>
         ) : (
           <>
-            {show && <Modal type={"rate"} userId={session} />}
+            {show && <Modal type={"rate"} userId={session} role={role} />}
             {activeButton === "home" && (
               <div>
                 <h3 className="font-bold text-lg">Beranda</h3>
@@ -154,7 +154,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ session }) => {
             {activeButton === "dosen" && (
               <div>
                 <h3 className="font-bold text-lg mb-3">Profil Dosen</h3>
-                <ProfileList userId={session} />
+                <ProfileList userId={session} role={role}/>
               </div>
             )}
             {activeButton === "saya" && (
