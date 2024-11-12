@@ -1,6 +1,7 @@
 import React from "react";
 import { FiUser } from "react-icons/fi";
 import { formatDateToIndonesian } from "@/lib/utilis";
+import { renderRating } from "../DetailDosen";
 
 interface User {
   email: string;
@@ -109,7 +110,7 @@ const MyProfile = ({ user }: { user: User }) => {
           <p className="font-semibold">Rata-Rata Penilaian</p>
           <div className="flex gap-3">
             <div className="flex gap-1">{renderStars(averageRating)}</div>
-            <p className="mt-[3px]">{averageRating}</p>
+            <p className="mt-[3px]">{renderRating(averageRating)}</p>
           </div>
         </div>
       </div>

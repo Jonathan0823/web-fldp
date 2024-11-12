@@ -144,7 +144,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ session, role }) => {
                             Spesialisasi: {formatToTitleCase(item.matakuliah)}
                           </p>
                         </div>
-                        <Link href={`/?show=true&dosenId=${item.id}`}>Nilai</Link>
+                        <Link href={`/?show=true&dosenId=${item.id}`} className="bg-[#5442f6] text-white p-2 px-3 rounded-lg hover:bg-[#4e3ee1]">Nilai</Link>
                       </div>
                     </div>
                   ))}

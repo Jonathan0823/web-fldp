@@ -41,6 +41,9 @@ const CommentBox = ({
   }, []);
 
   const handleSubmit = async () => {
+    if (!comment) {
+      return toast.error("Komentar tidak boleh kosong");
+    }
     try {
       await sendComments(dosenId, userId, comment, type);
       toast.success("Komentar berhasil dikirim");
@@ -96,8 +99,11 @@ const CommentBox = ({
           placeholder="Tambahkan komentar"
           value={comment}
           onChange={(e) => setComment(e.target.value)}
-          className="w-full bg-[#f3f4f6] rounded-lg px-4 relative py-2"
+          className="w-full bg-[#f3f4f6] flex-grow rounded-lg px-4 relative py-2"
         />
+        <div>
+          
+        </div>
         <button
           className=" text-[#9956d4] py-2 absolute right-0 mr-2"
           onClick={handleSubmit}

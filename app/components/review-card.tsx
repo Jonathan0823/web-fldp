@@ -90,6 +90,18 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
   };
 
   const handleSubmit = async (dosenId: string) => {
+    if (
+      !ratings[dosenId] ||
+      Object.values(ratings[dosenId]).some((rating) => rating === 0)
+    ) {
+      return toast.error("Harap berikan penilaian untuk semua kategori");
+    }
+    if(
+      Object.values(comments).some((comment) => comment === "")
+    ) {
+      return toast.error("Harap berikan komentar untuk semua kategori");
+    }
+    
     setLoading(true);
     try {
       const {

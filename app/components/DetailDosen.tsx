@@ -7,6 +7,10 @@ import { MdLeaderboard } from "react-icons/md";
 import CommentBox from "./CommentBox";
 import { formatToTitleCase } from "./ListDosen";
 
+export const renderRating = (rating: number) => {
+  return rating % 1 === 0 ? rating : rating.toFixed(2);
+};
+
 const DetailDosen = ({ userId, role }: { userId: string, role: string }) => {
   const params = useSearchParams();
   const dosenId = params.get("dosenId");
@@ -205,9 +209,7 @@ const DetailDosen = ({ userId, role }: { userId: string, role: string }) => {
     }
   };
 
-  const renderRating = (rating: number) => {
-    return rating % 1 === 0 ? rating : rating.toFixed(2);
-  };
+
 
   return (
     <div>
