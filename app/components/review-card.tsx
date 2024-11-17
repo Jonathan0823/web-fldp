@@ -27,9 +27,6 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
     [key: string]: { [key: string]: number };
   }>({});
   const [comments, setComments] = useState<{ [key: string]: string }>({});
-  const [reviewTime, setReviewTime] = useState<{ [key: string]: Date | null }>(
-    {}
-  );
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState<ReviewItem[]>([]);
   const [apiLoading, setApiLoading] = useState(true);
@@ -41,20 +38,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
       setApiLoading(true);
       try {
         const response = await axios.get(`/api/getDosen/${dosenId}`);
-        const reviewsResponse = await axios.get(`/api/getNilai/${userId}`);
         setItems(response.data);
-        setReviewTime(
-          reviewsResponse.data.reduce(
-            (
-              acc: { [key: string]: Date },
-              review: { dosenId: string; lastReviewTime: string }
-            ) => {
-              acc[review.dosenId] = new Date(review.lastReviewTime);
-              return acc;
-            },
-            {}
-          )
-        );
       } catch (error) {
         console.error("Error fetching review data", error);
       } finally {
@@ -64,12 +48,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
     fetchData();
   }, [dosenId, userId]);
 
-  const getNextMonday = (date: Date) => {
-    const nextMonday = new Date(date);
-    nextMonday.setDate(date.getDate() + ((8 - date.getDay()) % 7));
-    nextMonday.setHours(0, 0, 0, 0);
-    return nextMonday;
-  };
+
 
   const handleStarClick = (
     dosenId: string,
@@ -103,6 +82,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
     }
     
     setLoading(true);
+    toast.loading("Mengirim evaluasi...");
     try {
       const {
         pembelajaran = 0,
@@ -116,6 +96,29 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
       const commentTepatWaktu = comments["tepatWaktu"] || "";
       const commentPengajaran = comments["pengajaran"] || "";
       const commentPenyampaianMateri = comments["penyampaianMateri"] || "";
+
+      if (
+        !pembelajaran ||
+        !kehadiran ||
+        !tepatWaktu ||
+        !pengajaran ||
+        !penyampaianMateri
+      ) {
+        toast.dismiss();
+        return toast.error("Harap berikan penilaian untuk semua kategori");
+      }
+      if (
+        !commentPembelajaran ||
+        !commentKehadiran ||
+        !commentTepatWaktu ||
+        !commentPengajaran ||
+        !commentPenyampaianMateri
+      ) {
+        toast.dismiss();
+        return toast.error("Harap berikan komentar untuk semua kategori");
+      }
+      
+
       await Promise.all([
         sendComments(dosenId, userId, commentPembelajaran, "pembelajaran"),
         sendComments(dosenId, userId, commentKehadiran, "kehadiran"),
@@ -146,10 +149,10 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
         pengajaran: "",
         penyampaianMateri: "",
       }));
-      setReviewTime((prev) => ({ ...prev, [dosenId]: new Date() }));
+      toast.dismiss();
       toast.success("Review berhasil dikirim");
-    } catch (error) {
-      console.error("Error submitting review and comment:", error);
+    } catch {
+      toast.dismiss();
       toast.error("Gagal mengirim review");
     } finally {
       setLoading(false);
@@ -164,23 +167,19 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ userId }) => {
     { name: "Kehadiran", key: "kehadiran" },
   ];
 
-  const filteredItems = items.filter((item) => {
-    const lastReviewTime = reviewTime[item.id];
-    const now = new Date();
-    return !lastReviewTime || now >= getNextMonday(lastReviewTime);
-  });
+
 
   return (
     <div>
       <Toaster />
       {apiLoading ? (
         <div className="text-center text-gray-500">Loading data...</div>
-      ) : filteredItems.length === 0 ? (
+      ) : items.length === 0 ? (
         <p className="text-center text-gray-500">
           Tidak ada dosen yang perlu direview saat ini.
         </p>
       ) : (
-        filteredItems.map((item) => (
+        items.map((item) => (
           <div
             key={item.id}
             className="p-4 max-w-md mx-auto bg-white rounded-xl shadow-md mb-4 space-y-4"
