@@ -77,7 +77,7 @@ const CommentBox = ({
             <div>
               {role === "Admin" && (
                 <MdDelete
-                  className="text-red-500 w-6 h-6"
+                  className="text-red-500 w-6 h-6 hover:cursor-pointer"
                   onClick={async () => {
                     try {
                       await axios.post(`/api/deleteComment/${comment.id}`);
