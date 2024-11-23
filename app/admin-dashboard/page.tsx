@@ -74,6 +74,7 @@ const Sidebar: React.FC = () => {
           Expires: '0',
         },
       });
+      console.log(prodiResponse.data);
 
       setItems(response.data);
       setFakultasList(fakultasResponse.data);
