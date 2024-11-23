@@ -46,10 +46,34 @@ const Sidebar: React.FC = () => {
       setLoading(true);
       const res = await axios.get(`/api/getUser/${session?.user.id}`);
       setUser(res.data);
-      const fakultasResponse = await axios.get(`/api/getAlldata/getFakultas`);
-      const prodiResponse = await axios.get(`/api/getAlldata/getProdi`);
-      const matakuliahResponse = await axios.get(`/api/getAlldata/getMatkul`);
-      const response = await axios.get(`/api/getDosen/${filter}`);
+      const fakultasResponse = await axios.get(`/api/getAlldata/getFakultas`, {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          Pragma: 'no-cache',
+          Expires: '0',
+        },
+      });
+      const prodiResponse = await axios.get(`/api/getAlldata/getProdi`, {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          Pragma: 'no-cache',
+          Expires: '0',
+        },
+      });
+      const matakuliahResponse = await axios.get(`/api/getAlldata/getMatkul`, {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          Pragma: 'no-cache',
+          Expires: '0',
+        },
+      });
+      const response = await axios.get(`/api/getDosen/${filter}`, {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          Pragma: 'no-cache',
+          Expires: '0',
+        },
+      });
 
       setItems(response.data);
       setFakultasList(fakultasResponse.data);
