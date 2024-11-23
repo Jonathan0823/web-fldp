@@ -12,6 +12,7 @@ import Rule from "../components/admin/rule";
 interface Fakultas {
   id: string;
   nama: string;
+  fetchData: () => void;
 }
 
 interface Prodi {
@@ -44,29 +45,31 @@ const Sidebar: React.FC = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`/api/getUser/${session?.user.id}`);
-      setUser(res.data);
-      const fakultasResponse = await axios.get(`/api/getAlldata/getFakultas`, {
-        headers: {
-          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-          Pragma: 'no-cache',
-          Expires: '0',
-        },
-      });
-      const prodiResponse = await axios.get(`/api/getAlldata/getProdi`, {
-        headers: {
-          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-          Pragma: 'no-cache',
-          Expires: '0',
-        },
-      });
-      const matakuliahResponse = await axios.get(`/api/getAlldata/getMatkul`, {
-        headers: {
-          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-          Pragma: 'no-cache',
-          Expires: '0',
-        },
-      });
+      const timestamp = new Date().getTime(); // Cache-busting query parameter
+      const [fakultasResponse, prodiResponse, matakuliahResponse] = await Promise.all([
+        axios.get(`/api/getAlldata/getFakultas?timestamp=${timestamp}`, {
+          headers: {
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+            Pragma: 'no-cache',
+            Expires: '0',
+          },
+        }),
+        axios.get(`/api/getAlldata/getProdi?timestamp=${timestamp}`, {
+          headers: {
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+            Pragma: 'no-cache',
+            Expires: '0',
+          },
+        }),
+        axios.get(`/api/getAlldata/getMatkul?timestamp=${timestamp}`, {
+          headers: {
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+            Pragma: 'no-cache',
+            Expires: '0',
+          },
+        }),
+      ]);
+
       const response = await axios.get(`/api/getDosen/${filter}`, {
         headers: {
           'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
@@ -74,17 +77,19 @@ const Sidebar: React.FC = () => {
           Expires: '0',
         },
       });
-      console.log(prodiResponse.data);
-      console.log(fakultasResponse.data);
-      console.log(matakuliahResponse.data);
-      console.log(response.data);
 
       setItems(response.data);
+      setUser({
+        id: session?.user.id || "",
+        name: session?.user.name || "",
+        email: session?.user.email || "",
+        role: session?.user.role || "",
+      });
       setFakultasList(fakultasResponse.data);
       setProdiList(prodiResponse.data);
       setMatakuliahList(matakuliahResponse.data);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
     } finally {
       setLoading(false);
     }
@@ -93,6 +98,7 @@ const Sidebar: React.FC = () => {
   useEffect(() => {
     fetchData();
   }, [session, filter]);
+
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -229,14 +235,15 @@ const Sidebar: React.FC = () => {
               fakultasList={fakultasList}
               prodiList={prodiList}
               matakuliahList={matakuliahList}
+              fetchData={fetchData}
             />
           )}
           {activePage === "add fakultas" && <CreateFakultas />}
           {activePage === "add prodi" && (
-            <CreateProdi fakultasList={fakultasList} />
+            <CreateProdi fakultasList={fakultasList} fetchData={fetchData}/>
           )}
           {activePage === "add matkul" && (
-            <CreateMatakuliah fakultasList={fakultasList} />
+            <CreateMatakuliah fakultasList={fakultasList} fetchData={fetchData} />
           )}
         </div>
       </div>

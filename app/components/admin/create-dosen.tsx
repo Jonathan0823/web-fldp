@@ -32,9 +32,10 @@ interface DashboardProps {
   fakultasList: Fakultas[];
   prodiList: Prodi[];
   matakuliahList: Matakuliah[];
+  fetchData: () => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ fakultasList, prodiList, matakuliahList }) => {
+const Dashboard: React.FC<DashboardProps> = ({ fakultasList, prodiList, matakuliahList, fetchData }) => {
   const [form, setForm] = useState<Form>({
     nama: "",
     nip: "",
@@ -81,6 +82,7 @@ const Dashboard: React.FC<DashboardProps> = ({ fakultasList, prodiList, matakuli
       setSuccessMessage("Gagal menambahkan data.");
     } finally {
       setLoading(false);
+      fetchData();
       setTimeout(() => setSuccessMessage(null), 3000);
     }
   };

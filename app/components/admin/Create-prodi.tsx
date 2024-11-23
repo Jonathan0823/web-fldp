@@ -4,9 +4,10 @@ import { createProdi } from "@/lib/action";
 interface Fakultas {
   id: string;
   nama: string; 
+  fetchData: () => void;
 }
 
-const CreateProdi = ({ fakultasList }: { fakultasList: Fakultas[] }) => {
+const CreateProdi = ({ fakultasList, fetchData }: { fakultasList: Fakultas[], fetchData: () => void }) => {
   const [nama, setNama] = useState("");
   const [fakultasId, setFakultasId] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -32,7 +33,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     } catch (error) {
         console.error("Error creating prodi:", error);
     }finally{
-  
+        fetchData();
         setLoading(false);
     }
 };
