@@ -75,6 +75,9 @@ const Sidebar: React.FC = () => {
         },
       });
       console.log(prodiResponse.data);
+      console.log(fakultasResponse.data);
+      console.log(matakuliahResponse.data);
+      console.log(response.data);
 
       setItems(response.data);
       setFakultasList(fakultasResponse.data);
