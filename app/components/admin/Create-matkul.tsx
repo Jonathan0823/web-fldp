@@ -8,9 +8,10 @@ interface Fakultas {
 
 interface CreateMatakuliahProps {
   fakultasList: Fakultas[];
+  fetchData: () => void;
 }
 
-const CreateMatakuliah = ({ fakultasList }: CreateMatakuliahProps) => {
+const CreateMatakuliah = ({ fakultasList, fetchData }: CreateMatakuliahProps) => {
   const [nama, setNama] = useState("");
   const [fakultasId, setFakultasId] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -34,6 +35,7 @@ const CreateMatakuliah = ({ fakultasList }: CreateMatakuliahProps) => {
     } catch (error) {
       console.error("Error creating matakuliah:", error);
     } finally {
+      fetchData();
       setLoading(false);
     }
   };

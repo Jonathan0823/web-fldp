@@ -6,7 +6,7 @@ interface Fakultas {
   nama: string; 
 }
 
-const CreateProdi = ({ fakultasList }: { fakultasList: Fakultas[] }) => {
+const CreateProdi = ({ fakultasList, fetchData }: { fakultasList: Fakultas[], fetchData: () => void }) => {
   const [nama, setNama] = useState("");
   const [fakultasId, setFakultasId] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -32,7 +32,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     } catch (error) {
         console.error("Error creating prodi:", error);
     }finally{
-  
+        fetchData();
         setLoading(false);
     }
 };

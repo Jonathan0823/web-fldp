@@ -16,7 +16,6 @@ interface Nilai {
 }
 
 const MyProfile = ({ user }: { user: User }) => {
-  console.log(user);
 
   const totalPenilaian = user.penilaian.length;
   const totalRating = user.penilaian.reduce((acc: number, nilai: Nilai) => {

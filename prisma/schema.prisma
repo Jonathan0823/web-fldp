@@ -39,8 +39,8 @@ model Nilai {
   dosenId             String
   userId              String
   komen String?
-  penilaian           User     @relation(fields: [userId], references: [id])
-  dosen               Dosen    @relation(fields: [dosenId], references: [id])
+  penilaian           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dosen               Dosen    @relation(fields: [dosenId], references: [id], onDelete: Cascade)
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 }
@@ -50,12 +50,12 @@ model Dosen {
   nama       String
   nip        String
   fakultasId String
-  fakultas   Fakultas    @relation(fields: [fakultasId], references: [id])
+  fakultas   Fakultas    @relation(fields: [fakultasId], references: [id], onDelete: Cascade)
   email      String      @unique
   matkulId   String
-  matakuliah Matakuliah? @relation(fields: [matkulId], references: [id])
+  matakuliah Matakuliah? @relation(fields: [matkulId], references: [id], onDelete: Cascade)
   prodiId    String
-  prodi      Prodi       @relation(fields: [prodiId], references: [id])
+  prodi      Prodi       @relation(fields: [prodiId], references: [id], onDelete: Cascade)
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt 
   nilai      Nilai[]
@@ -79,7 +79,7 @@ model Prodi {
   updatedAt  DateTime @updatedAt
   fakultasId String
   dosens     Dosen[]
-  Fakultas   Fakultas @relation(fields: [fakultasId], references: [id])
+  Fakultas   Fakultas @relation(fields: [fakultasId], references: [id], onDelete: Cascade)
 }
 
 model Matakuliah {
@@ -88,7 +88,7 @@ model Matakuliah {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   fakultasId String
-  Fakultas   Fakultas @relation(fields: [fakultasId], references: [id])
+  Fakultas   Fakultas @relation(fields: [fakultasId], references: [id], onDelete: Cascade)
   dosen      Dosen[]
   dosenId    String?
 }
@@ -99,8 +99,8 @@ model Comment {
   dosenId   String
   comment   String
   type      String
-  user      User     @relation(fields: [userId], references: [id])
-  dosen     Dosen    @relation(fields: [dosenId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dosen     Dosen    @relation(fields: [dosenId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

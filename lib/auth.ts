@@ -27,17 +27,14 @@ export const authOptions: NextAuthOptions = {
               email: credentials?.email,
             },
           });
-          console.log("User data:", user);
 
           if (!user) {
-            console.log("User not found");
             return null;
           }
 
           const passwordCorrect = await compare(credentials?.password || "", user.password);
 
           if (!passwordCorrect) {
-            console.log("Password is incorrect");
             return null;
           }
 
