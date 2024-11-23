@@ -4,7 +4,6 @@ import { createProdi } from "@/lib/action";
 interface Fakultas {
   id: string;
   nama: string; 
-  fetchData: () => void;
 }
 
 const CreateProdi = ({ fakultasList, fetchData }: { fakultasList: Fakultas[], fetchData: () => void }) => {

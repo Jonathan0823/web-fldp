@@ -56,7 +56,6 @@ export const editDosen = async (data: DosenData) => {
 
 export const deleteDosen = async (idUser: string, idDosen: string) => {
   try {
-    console.log(idUser, idDosen);
     const valid = await prisma.user.findUnique({
       where: {
         id: idUser,
@@ -269,3 +268,47 @@ export const review = async (
 //     return res.status(500).json({ message: "Failed to send email." });
 //   }
 // };
+
+
+export const getDosen = async (query: string) => {
+  try {
+    const dosen = await prisma.dosen.findMany({
+      where: {
+        nama: {
+          contains: query,
+        },
+      },
+    });
+    return dosen;
+  } catch (error) {
+    throw new Error(String(error));
+  }
+}
+
+
+export const getAllProdi = async () => {
+  try {
+    const prodi = await prisma.prodi.findMany();
+    return prodi;
+  } catch (error) {
+    throw new Error(String(error));
+  }
+};
+
+export const getAllFakultas = async () => {
+  try {
+    const fakultas = await prisma.fakultas.findMany();
+    return fakultas;
+  } catch (error) {
+    throw new Error(String(error));
+  }
+};
+
+export const getAllMatakuliah = async () => {
+  try {
+    const matakuliah = await prisma.matakuliah.findMany();
+    return matakuliah;
+  } catch (error) {
+    throw new Error(String(error));
+  }
+}

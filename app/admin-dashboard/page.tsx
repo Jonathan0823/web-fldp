@@ -9,11 +9,9 @@ import CreateMatakuliah from "../components/admin/Create-matkul";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Rule from "../components/admin/rule";
-interface Fakultas {
-  id: string;
-  nama: string;
-  fetchData: () => void;
-}
+import { getAllFakultas, getAllMatakuliah, getAllProdi } from "@/lib/action";
+
+
 
 interface Prodi {
   id: string;
@@ -30,7 +28,8 @@ const Sidebar: React.FC = () => {
   const [filter, setFilter] = useState("All");
   const [isOpen, setIsOpen] = useState(false);
   const [activePage, setActivePage] = useState("Rule");
-  const [fakultasList, setFakultasList] = useState<Fakultas[]>([]);
+  
+  const [fakultasList, setFakultasList] = useState<{ id: string; nama: string; createdAt: Date; updatedAt: Date; }[]>([]);
   const [prodiList, setProdiList] = useState<Prodi[]>([]);
   const [matakuliahList, setMatakuliahList] = useState<Matakuliah[]>([]);
   const [items, setItems] = useState([]);
@@ -45,36 +44,20 @@ const Sidebar: React.FC = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const timestamp = new Date().getTime(); // Cache-busting query parameter
-      const [fakultasResponse, prodiResponse, matakuliahResponse] = await Promise.all([
-        axios.get(`/api/getAlldata/getFakultas?timestamp=${timestamp}`, {
-          headers: {
-            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-            Pragma: 'no-cache',
-            Expires: '0',
-          },
-        }),
-        axios.get(`/api/getAlldata/getProdi?timestamp=${timestamp}`, {
-          headers: {
-            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-            Pragma: 'no-cache',
-            Expires: '0',
-          },
-        }),
-        axios.get(`/api/getAlldata/getMatkul?timestamp=${timestamp}`, {
-          headers: {
-            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-            Pragma: 'no-cache',
-            Expires: '0',
-          },
-        }),
-      ]);
+      const [fakultasResponse, prodiResponse, matakuliahResponse] =
+        await Promise.all([
+          getAllFakultas(),
+          getAllProdi(),
+          getAllMatakuliah(),
+        ]);
+  
 
       const response = await axios.get(`/api/getDosen/${filter}`, {
         headers: {
-          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-          Pragma: 'no-cache',
-          Expires: '0',
+          "Cache-Control":
+            "no-store, no-cache, must-revalidate, proxy-revalidate",
+          Pragma: "no-cache",
+          Expires: "0",
         },
       });
 
@@ -85,11 +68,11 @@ const Sidebar: React.FC = () => {
         email: session?.user.email || "",
         role: session?.user.role || "",
       });
-      setFakultasList(fakultasResponse.data);
-      setProdiList(prodiResponse.data);
-      setMatakuliahList(matakuliahResponse.data);
+      setFakultasList(fakultasResponse);
+      setProdiList(prodiResponse);
+      setMatakuliahList(matakuliahResponse);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
     }
@@ -98,7 +81,6 @@ const Sidebar: React.FC = () => {
   useEffect(() => {
     fetchData();
   }, [session, filter]);
-
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -228,6 +210,7 @@ const Sidebar: React.FC = () => {
               filter={filter}
               userId={session?.user.id || ""}
               loading={loading}
+              fakultasList={fakultasList}
             />
           )}
           {activePage === "add dosen" && (
@@ -240,10 +223,13 @@ const Sidebar: React.FC = () => {
           )}
           {activePage === "add fakultas" && <CreateFakultas />}
           {activePage === "add prodi" && (
-            <CreateProdi fakultasList={fakultasList} fetchData={fetchData}/>
+            <CreateProdi fakultasList={fakultasList} fetchData={fetchData} />
           )}
           {activePage === "add matkul" && (
-            <CreateMatakuliah fakultasList={fakultasList} fetchData={fetchData} />
+            <CreateMatakuliah
+              fakultasList={fakultasList}
+              fetchData={fetchData}
+            />
           )}
         </div>
       </div>

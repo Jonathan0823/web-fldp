@@ -6,7 +6,6 @@ import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 import AdminList from "./list";
 import { deleteDosen, editDosen } from "@/lib/action";
 
-
 interface DosenData {
   id: string;
   nama: string;
@@ -16,7 +15,8 @@ interface DosenData {
   email: string;
   matakuliah: string;
   createdAt: string;
-  updatedAt: string;}
+  updatedAt: string;
+}
 
 interface AdminCrudProps {
   items: DosenData[];
@@ -25,17 +25,31 @@ interface AdminCrudProps {
   filter: string;
   userId: string;
   loading: boolean;
+  fakultasList: {
+    id: string;
+    nama: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
 }
 
-const AdminCrud: React.FC<AdminCrudProps> = ({ items, setFilter, fetchData, filter, userId,loading}) => {
+const AdminCrud: React.FC<AdminCrudProps> = ({
+  items,
+  setFilter,
+  fetchData,
+  filter,
+  userId,
+  loading,
+  fakultasList,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const handleDelete = async (idAdmin: string) => {
+  const handleDelete = async () => {
     try {
       if (userId) {
-        await deleteDosen(userId, idAdmin);
+        await deleteDosen(userId, selectedId!);
         fetchData();
       } else {
         console.error("User ID is not available");
@@ -62,6 +76,7 @@ const AdminCrud: React.FC<AdminCrudProps> = ({ items, setFilter, fetchData, filt
   }, [filter]);
 
   const openDeleteModal = (id: string) => {
+    console.log("open delete modal", id);
     setSelectedId(id);
     setIsOpen(true);
   };
@@ -73,15 +88,17 @@ const AdminCrud: React.FC<AdminCrudProps> = ({ items, setFilter, fetchData, filt
 
   const filters = [
     { label: "All", value: "All" },
-    { label: "Ilmu Komputer", value: "ilmu komputer" },
-    { label: "Ilmu Ekonomi", value: "ilmu ekonomi" },
-    { label: "Ilmu Hukum", value: "ilmu hukum" },
+    ...fakultasList.map((f) => ({ label: f.nama, value: f.nama })),
   ];
 
   return (
     <div className="max-w-7xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
-      {error && <p className="mb-4 p-3 bg-red-100 text-red-600 border border-red-400 rounded">{error}</p>}
+      {error && (
+        <p className="mb-4 p-3 bg-red-100 text-red-600 border border-red-400 rounded">
+          {error}
+        </p>
+      )}
       <div className="flex justify-center mb-6">
         {filters.map((f) => (
           <button
@@ -97,7 +114,12 @@ const AdminCrud: React.FC<AdminCrudProps> = ({ items, setFilter, fetchData, filt
           </button>
         ))}
       </div>
-      <AdminList items={items} onDelete={openDeleteModal} onEdit={handleEdit} loading={loading}/>
+      <AdminList
+        items={items}
+        onDelete={openDeleteModal}
+        onEdit={handleEdit}
+        loading={loading}
+      />
 
       <DeleteConfirmationDialog
         isOpen={isOpen}
@@ -108,6 +130,5 @@ const AdminCrud: React.FC<AdminCrudProps> = ({ items, setFilter, fetchData, filt
     </div>
   );
 };
-
 
 export default AdminCrud;
