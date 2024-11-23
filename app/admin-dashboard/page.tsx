@@ -74,6 +74,10 @@ const Sidebar: React.FC = () => {
           Expires: '0',
         },
       });
+      console.log(prodiResponse.data);
+      console.log(fakultasResponse.data);
+      console.log(matakuliahResponse.data);
+      console.log(response.data);
 
       setItems(response.data);
       setFakultasList(fakultasResponse.data);
